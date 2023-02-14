@@ -2,7 +2,7 @@
 #define SENGINE_ENGINE_H
 
 #include <SDL.h>
-#include <map>
+#include <list>
 
 #include "loop_runners/loop_runner.h"
 
@@ -12,9 +12,27 @@ public:
 
     SDL_Renderer *GetRenderer();
     SDL_Window *GetWindow();
+
+    template<typename T>
+    T *GetLoopRunner();
+
+    void SetFps(int targetFps);
+
+
+    void Update(double deltaTime);
+    void Render();
+    void RunLoop();
 private:
     SDL_Renderer *renderer;
     SDL_Window *window;
+
+    std::list<LoopRunner*> loopRunners;
+
+    bool initialized;
+    bool loopRunning;
+
+    int fps;
+    float cycleTime;
 };
 
 extern Engine *g_Engine;
