@@ -3,24 +3,29 @@
 
 #include <string>
 
+const char *ASSET_EXTENSION = "asset";
+
 enum class AssetType {
     Sprite
 };
 
 template<AssetType T>
 struct AssetPath {
-    std::string path;
+    const std::string& path;
 
-    const char *GetPathPrefix() {
+    std::string GetPathPrefix() {
+        std::string pathPrefix = "datafiles/";
         switch (T) {
             case AssetType::Sprite:
-                return "sprite/";
+                pathPrefix += "sprite/";
         }
+
+        return pathPrefix;
     }
 
-    const char *GetFullPath() {
-        const char *prefix = GetPathPrefix();
-
+    const std::string GetFullPath() {
+        std::string prefix = GetPathPrefix();
+        return (prefix + path + "." + ASSET_EXTENSION);
     }
 };
 

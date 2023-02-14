@@ -6,15 +6,17 @@
 
 #include "loop_runners/loop_runner.h"
 
-class SEngine {
+class Engine {
 public:
-    SEngine();
+    Engine();
 
+    SDL_Renderer *GetRenderer();
+    SDL_Window *GetWindow();
 private:
     SDL_Renderer *renderer;
     SDL_Window *window;
 };
 
-extern SEngine g_SEngine;
+extern Engine *g_Engine;
 
 #endif //SENGINE_ENGINE_H

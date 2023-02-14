@@ -12,8 +12,10 @@ public:
 
     void Update(double deltaTime);
     void Render();
+
+    template<Component T> Component *GetComponent();
 protected:
-    std::vector<Component> components;
+    std::vector<Component*> components;
 
     virtual void EntityUpdate(double deltaTime) = 0;
     virtual void EntityRender() = 0;
