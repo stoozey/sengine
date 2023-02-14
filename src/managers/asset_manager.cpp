@@ -1,26 +1,26 @@
 #include "managers/asset_manager.h"
 
 template<AssetType T>
-Asset *AssetManager::LoadAsset(AssetPath<T> assetPath) {
+Asset *AssetManager::LoadAsset(const AssetPath<T> &assetPath) {
 
 }
 
 template<AssetType T>
-void AssetManager::UnLoadAsset(AssetPath<T> assetPath) {
+void AssetManager::UnLoadAsset(const AssetPath<T> &assetPath) {
 
 }
 
 template<AssetType T>
-Asset *AssetManager::GetAsset(AssetPath<T> assetPath) {
+Asset *AssetManager::GetAsset(const AssetPath<T> &assetPath) {
 
 }
 
 template<AssetType T>
-bool AssetManager::AssetExists(AssetPath<T> assetPath) {
+bool AssetManager::AssetExists(const AssetPath<T> &assetPath) {
 
 }
 
 template<AssetType T>
-void AssetManager::AddToAssets(AssetPath<T> assetPath, Asset *asset) {
+void AssetManager::AddToAssets(const AssetPath<T> &assetPath, Asset *asset) {
 
 }

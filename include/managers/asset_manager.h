@@ -6,12 +6,12 @@
 
 class AssetManager {
 public:
-    template<AssetType T> Asset *LoadAsset(AssetPath<T> assetPath);
-    template<AssetType T> void UnLoadAsset(AssetPath<T> assetPath);
-    template<AssetType T> Asset *GetAsset(AssetPath<T> assetPath);
-    template<AssetType T> bool AssetExists(AssetPath<T> assetPath);
+    template<AssetType T> Asset *LoadAsset(const AssetPath<T> &assetPath);
+    template<AssetType T> void UnLoadAsset(const AssetPath<T> &assetPath);
+    template<AssetType T> Asset *GetAsset(const AssetPath<T> &assetPath);
+    template<AssetType T> bool AssetExists(const AssetPath<T> &assetPath);
 private:
-    template<AssetType T> void AddToAssets(AssetPath<T> assetPath, Asset *asset);
+    template<AssetType T> void AddToAssets(const AssetPath<T> &assetPath, Asset *asset);
 
     std::map<std::string, Asset*> assets;
 };
