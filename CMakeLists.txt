@@ -36,15 +36,15 @@ target_link_libraries(
         --static -static-libgcc -static-libstdc++ -lmingw32 SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image -mconsole)
 
 
-#add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-#        COMMAND ${CMAKE_COMMAND} -E copy_directory
-#        "${CMAKE_SOURCE_DIR}/datafiles"
-#        $<TARGET_FILE_DIR:${PROJECT_NAME}>)
-#
-#add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-#        COMMAND ${CMAKE_COMMAND} -E copy_directory
-#        "${CMAKE_SOURCE_DIR}/datafiles"
-#        $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/internal-datafiles"
+        $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/datafiles"
+        $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>)
 
 
 install(TARGETS ${PROJECT_NAME}
