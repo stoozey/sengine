@@ -1,17 +1,19 @@
 #include <typeinfo>
 #include <cmath>
+#include <iostream>
 
 #include "engine.h"
 #include "datatypes/clock.h"
 
-const int WINDOW_WIDTH_DEFAULT = 1280;
-const int WINDOW_HEIGHT_DEFAULT = 720;
+int WINDOW_WIDTH_DEFAULT = 1280;
+int WINDOW_HEIGHT_DEFAULT = 720;
+int FPS_DEFAULT = 60;
 
 Engine *g_Engine = new Engine();
 
-Engine::Engine() {
-    int success = SDL_CreateWindowAndRenderer(WINDOW_WIDTH_DEFAULT, WINDOW_HEIGHT_DEFAULT, SDL_WINDOW_SHOWN, &window, &renderer);
-    initialized = (success == 0);
+void Engine::Initialize() {
+    SetFps(FPS_DEFAULT);
+    SDL_CreateWindowAndRenderer(WINDOW_WIDTH_DEFAULT, WINDOW_HEIGHT_DEFAULT, SDL_WINDOW_SHOWN, &window, &renderer);
     loopRunning = true;
 }
 
@@ -21,6 +23,10 @@ SDL_Renderer *Engine::GetRenderer() {
 
 SDL_Window *Engine::GetWindow() {
     return window;
+}
+
+void Engine::AddLoopRunner(LoopRunner *loopRunner) {
+    loopRunners.push_back(loopRunner);
 }
 
 template<typename T>
@@ -86,7 +92,6 @@ void Engine::RunLoop() {
             last = now;
             now = SDL_GetPerformanceCounter();
             deltaTime = ((double) ((now - last) * 1000 / (double) SDL_GetPerformanceFrequency()) * 0.01);
-
             //g_PhysicsManager.Update(cycleTime);
 
             //InputManager::Poll();

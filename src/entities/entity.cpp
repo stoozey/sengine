@@ -2,7 +2,7 @@
 
 void Entity::Update(double deltaTime) {
     for (auto &component : components) {
-        component.Update(deltaTime);
+        component->Update(deltaTime);
     }
 
     EntityUpdate(deltaTime);
@@ -10,7 +10,7 @@ void Entity::Update(double deltaTime) {
 
 void Entity::Render() {
     for (auto &component : components) {
-        component.Render();
+        component->Render();
     }
 
     EntityRender();

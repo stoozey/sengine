@@ -3,8 +3,6 @@
 
 #include <string>
 
-const char *ASSET_EXTENSION = "asset";
-
 enum class AssetType {
     Sprite
 };
@@ -23,9 +21,9 @@ struct AssetPath {
         return pathPrefix;
     }
 
-    const std::string GetFullPath() {
+    std::string GetFullPath() {
         std::string prefix = GetPathPrefix();
-        return (prefix + path + "." + ASSET_EXTENSION);
+        return (prefix + path + ".asset");
     }
 };
 

@@ -8,13 +8,14 @@
 
 class Engine {
 public:
-    Engine();
+    void Initialize();
 
     SDL_Renderer *GetRenderer();
     SDL_Window *GetWindow();
 
     template<typename T>
     T *GetLoopRunner();
+    void AddLoopRunner(LoopRunner *loopRunner);
 
     void SetFps(int targetFps);
 
@@ -28,7 +29,6 @@ private:
 
     std::list<LoopRunner*> loopRunners;
 
-    bool initialized;
     bool loopRunning;
 
     int fps;

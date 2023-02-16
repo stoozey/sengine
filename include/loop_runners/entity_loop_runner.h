@@ -17,12 +17,10 @@ public:
 
 class EntityLoopRunner : public LoopRunner {
 public:
-    EntityLoopRunner();
-
     void AddEntity(Entity *entity);
 
-    void Update(double deltaTime);
-    void Render();
+    void Update(double deltaTime) override;
+    void Render() override;
 private:
     std::vector<Entity*> entities;
 };

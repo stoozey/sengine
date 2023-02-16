@@ -1,9 +1,5 @@
 #include "loop_runners/entity_loop_runner.h"
 
-EntityLoopRunner::EntityLoopRunner() {
-    loopRunnerType = LoopRunnerType::Entity;
-}
-
 void EntityLoopRunner::AddEntity(Entity *entity) {
     entities.emplace_back(entity);
 }
