@@ -5,6 +5,8 @@
 #include "engine.h"
 #include "datatypes/clock.h"
 #include "managers/input_manager.h"
+#include "glad/glad.h"
+#include "shader.h"
 
 int WINDOW_WIDTH_DEFAULT = 1280;
 int WINDOW_HEIGHT_DEFAULT = 720;
@@ -20,8 +22,11 @@ Engine::Engine() {
     loopRunning = false;
 
     fps = 0;
-    cycleTime = 0;
+    cycleTime = 0.0f;
     SetFps(FPS_DEFAULT);
+
+    windowWidth = WINDOW_WIDTH_DEFAULT;
+    windowHeight = WINDOW_HEIGHT_DEFAULT;
 }
 
 Engine::~Engine() {
@@ -38,7 +43,7 @@ void Engine::Initialize() {
 }
 
 void Engine::InitSdl() {
-    SDL_CreateWindowAndRenderer(WINDOW_WIDTH_DEFAULT, WINDOW_HEIGHT_DEFAULT, (SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL), &window, &renderer);
+    SDL_CreateWindowAndRenderer(windowWidth, windowHeight, (SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL), &window, &renderer);
     if ((window == nullptr) || (renderer == nullptr)) {
         std::cout << "Engine::Initialize failed (window or renderer was null)" << std::endl;
         exit(1);
@@ -53,6 +58,11 @@ void Engine::InitSdl() {
     glContext = SDL_GL_CreateContext(window);
     if (glContext == nullptr) {
         std::cout << "Engine::Initialize failed (glContext was null)" << std::endl;
+        exit(1);
+    }
+
+    if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
+        std::cout << "glad wasn't initialized" << std::endl;
         exit(1);
     }
 }
@@ -121,6 +131,53 @@ void Engine::RunLoop() {
     static Clock systemClock;
     float accumulatedSeconds = 0.0f;
 
+
+    /// TEMP
+    const std::vector<GLfloat> vertexPosition {
+            -0.8f, -0.8f, 0.0f,
+            0.8f, -0.8f, 0.0f,
+            0.0f, 0.8f, 0.0f,
+    };
+
+    GLuint vertexArrayObject = 0;
+    glGenVertexArrays(1, &vertexArrayObject);
+    glBindVertexArray(vertexArrayObject);
+
+    GLuint vertexBufferObject = 0;
+    glGenBuffers(1, &vertexBufferObject);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+    glBufferData(GL_ARRAY_BUFFER,
+                 vertexPosition.size() * sizeof(GLfloat),
+                 vertexPosition.data(),
+                 GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    glBindVertexArray(0);
+    glDisableVertexAttribArray(0);
+
+    const std::string vertexShaderSource =
+            "#version 410 core\n"
+            "in vec4 position;\n"
+            "void main()\n"
+            "{\n"
+            "   gl_Position = vec4(position.x, position.y, position.z, position.w);\n"
+            "}";
+
+    const std::string fragmentShaderSource =
+            "#version 410 core\n"
+            "out vec4 color;\n"
+            "void main()\n"
+            "{\n"
+            "   color = vec4(1.0f, 0.1f, 1.0f, 1.0f);\n"
+            "}";
+
+    GLuint shaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
+
+    /// TEMP
+
+
     loopRunning = true;
     while (loopRunning)
     {
@@ -144,6 +201,22 @@ void Engine::RunLoop() {
             Update(deltaTime);
 
             // Render
+            glDisable(GL_DEPTH_TEST);
+            glDisable(GL_CULL_FACE);
+
+            glViewport(0, 0, windowWidth, windowHeight);
+            glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+            glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+            glUseProgram(shaderProgram);
+
+
+            glBindVertexArray(vertexArrayObject);
+            glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+
+
             Render();
             SDL_GL_SwapWindow(window);
         }

@@ -6,7 +6,7 @@
 #include "glad/glad.h"
 
 GLuint CompileShader(GLuint shaderType, const std::string &shaderSourceString) {
-    if ((shaderType != GL_VERTEX_SHADER) && (shaderType != GL_FRAGMENT_SHADER)) return -1;
+    //if ((shaderType != GL_VERTEX_SHADER) && (shaderType != GL_FRAGMENT_SHADER)) return -1;
 
     GLuint shaderObject = glCreateShader(shaderType);
     const char *source = shaderSourceString.c_str();

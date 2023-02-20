@@ -42,6 +42,9 @@ private:
     int fps;
     float cycleTime;
 
+    int windowWidth;
+    int windowHeight;
+
     void InitSdl();
     void InitOpenGl();
 };

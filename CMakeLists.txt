@@ -30,7 +30,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${SDL2IMAGE_INCLUDE_DIR
 set(SENGINE_SDL_LINKER_FLAGS SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SENGINE_SDL_LINKER_FLAGS})
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libgcc -static-libstdc++ -lmingw32 ${SENGINE_SDL_LINKER_FLAGS} -mconsole)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libstdc++ -static-libgcc -lmingw32 ${SENGINE_SDL_LINKER_FLAGS} -mconsole)
 
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
