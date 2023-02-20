@@ -11,7 +11,7 @@ struct AssetPath {
     const AssetType assetType;
     const std::string& path;
 
-    std::string GetPathPrefix() {
+    [[nodiscard]] std::string GetPathPrefix() const {
         std::string pathPrefix = "assets/";
         switch (assetType) {
             case AssetType::Sprite:
