@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 
+#include "glad/glad.h"
 #include "engine.h"
 #include "datatypes/clock.h"
 #include "managers/input_manager.h"
@@ -15,6 +16,7 @@ Engine *g_Engine = new Engine();
 Engine::Engine() {
     renderer = nullptr;
     window = nullptr;
+    glContext = nullptr;
 
     loopRunning = false;
 
@@ -23,8 +25,32 @@ Engine::Engine() {
     SetFps(FPS_DEFAULT);
 }
 
+Engine::~Engine() {
+    if (window != nullptr) {
+        SDL_DestroyWindow(window);
+    }
+
+    SDL_Quit();
+}
+
 void Engine::Initialize() {
-    SDL_CreateWindowAndRenderer(WINDOW_WIDTH_DEFAULT, WINDOW_HEIGHT_DEFAULT, SDL_WINDOW_SHOWN, &window, &renderer);
+    SDL_CreateWindowAndRenderer(WINDOW_WIDTH_DEFAULT, WINDOW_HEIGHT_DEFAULT, (SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL), &window, &renderer);
+    if ((window == nullptr) || (renderer == nullptr)) {
+        std::cout << "Engine::Initialize failed (window or renderer was null)" << std::endl;
+        exit(1);
+    }
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
+
+    glContext = SDL_GL_CreateContext(window);
+    if (glContext == nullptr) {
+        std::cout << "Engine::Initialize failed (glContext was null)" << std::endl;
+        exit(1);
+    }
 }
 
 SDL_Renderer *Engine::GetRenderer() {
@@ -33,6 +59,10 @@ SDL_Renderer *Engine::GetRenderer() {
 
 SDL_Window *Engine::GetWindow() {
     return window;
+}
+
+SDL_GLContext *Engine::GetGlContext() {
+    return &glContext;
 }
 
 void Engine::AddLoopRunner(LoopRunner *loopRunner) {
@@ -99,17 +129,15 @@ void Engine::RunLoop() {
 
             last = now;
             now = SDL_GetPerformanceCounter();
-            deltaTime = ((static_cast<double>(now - last) * 1000 / (double) SDL_GetPerformanceFrequency()) * 0.01);
+            deltaTime = ((static_cast<double>(now - last) * 1000 / static_cast<double>(SDL_GetPerformanceFrequency())) * 0.01);
             //g_PhysicsManager.Update(cycleTime);
 
             g_InputManager->Poll();
             Update(deltaTime);
 
             // Render
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-            SDL_RenderClear(renderer);
             Render();
-            SDL_RenderPresent(renderer);
+            SDL_GL_SwapWindow(window);
         }
     }
 }

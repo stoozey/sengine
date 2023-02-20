@@ -9,11 +9,13 @@
 class Engine {
 public:
     Engine();
+    ~Engine();
 
     void Initialize();
 
     SDL_Renderer *GetRenderer();
     SDL_Window *GetWindow();
+    SDL_GLContext *GetGlContext();
 
     LoopRunner *GetLoopRunner(LoopRunnerType loopRunnerType);
     void AddLoopRunner(LoopRunner *loopRunner);
@@ -27,6 +29,7 @@ public:
 private:
     SDL_Renderer *renderer;
     SDL_Window *window;
+    SDL_GLContext glContext;
 
     std::list<LoopRunner*> loopRunners;
 
