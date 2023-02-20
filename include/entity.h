@@ -12,8 +12,6 @@ public:
 
     void Update(double deltaTime);
     void Render();
-
-    template<Component T> Component *GetComponent();
 protected:
     std::vector<Component*> components;
 

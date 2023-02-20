@@ -12,7 +12,7 @@ struct AssetPath {
     const std::string& path;
 
     std::string GetPathPrefix() {
-        std::string pathPrefix = "resources/";
+        std::string pathPrefix = "assets/";
         switch (assetType) {
             case AssetType::Sprite:
                 pathPrefix += "sprite/";
