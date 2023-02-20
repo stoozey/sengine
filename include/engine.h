@@ -8,13 +8,15 @@
 
 class Engine {
 public:
+    Engine();
+
     void Initialize();
 
     SDL_Renderer *GetRenderer();
     SDL_Window *GetWindow();
 
     template<typename T>
-    T *GetLoopRunner();
+    T *GetLoopRunner(LoopRunnerType loopRunnerType);
     void AddLoopRunner(LoopRunner *loopRunner);
 
     void SetFps(int targetFps);

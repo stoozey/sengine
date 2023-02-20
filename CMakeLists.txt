@@ -14,11 +14,11 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>"
         )
 
-#set_target_properties(${PROJECT_NAME} PROPERTIES
-#        VERSION ${PROJECT_VERSION}
-#        SOVERSION ${PROJECT_VERSION_MAJOR}
-#        PUBLIC_HEADER ${SENGINE_INCLUDE_FILES}
-#        )
+set_target_properties(${PROJECT_NAME} PROPERTIES
+        VERSION "${PROJECT_VERSION}"
+        SOVERSION "${PROJECT_VERSION_MAJOR}"
+        PUBLIC_HEADER "${SENGINE_INCLUDE_FILES}"
+        )
 
 
 find_package(SDL2 REQUIRED)
@@ -27,13 +27,10 @@ find_package(SDL2_image REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2IMAGE_INCLUDE_DIRS})
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${SDL2IMAGE_INCLUDE_DIRS})
 
-target_link_libraries(
-        ${PROJECT_NAME} PRIVATE
-        --static -static-libgcc -static-libstdc++ -lmingw32 SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image -mconsole)
+set(SENGINE_SDL_LINKER_FLAGS SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image)
 
-target_link_libraries(
-        ${CMAKE_PROJECT_NAME} PRIVATE
-        --static -static-libgcc -static-libstdc++ -lmingw32 SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image -mconsole)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SENGINE_SDL_LINKER_FLAGS})
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libgcc -static-libstdc++ -lmingw32 ${SENGINE_SDL_LINKER_FLAGS} -mconsole)
 
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

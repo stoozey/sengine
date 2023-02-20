@@ -11,10 +11,19 @@ int FPS_DEFAULT = 60;
 
 Engine *g_Engine = new Engine();
 
-void Engine::Initialize() {
+Engine::Engine() {
+    renderer = nullptr;
+    window = nullptr;
+
+    loopRunning = false;
+
+    fps = 0;
+    cycleTime = 0;
     SetFps(FPS_DEFAULT);
+}
+
+void Engine::Initialize() {
     SDL_CreateWindowAndRenderer(WINDOW_WIDTH_DEFAULT, WINDOW_HEIGHT_DEFAULT, SDL_WINDOW_SHOWN, &window, &renderer);
-    loopRunning = true;
 }
 
 SDL_Renderer *Engine::GetRenderer() {
@@ -30,10 +39,10 @@ void Engine::AddLoopRunner(LoopRunner *loopRunner) {
 }
 
 template<typename T>
-T *Engine::GetLoopRunner() {
+T *Engine::GetLoopRunner(LoopRunnerType loopRunnerType) {
     for (auto &loopRunner : loopRunners) {
-        if (typeid(loopRunner) == typeid(T)) {
-            return loopRunner;
+        if (loopRunner->GetLoopRunnerType() == loopRunnerType) {
+            return dynamic_cast<T>(loopRunner);
         }
     }
 
@@ -76,6 +85,7 @@ void Engine::RunLoop() {
     static Clock systemClock;
     float accumulatedSeconds = 0.0f;
 
+    loopRunning = true;
     while (loopRunning)
     {
         systemClock.Tick();

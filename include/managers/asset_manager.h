@@ -8,21 +8,15 @@
 
 class AssetManager {
 public:
-    template<AssetType T>
-    Asset *LoadAsset(const AssetPath<T>& assetPath);
+    static Asset *LoadAsset(AssetPath& assetPath);
+    static void UnLoadAsset(AssetPath& assetPath);
 
-    template<AssetType T>
-    void UnLoadAsset(const AssetPath<T>& assetPath);
-
-    template<AssetType T>
-    Asset *GetAsset(const AssetPath<T>& assetPath);
-
-    template<AssetType T>
-    bool AssetExists(const AssetPath<T>& assetPath);
+    static Asset *GetAsset(AssetPath& assetPath);
+    static bool AssetExists(AssetPath& assetPath);
 private:
-    std::map<std::string, Asset*> assets;
+    static std::map<std::string, Asset*> assets;
 };
 
-extern AssetManager *g_AssetManager;
+//extern AssetManager *g_AssetManager;
 
 #endif //SENGINE_ASSET_MANAGER_H

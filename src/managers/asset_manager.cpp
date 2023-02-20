@@ -3,30 +3,30 @@
 #include "managers/asset_manager.h"
 #include "assets/sprite.h"
 
-namespace fs = std::filesystem;
 
-AssetManager *g_AssetManager = new AssetManager();
+//AssetManager *g_AssetManager = new AssetManager();
 
-template<AssetType T>
-Asset *AssetManager::LoadAsset(const AssetPath<T>& assetPath) {
+std::map<std::string, Asset*> AssetManager::assets = std::map<std::string, Asset*>();
+
+Asset *AssetManager::LoadAsset(AssetPath& assetPath) {
     const std::string path = assetPath.GetFullPath();
     Asset *asset = GetAsset(assetPath);
-    if ((fs::exists(path)) && (asset == nullptr)) {
-        switch (T) {
+    if ((std::filesystem::exists(path)) && (asset == nullptr)) {
+        switch (assetPath.assetType) {
             case AssetType::Sprite: {
-                asset = new Sprite(path, nullptr);
+                asset = new Sprite(nullptr);
                 break;
             }
         }
 
+        asset->Load(path);
         assets.insert({path, asset});
     }
 
     return asset;
 }
 
-template<AssetType T>
-void AssetManager::UnLoadAsset(const AssetPath<T>& assetPath) {
+void AssetManager::UnLoadAsset(AssetPath& assetPath) {
     const std::string path = assetPath.GetFullPath();
     auto find = assets.find(path);
     if (find == assets.end()) return;
@@ -35,14 +35,12 @@ void AssetManager::UnLoadAsset(const AssetPath<T>& assetPath) {
     delete find->second;
 }
 
-template<AssetType T>
-Asset *AssetManager::GetAsset(const AssetPath<T>& assetPath) {
+Asset *AssetManager::GetAsset(AssetPath& assetPath) {
     const std::string path = assetPath.GetFullPath();
     auto find = assets.find(path);
     return ((find == assets.end()) ? nullptr : find->second);
 }
 
-template<AssetType T>
-bool AssetManager::AssetExists(const AssetPath<T>& assetPath) {
+bool AssetManager::AssetExists(AssetPath& assetPath) {
     return (GetAsset(assetPath) != nullptr);
 }

@@ -7,8 +7,12 @@ enum class LoopRunnerType {
 
 class LoopRunner {
 public:
+    LoopRunnerType GetLoopRunnerType();
+
     virtual void Update(double deltaTime) = 0;
     virtual void Render() = 0;
+protected:
+    LoopRunnerType loopRunnerType = LoopRunnerType::Entity;
 };
 
 #endif //SENGINE_LOOP_RUNNER_H

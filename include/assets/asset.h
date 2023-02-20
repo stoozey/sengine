@@ -8,7 +8,7 @@
 
 class Asset {
 public:
-    Asset(const std::string& filePath);
+    virtual void Load(const std::string& filePath) = 0;
 };
 
 #endif //SENGINE_ASSET_H

@@ -10,10 +10,14 @@
 
 class Sprite : public Asset {
 public:
-    Sprite(const std::string& filePath, SDL_Renderer *sdlRenderer);
+    Sprite(SDL_Renderer *sdlRenderer);
     ~Sprite();
 
+    void Load(const std::string& filePath) override;
+
     void Render(const Vector2 &position);
+
+    void SetRenderer(SDL_Renderer *renderer);
 
     SDL_FRect GetFRect(const Vector2 &position);
     int GetWidth();

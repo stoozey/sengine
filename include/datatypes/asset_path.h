@@ -7,13 +7,13 @@ enum class AssetType {
     Sprite
 };
 
-template<AssetType T>
 struct AssetPath {
+    const AssetType assetType;
     const std::string& path;
 
     std::string GetPathPrefix() {
-        std::string pathPrefix = "datafiles/";
-        switch (T) {
+        std::string pathPrefix = "resources/";
+        switch (assetType) {
             case AssetType::Sprite:
                 pathPrefix += "sprite/";
         }

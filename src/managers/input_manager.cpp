@@ -39,8 +39,7 @@ void InputManager::PollInputs() {
         std::vector<int> scanCodes = pair.second;
 
         int isDown = 0;
-        for (int i = 0; i < scanCodes.size(); i++) {
-            int scanCode = scanCodes[i];
+        for (int scanCode : scanCodes) {
             if (keyInputs[scanCode] != 0)
             {
                 isDown = 1;
