@@ -159,18 +159,18 @@ void Engine::RunLoop() {
 
     const std::string vertexShaderSource =
             "#version 410 core\n"
-            "in vec4 position;\n"
-            "void main()\n"
-            "{\n"
-            "   gl_Position = vec4(position.x, position.y, position.z, position.w);\n"
+            "in vec4 position;"
+            "void main()"
+            "{"
+            "   gl_Position = vec4(position.x, position.y, position.z, position.w);"
             "}";
 
     const std::string fragmentShaderSource =
             "#version 410 core\n"
-            "out vec4 color;\n"
-            "void main()\n"
-            "{\n"
-            "   color = vec4(1.0f, 0.1f, 1.0f, 1.0f);\n"
+            "out vec4 color;"
+            "void main()"
+            "{"
+            "   color = vec4(1.0f, 0.1f, 1.0f, 1.0f);"
             "}";
 
     GLuint shaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
