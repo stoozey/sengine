@@ -1,5 +1,5 @@
-#ifndef SENGINE_VECTOR2_H
-#define SENGINE_VECTOR2_H
+#ifndef SENGINE_VECTOR3_H
+#define SENGINE_VECTOR3_H
 
 
 struct Vector3 {
@@ -8,4 +8,4 @@ struct Vector3 {
     float z;
 };
 
-#endif //SENGINE_VECTOR2_H
+#endif //SENGINE_VECTOR3_H
