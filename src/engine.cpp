@@ -4,6 +4,7 @@
 
 #include "engine.h"
 #include "datatypes/clock.h"
+#include "managers/input_manager.h"
 
 int WINDOW_WIDTH_DEFAULT = 1280;
 int WINDOW_HEIGHT_DEFAULT = 720;
@@ -101,7 +102,7 @@ void Engine::RunLoop() {
             deltaTime = ((double) ((now - last) * 1000 / (double) SDL_GetPerformanceFrequency()) * 0.01);
             //g_PhysicsManager.Update(cycleTime);
 
-            //InputManager::Poll();
+            g_InputManager->Poll();
             Update(deltaTime);
 
             // Render
