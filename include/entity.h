@@ -8,15 +8,17 @@
 
 class Entity {
 public:
+    Entity();
+
     Vector3 position;
 
-    void Update(double deltaTime);
-    void Render();
-protected:
-    std::vector<Component*> components;
+    virtual void PreUpdate(double deltaTime);
+    virtual void Update(double deltaTime);
+    virtual void PostUpdate(double deltaTime);
 
-    virtual void EntityUpdate(double deltaTime) = 0;
-    virtual void EntityRender() = 0;
+    virtual void PreRender();
+    virtual void Render();
+    virtual void PostRender();
 };
 
 #endif //SENGINE_ENTITY_H

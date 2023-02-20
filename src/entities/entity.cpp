@@ -1,17 +1,13 @@
 #include "entity.h"
 
-void Entity::Update(double deltaTime) {
-    for (auto &component : components) {
-        component->Update(deltaTime);
-    }
-
-    EntityUpdate(deltaTime);
+Entity::Entity() {
+    position = {0, 0};
 }
 
-void Entity::Render() {
-    for (auto &component : components) {
-        component->Render();
-    }
+void Entity::PreUpdate(double deltaTime) { }
+void Entity::Update(double deltaTime) { }
+void Entity::PostUpdate(double deltaTime) { }
 
-    EntityRender();
-}
+void Entity::PreRender() { }
+void Entity::Render() { }
+void Entity::PostRender() { }

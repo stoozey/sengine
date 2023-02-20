@@ -7,14 +7,6 @@
 #include "loop_runners/loop_runner.h"
 #include "entity.h"
 
-class Compare
-{
-public:
-    bool operator() (Entity *a, Entity *b) {
-        return (a->position.z > b->position.z);
-    }
-};
-
 class EntityLoopRunner : public LoopRunner {
 public:
     void AddEntity(Entity *entity);
