@@ -15,8 +15,7 @@ public:
     SDL_Renderer *GetRenderer();
     SDL_Window *GetWindow();
 
-    template<typename T>
-    T *GetLoopRunner(LoopRunnerType loopRunnerType);
+    LoopRunner *GetLoopRunner(LoopRunnerType loopRunnerType);
     void AddLoopRunner(LoopRunner *loopRunner);
 
     void SetFps(int targetFps);

@@ -38,12 +38,9 @@ void Engine::AddLoopRunner(LoopRunner *loopRunner) {
     loopRunners.push_back(loopRunner);
 }
 
-template<typename T>
-T *Engine::GetLoopRunner(LoopRunnerType loopRunnerType) {
+LoopRunner *Engine::GetLoopRunner(LoopRunnerType loopRunnerType) {
     for (auto &loopRunner : loopRunners) {
-        if (loopRunner->GetLoopRunnerType() == loopRunnerType) {
-            return dynamic_cast<T>(loopRunner);
-        }
+        if (loopRunner->GetLoopRunnerType() == loopRunnerType) return loopRunner;
     }
 
     return nullptr;
@@ -51,7 +48,7 @@ T *Engine::GetLoopRunner(LoopRunnerType loopRunnerType) {
 
 void Engine::SetFps(int targetFps) {
     fps = targetFps;
-    cycleTime = (1.0f / fps);
+    cycleTime = (1.0f / static_cast<float>(fps));
 }
 
 void Engine::Update(double deltaTime) {
