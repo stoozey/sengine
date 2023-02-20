@@ -78,7 +78,7 @@ void Engine::Render() {
 void Engine::RunLoop() {
     Uint64 now = SDL_GetPerformanceCounter();
     Uint64 last = 0;
-    double deltaTime = 0;
+    double deltaTime = 0.0;
 
     static Clock systemClock;
     float accumulatedSeconds = 0.0f;
@@ -99,7 +99,7 @@ void Engine::RunLoop() {
 
             last = now;
             now = SDL_GetPerformanceCounter();
-            deltaTime = ((double) ((now - last) * 1000 / (double) SDL_GetPerformanceFrequency()) * 0.01);
+            deltaTime = ((static_cast<double>(now - last) * 1000 / (double) SDL_GetPerformanceFrequency()) * 0.01);
             //g_PhysicsManager.Update(cycleTime);
 
             g_InputManager->Poll();

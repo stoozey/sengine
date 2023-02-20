@@ -4,12 +4,15 @@
 InputManager *g_InputManager = new InputManager();
 
 InputManager::InputManager() {
+    mousePosition = {0, 0};
+
     for (int i = (int) MouseButton::LeftClick; i != (int) MouseButton::None; i++) {
         std::map<Input, int> map = {
                 {Input::Down, 0},
                 {Input::Pressed, 0},
                 {Input::Released, 0}
         };
+
         MouseButton mouseInput = static_cast<MouseButton>(i);
         mouseStates.insert(std::pair<MouseButton, std::map<Input, int>>(mouseInput, map));
     }
@@ -85,7 +88,7 @@ Vector2 InputManager::GetMousePosition() {
     return mousePosition;
 }
 
-void InputManager::DefineInput(std::string inputName) {
+void InputManager::DefineInput(const std::string &inputName) {
     std::vector<int> keysVector;
     keyMap.insert(std::pair<std::string, std::vector<int>>(inputName, keysVector));
 
@@ -97,23 +100,23 @@ void InputManager::DefineInput(std::string inputName) {
     inputStates.insert(std::pair<std::string, std::map<Input, int>>(inputName, map));
 }
 
-void InputManager::TrackInput(std::string name, int scanCode) {
-    auto keys = keyMap.find(name);
+void InputManager::TrackInput(const std::string &inputName, int scanCode) {
+    auto keys = keyMap.find(inputName);
     std::vector<int> &scanCodes = keys->second;
     scanCodes.emplace_back(scanCode);
 }
 
-int InputManager::GetInputDown(std::string name) {
-    auto state = inputStates.find(name)->second;
+int InputManager::GetInputDown(const std::string &inputName) {
+    auto state = inputStates.find(inputName)->second;
     return GetMapState(state, Input::Down);
 }
 
-int InputManager::GetInputPressed(std::string name) {
-    auto state = inputStates.find(name)->second;
+int InputManager::GetInputPressed(const std::string &inputName) {
+    auto state = inputStates.find(inputName)->second;
     return GetMapState(state, Input::Pressed);
 }
 
-int InputManager::GetInputReleased(std::string name) {
-    auto state = inputStates.find(name)->second;
+int InputManager::GetInputReleased(const std::string &inputName) {
+    auto state = inputStates.find(inputName)->second;
     return GetMapState(state, Input::Released);
 }

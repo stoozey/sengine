@@ -28,17 +28,17 @@ public:
 
     void Poll();
 
-    void DefineInput(std::string inputName);
-    void TrackInput(std::string name, int scanCode);
+    void DefineInput(const std::string &inputName);
+    void TrackInput(const std::string &inputName, int scanCode);
 
     int GetMouseDown(MouseButton mouseInput);
     int GetMousePressed(MouseButton mouseInput);
     int GetMouseReleased(MouseButton mouseInput);
     Vector2 GetMousePosition();
 
-    int GetInputDown(std::string name);
-    int GetInputPressed(std::string name);
-    int GetInputReleased(std::string name);
+    int GetInputDown(const std::string &inputName);
+    int GetInputPressed(const std::string &inputName);
+    int GetInputReleased(const std::string &inputName);
 private:
     void PollMouse();
     void PollInputs();
