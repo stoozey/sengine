@@ -1,6 +1,6 @@
 #include "loop_runners/entity_loop_runner.h"
 
-void EntityLoopRunner::AddEntity(Entity *entity) {
+void EntityLoopRunner::AddEntity(const std::shared_ptr<Entity> &entity) {
     entities.emplace_back(entity);
 }
 

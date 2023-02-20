@@ -3,8 +3,12 @@
 
 #include <SDL.h>
 #include <list>
+#include <memory>
 
 #include "loop_runners/loop_runner.h"
+
+#include "loop_runners/entity_loop_runner.h"
+
 
 class Engine {
 public:
@@ -17,8 +21,8 @@ public:
     SDL_Window *GetWindow();
     SDL_GLContext *GetGlContext();
 
-    LoopRunner *GetLoopRunner(LoopRunnerType loopRunnerType);
-    void AddLoopRunner(LoopRunner *loopRunner);
+    std::shared_ptr<LoopRunner> GetLoopRunner(LoopRunnerType loopRunnerType);
+    void AddLoopRunner(std::shared_ptr<LoopRunner> &loopRunner);
 
     void SetFps(int targetFps);
 
@@ -31,12 +35,15 @@ private:
     SDL_Window *window;
     SDL_GLContext glContext;
 
-    std::list<LoopRunner*> loopRunners;
+    std::list<std::shared_ptr<LoopRunner>> loopRunners;
 
     bool loopRunning;
 
     int fps;
     float cycleTime;
+
+    void InitSdl();
+    void InitOpenGl();
 };
 
 extern Engine *g_Engine;

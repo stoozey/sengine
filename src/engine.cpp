@@ -2,7 +2,6 @@
 #include <cmath>
 #include <iostream>
 
-#include "glad/glad.h"
 #include "engine.h"
 #include "datatypes/clock.h"
 #include "managers/input_manager.h"
@@ -34,6 +33,11 @@ Engine::~Engine() {
 }
 
 void Engine::Initialize() {
+    InitSdl();
+    InitOpenGl();
+}
+
+void Engine::InitSdl() {
     SDL_CreateWindowAndRenderer(WINDOW_WIDTH_DEFAULT, WINDOW_HEIGHT_DEFAULT, (SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL), &window, &renderer);
     if ((window == nullptr) || (renderer == nullptr)) {
         std::cout << "Engine::Initialize failed (window or renderer was null)" << std::endl;
@@ -53,6 +57,10 @@ void Engine::Initialize() {
     }
 }
 
+void Engine::InitOpenGl() {
+
+}
+
 SDL_Renderer *Engine::GetRenderer() {
     return renderer;
 }
@@ -65,11 +73,11 @@ SDL_GLContext *Engine::GetGlContext() {
     return &glContext;
 }
 
-void Engine::AddLoopRunner(LoopRunner *loopRunner) {
+void Engine::AddLoopRunner(std::shared_ptr<LoopRunner> &loopRunner) {
     loopRunners.push_back(loopRunner);
 }
 
-LoopRunner *Engine::GetLoopRunner(LoopRunnerType loopRunnerType) {
+std::shared_ptr<LoopRunner> Engine::GetLoopRunner(LoopRunnerType loopRunnerType) {
     for (auto &loopRunner : loopRunners) {
         if (loopRunner->GetLoopRunnerType() == loopRunnerType) return loopRunner;
     }
