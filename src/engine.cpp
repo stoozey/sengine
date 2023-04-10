@@ -1,6 +1,7 @@
 #include <typeinfo>
 #include <cmath>
 #include <iostream>
+#include <fstream>
 
 #include "engine.h"
 #include "datatypes/clock.h"
@@ -134,12 +135,16 @@ void Engine::RunLoop() {
 
 
     /// TEMP
+
+    // vb 1
+
     const std::vector<GLfloat> vertexPosition {
             -0.8f, -0.8f, 0.0f,
             0.8f, -0.8f, 0.0f,
             0.0f, 0.8f, 0.0f,
     };
 
+    // poop
     GLuint vertexArrayObject = 0;
     glGenVertexArrays(1, &vertexArrayObject);
     glBindVertexArray(vertexArrayObject);
@@ -155,14 +160,42 @@ void Engine::RunLoop() {
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
+    // vb 2
+    const std::vector<GLfloat> vertexColour {
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f,
+    };
+
+    GLuint vertexBufferObject2 = 1;
+    glGenBuffers(1, &vertexBufferObject2);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject2);
+    glBufferData(GL_ARRAY_BUFFER,
+                 vertexColour.size() * sizeof(GLfloat),
+                 vertexColour.data(),
+                 GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1,
+                          3,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          0,
+                          nullptr);
+
+    // something!
     glBindVertexArray(0);
     glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+
 
     Shader shader = Shader();
-    shader.Load("E:\\shader1.asset");
+    shader.Load("E:\\shader2.asset");
 
     /// TEMP
 
+    std::cout << shader.shaderData.vertexShader << std::endl<< std::endl<< std::endl<< std::endl<< std::endl<< std::endl;
+    std::cout << shader.shaderData.fragmentShader << std::endl<< std::endl<< std::endl<< std::endl<< std::endl<< std::endl;
 
     loopRunning = true;
     while (loopRunning)
@@ -193,6 +226,7 @@ void Engine::RunLoop() {
             glViewport(0, 0, windowWidth, windowHeight);
             glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
             glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
 
             glUseProgram(shader.GetProgram());
 

@@ -39,9 +39,6 @@ void Shader::Load(const std::string &filePath) {
     strcpy(shaderData.vertexShader, vertexShader.c_str());
     strcpy(shaderData.fragmentShader, fragmentShader.c_str());
     CreateProgram();
-
-    std::cout << shaderData.vertexShader << std::endl<< std::endl<< std::endl<< std::endl;
-    std::cout << shaderData.fragmentShader << std::endl<< std::endl<< std::endl<< std::endl;
 }
 
 ShaderData Shader::GenerateEncodedShaderData() {
