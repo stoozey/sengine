@@ -3,10 +3,6 @@
 
 #include <string>
 
-enum class AssetType {
-    Sprite
-};
-
 struct AssetPath {
     const AssetType assetType;
     const std::string& path;

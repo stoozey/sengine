@@ -2,7 +2,7 @@
 
 #include "managers/asset_manager.h"
 #include "assets/sprite.h"
-
+#include "assets/shader.h"
 
 //AssetManager *g_AssetManager = new AssetManager();
 
@@ -15,6 +15,11 @@ Asset *AssetManager::LoadAsset(AssetPath& assetPath) {
         switch (assetPath.assetType) {
             case AssetType::Sprite: {
                 asset = new Sprite(nullptr);
+                break;
+            }
+
+            case AssetType::Shader: {
+                asset = new Shader();
                 break;
             }
         }

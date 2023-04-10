@@ -6,7 +6,7 @@
 #include "datatypes/clock.h"
 #include "managers/input_manager.h"
 #include "glad/glad.h"
-#include "shader.h"
+#include "assets/shader.h"
 
 int WINDOW_WIDTH_DEFAULT = 1280;
 int WINDOW_HEIGHT_DEFAULT = 720;
@@ -62,7 +62,7 @@ void Engine::InitSdl() {
     }
 
     if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
-        std::cout << "glad wasn't initialized" << std::endl;
+        std::cout << "Engine::Initialize failed (glad wasn't initialized)" << std::endl;
         exit(1);
     }
 }
@@ -99,6 +99,7 @@ void Engine::SetFps(int targetFps) {
     fps = targetFps;
     cycleTime = (1.0f / static_cast<float>(fps));
 }
+
 
 void Engine::Update(double deltaTime) {
     SDL_Event event;
@@ -157,23 +158,8 @@ void Engine::RunLoop() {
     glBindVertexArray(0);
     glDisableVertexAttribArray(0);
 
-    const std::string vertexShaderSource =
-            "#version 410 core\n"
-            "in vec4 position;"
-            "void main()"
-            "{"
-            "   gl_Position = vec4(position.x, position.y, position.z, position.w);"
-            "}";
-
-    const std::string fragmentShaderSource =
-            "#version 410 core\n"
-            "out vec4 color;"
-            "void main()"
-            "{"
-            "   color = vec4(1.0f, 0.1f, 1.0f, 1.0f);"
-            "}";
-
-    GLuint shaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
+    Shader shader = Shader();
+    shader.Load("E:\\shader1.asset");
 
     /// TEMP
 
@@ -208,7 +194,7 @@ void Engine::RunLoop() {
             glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
             glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-            glUseProgram(shaderProgram);
+            glUseProgram(shader.GetProgram());
 
 
             glBindVertexArray(vertexArrayObject);

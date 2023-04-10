@@ -26,7 +26,6 @@ public:
 
     void SetFps(int targetFps);
 
-
     void Update(double deltaTime);
     void Render();
     void RunLoop();

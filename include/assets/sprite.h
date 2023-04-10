@@ -11,8 +11,12 @@
 class Sprite : public Asset {
 public:
     Sprite(SDL_Renderer *sdlRenderer);
+    static std::shared_ptr<Sprite> FromImage(SDL_Renderer *sdlRenderer, const std::string &filename);
     ~Sprite();
 
+    void LoadImage(SDL_RWops *file);
+
+    void Save(const std::string& filePath) override;
     void Load(const std::string& filePath) override;
 
     void Render(const Vector2 &position);
@@ -23,8 +27,12 @@ public:
     int GetWidth();
     int GetHeight();
 private:
+    static AssetInfo assetInfo;
+
     SDL_Renderer *renderer;
+    SDL_Surface *surface;
     SDL_Texture *texture;
+
 
     int width;
     int height;
