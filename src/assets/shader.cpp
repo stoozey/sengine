@@ -14,35 +14,31 @@ void Shader::Save(const std::string &filePath) {
     SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "w");
     WriteAssetInfo(file, assetInfo);
 
-    ShaderData encodedData = GenerateEncodedShaderData();
-    SDL_RWwrite(file, reinterpret_cast<char*>(&encodedData), sizeof(ShaderData), 1);
+    ShaderData data = ((shaderData.encoded) ? GenerateEncodedShaderData() : shaderData);
+    SDL_RWwrite(file, reinterpret_cast<char*>(&data), sizeof(ShaderData), 1);
     SDL_RWclose(file);
 }
 
 void Shader::Load(const std::string &filePath) {
     SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "r");
-    std::cout << "read asset info " << file->type << std::endl;
     ReadAssetInfo(file);
 
     ShaderData encodedData{ "", "" };
     SDL_RWread(file, reinterpret_cast<char*>(&encodedData), sizeof(ShaderData), 1);
     SDL_RWclose(file);
-    std::cout << "decoding" << std::endl;
 
     std::string vertexShader, fragmentShader;
-    macaron::Base64::Decode(encodedData.vertexShader, vertexShader);
-    macaron::Base64::Decode(encodedData.fragmentShader, fragmentShader);
-    std::cout << "copying" << std::endl;
+    if (shaderData.encoded) {
+        macaron::Base64::Decode(encodedData.vertexShader, vertexShader);
+        macaron::Base64::Decode(encodedData.fragmentShader, fragmentShader);
+    } else {
+        vertexShader = encodedData.vertexShader;
+        fragmentShader = encodedData.vertexShader;
+    }
 
     strcpy(shaderData.vertexShader, vertexShader.c_str());
     strcpy(shaderData.fragmentShader, fragmentShader.c_str());
-    std::cout << "creating program" << std::endl;
-
     CreateProgram();
-    std::cout << "cout" << std::endl;
-
-    std::cout << "vertexShader: " << shaderData.vertexShader << std::endl;
-    std::cout << "fragmentShader: " << shaderData.fragmentShader << std::endl;
 }
 
 ShaderData Shader::GenerateEncodedShaderData() {

@@ -5,8 +5,9 @@
 #include "glad/glad.h"
 
 struct ShaderData {
-    char vertexShader[2048];
-    char fragmentShader[2048];
+    char vertexShader[4096];
+    char fragmentShader[4096];
+    bool encoded = false;
 };
 
 class Shader : public Asset {
