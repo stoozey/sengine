@@ -23,7 +23,7 @@ void Shader::Load(const std::string &filePath) {
     SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "r");
     ReadAssetInfo(file);
 
-    ShaderData encodedData{ "", "" };
+    ShaderData encodedData;
     SDL_RWread(file, reinterpret_cast<char*>(&encodedData), sizeof(ShaderData), 1);
     SDL_RWclose(file);
 
@@ -33,12 +33,15 @@ void Shader::Load(const std::string &filePath) {
         macaron::Base64::Decode(encodedData.fragmentShader, fragmentShader);
     } else {
         vertexShader = encodedData.vertexShader;
-        fragmentShader = encodedData.vertexShader;
+        fragmentShader = encodedData.fragmentShader;
     }
 
     strcpy(shaderData.vertexShader, vertexShader.c_str());
     strcpy(shaderData.fragmentShader, fragmentShader.c_str());
     CreateProgram();
+
+    std::cout << shaderData.vertexShader << std::endl<< std::endl<< std::endl<< std::endl;
+    std::cout << shaderData.fragmentShader << std::endl<< std::endl<< std::endl<< std::endl;
 }
 
 ShaderData Shader::GenerateEncodedShaderData() {
