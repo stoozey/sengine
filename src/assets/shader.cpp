@@ -41,6 +41,41 @@ void Shader::Load(const std::string &filePath) {
     CreateProgram();
 }
 
+GLuint Shader::GetProgram() const {
+    return program;
+}
+
+bool Shader::ProgramExists() const {
+    return (program > 0);
+}
+
+UniformData Shader::GetUniformData(const std::string &name) {
+    auto find = uniformData.find(name);
+    if (find == uniformData.end()) throw std::invalid_argument(name);
+
+    return find->second;
+}
+
+void Shader::SetUniform(const std::string &name, float value) {
+    UniformData data = GetUniformData(name);
+    glUniform1f(data.location, value);
+}
+
+void Shader::SetUniform(const std::string &name, glm::vec2 value) {
+    UniformData data = GetUniformData(name);
+    glUniform2f(data.location, value.x, value.y);
+}
+
+void Shader::SetUniform(const std::string &name, glm::vec3 value) {
+    UniformData data = GetUniformData(name);
+    glUniform3f(data.location, value.x, value.y, value.z);
+}
+
+void Shader::SetUniform(const std::string &name, glm::vec4 value) {
+    UniformData data = GetUniformData(name);
+    glUniform4f(data.location, value.x, value.y, value.z, value.w);
+}
+
 ShaderData Shader::GenerateEncodedShaderData() {
     std::string vertexEncoded = macaron::Base64::Encode(shaderData.vertexShader);
     std::string fragmentEncoded = macaron::Base64::Encode(shaderData.fragmentShader);
@@ -49,10 +84,6 @@ ShaderData Shader::GenerateEncodedShaderData() {
     strcpy(data.vertexShader, vertexEncoded.c_str());
     strcpy(data.fragmentShader, fragmentEncoded.c_str());
     return data;
-}
-
-GLuint Shader::GetProgram() const {
-    return program;
 }
 
 GLuint Shader::Compile(GLuint shaderType, const char *source) {
@@ -66,9 +97,7 @@ GLuint Shader::Compile(GLuint shaderType, const char *source) {
 }
 
 void Shader::CreateProgram() {
-    if (program > 0) {
-        glDeleteProgram(program);
-    }
+    DeleteProgram();
 
     program = glCreateProgram();
     GLuint vertexShader = Compile(GL_VERTEX_SHADER, shaderData.vertexShader);
@@ -79,4 +108,42 @@ void Shader::CreateProgram() {
     glLinkProgram(program);
 
     glValidateProgram(program);
+
+    FetchUniforms();
+}
+
+void Shader::DeleteProgram() {
+    if (!ProgramExists()) return;
+
+    glDeleteProgram(program);
+    program = -1;
+
+    uniformData.clear();
+};
+
+void Shader::FetchUniforms() {
+    if (!ProgramExists()) return;
+
+    GLint i;
+    GLint count;
+
+    GLint size; // size of the variable
+    GLenum type; // type of the variable (float, vec3 or mat4, etc)
+
+    const GLsizei bufSize = 16; // maximum name length
+    GLchar name[bufSize]; // variable name in GLSL
+    GLsizei length; // name length
+
+    glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &count);
+    printf("Active Uniforms: %d\n", count);
+
+    for (i = 0; i < count; i++)
+    {
+        glGetActiveUniform(program, (GLuint)i, bufSize, &length, &size, &type, name);
+
+        GLint location = glGetUniformLocation(program, name);
+        UniformData data{ type, location };
+        std::cout << name << " " << type << std::endl;
+        uniformData.insert({name, data});
+    }
 }

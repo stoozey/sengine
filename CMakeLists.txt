@@ -36,8 +36,8 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libstdc++ -
 
 # thirdparty
 add_subdirectory(thirdparty)
-target_include_directories(${PROJECT_NAME} PRIVATE thirdparty)
-target_link_libraries(${PROJECT_NAME} PRIVATE glm)
+target_include_directories(${PROJECT_NAME} PUBLIC thirdparty)
+target_link_libraries(${PROJECT_NAME} PUBLIC glm)
 
 # build commands
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

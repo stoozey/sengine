@@ -16,8 +16,8 @@ public:
 
     void LoadImage(SDL_RWops *file);
 
-    void Save(const std::string& filePath) override;
-    void Load(const std::string& filePath) override;
+    void Save(const std::string &filePath) override;
+    void Load(const std::string &filePath) override;
 
     void Render(const Vector2 &position);
 

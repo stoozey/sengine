@@ -2,6 +2,8 @@
 #include <cmath>
 #include <iostream>
 #include <fstream>
+#include <glm/glm.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include "engine.h"
 #include "datatypes/clock.h"
@@ -86,7 +88,8 @@ void Engine::InitSdl() {
 }
 
 void Engine::InitOpenGl() {
-
+    glm::vec4 poop{ 1.0f, 2.0f, 3.0f, 1.0f };
+    std::cout << glm::to_string(poop) << std::endl;
 }
 
 SDL_Renderer *Engine::GetRenderer() {
@@ -216,11 +219,14 @@ void Engine::RunLoop() {
     glBindVertexArray(0);
     glDisableVertexAttribArray(0);
 
+    glm::vec3 uOffset;
 
     Shader shader = Shader();
     shader.Load("E:\\shader2.asset");
 
     /// TEMP
+
+    float totalTime = 0.0f;
 
     loopRunning = true;
     while (loopRunning)
@@ -257,10 +263,19 @@ void Engine::RunLoop() {
             glBindVertexArray(vertexArrayObject);
             glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 
-            GlCheck(glDrawElements(GL_TRIANGLES, 6, GL_INT, nullptr));
+            GlCheck(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
 
             glUseProgram(shader.GetProgram());
+
+            float s = sin(totalTime);
+            float c = cos(totalTime);
+            uOffset.x = s;
+            uOffset.y = -c;
+            uOffset.z = s;
+            shader.SetUniform("u_Offset", uOffset);
+            std::cout << "updating " << deltaTime << std::endl;
+            totalTime += deltaTime;
 
             Render();
             SDL_GL_SwapWindow(window);
