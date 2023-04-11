@@ -13,6 +13,23 @@ int WINDOW_WIDTH_DEFAULT = 1280;
 int WINDOW_HEIGHT_DEFAULT = 720;
 int FPS_DEFAULT = 60;
 
+static void GlClearAllErrors() {
+    while (glGetError() != GL_NO_ERROR) {
+
+    }
+}
+
+static bool GlCheckErrorStatus(const char *functionName, int line) {
+    while (GLenum error = glGetError()) {
+        std::cout << "OPENGL ERROR: " << error << " occurred on " << line <<  ":" << functionName << std::endl;
+        return true;
+    }
+
+    return false;
+}
+
+#define GlCheck(x) GlClearAllErrors(); x; GlCheckErrorStatus(#x, __LINE__);
+
 Engine *g_Engine = new Engine();
 
 Engine::Engine() {
@@ -136,32 +153,19 @@ void Engine::RunLoop() {
 
     /// TEMP
 
-    const std::vector<GLfloat> vertexData {
-        //// 1
-        // left
-        -0.5f, -0.5f, 0.0f,
-        1.0f, 0.0f, 0.0f,
-
-        // right
-        0.5f, -0.5f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-
-        // top
-        -0.5f, 0.5f, 0.0f,
-        0.0f, 0.0f, 1.0f,
-
-        //// 2
-        // right
-        0.5f, -0.5f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-
-        // top
-        0.5f, 0.5f, 0.0f,
-        0.0f, 0.0f, 1.0f
-
-        // left
-        -0.5f, 0.5f, 0.0f,
-        0.0f, 0.0f, 1.0f
+    const std::vector<GLfloat> vertexData{
+            // 0
+            -0.5f, -0.5f, 0.0f, // left
+            1.0f, 0.0f, 0.0f,
+            // 1
+            0.5f, -0.5f, 0.0f, // right
+            0.0f, 1.0f, 0.0f,
+            // 2
+            -0.5f, 0.5f, 0.0f, // top left
+            0.0f, 0.0f, 1.0f,
+            // 3
+            0.5f, 0.5f, 0.0f, // top right
+            0.0f, 0.0f, 1.0f
     };
 
     GLuint vertexArrayObject = 0;
@@ -174,6 +178,20 @@ void Engine::RunLoop() {
     glBufferData(GL_ARRAY_BUFFER,
                  vertexData.size() * sizeof(GLfloat),
                  vertexData.data(),
+                 GL_STATIC_DRAW);
+
+    // setup ibo
+    const std::vector<GLuint> indexBufferData {
+        2, 0, 1,
+        3, 2, 1
+    };
+
+    GLuint indexBufferObject = 0;
+    glGenBuffers(1, &indexBufferObject);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 indexBufferData.size() * sizeof(GLuint),
+                 indexBufferData.data(),
                  GL_STATIC_DRAW);
 
     // xyz
@@ -239,7 +257,7 @@ void Engine::RunLoop() {
             glBindVertexArray(vertexArrayObject);
             glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            GlCheck(glDrawElements(GL_TRIANGLES, 6, GL_INT, nullptr));
 
 
             glUseProgram(shader.GetProgram());

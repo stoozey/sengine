@@ -5,10 +5,12 @@ set(CMAKE_CXX_STANDARD 20)
 
 include(GNUInstallDirs)
 
+# source files
 file(GLOB_RECURSE SENGINE_SRC_FILES "${PROJECT_SOURCE_DIR}/src/*.cpp" "${PROJECT_SOURCE_DIR}/src/*.c")
 file(GLOB_RECURSE SENGINE_INCLUDE_FILES "${PROJECT_SOURCE_DIR}/include/*.h")
 add_library(${PROJECT_NAME} SHARED ${SENGINE_SRC_FILES} ${SENGINE_INCLUDE_FILES})
 
+# data files
 target_include_directories(${PROJECT_NAME} PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>"
@@ -20,7 +22,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         PUBLIC_HEADER "${SENGINE_INCLUDE_FILES}"
         )
 
-
+# packages
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 
@@ -32,7 +34,12 @@ set(SENGINE_SDL_LINKER_FLAGS SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SENGINE_SDL_LINKER_FLAGS})
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libstdc++ -static-libgcc -lmingw32 ${SENGINE_SDL_LINKER_FLAGS} -mconsole)
 
+# thirdparty
+add_subdirectory(thirdparty)
+target_include_directories(${PROJECT_NAME} PRIVATE thirdparty)
+target_link_libraries(${PROJECT_NAME} PRIVATE glm)
 
+# build commands
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${PROJECT_SOURCE_DIR}/internal-datafiles"
