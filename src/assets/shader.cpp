@@ -140,7 +140,6 @@ void Shader::FetchUniforms() {
     GLsizei length; // name length
 
     glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &count);
-    printf("Active Uniforms: %d\n", count);
 
     for (i = 0; i < count; i++)
     {
@@ -148,7 +147,8 @@ void Shader::FetchUniforms() {
 
         GLint location = glGetUniformLocation(program, name);
         UniformData data{ type, location };
-        std::cout << name << " " << type << std::endl;
         uniformData.insert({name, data});
+
+        std::cout << name << " " << type << std::endl;
     }
 }

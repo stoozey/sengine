@@ -10,7 +10,7 @@ file(GLOB_RECURSE SENGINE_SRC_FILES "${PROJECT_SOURCE_DIR}/src/*.cpp" "${PROJECT
 file(GLOB_RECURSE SENGINE_INCLUDE_FILES "${PROJECT_SOURCE_DIR}/include/*.h")
 add_library(${PROJECT_NAME} SHARED ${SENGINE_SRC_FILES} ${SENGINE_INCLUDE_FILES})
 
-# data files
+# datafiles
 target_include_directories(${PROJECT_NAME} PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>"
@@ -38,6 +38,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libstdc++ -
 add_subdirectory(thirdparty)
 target_include_directories(${PROJECT_NAME} PUBLIC thirdparty)
 target_link_libraries(${PROJECT_NAME} PUBLIC glm)
+
 
 # build commands
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

@@ -9,6 +9,7 @@
 #include "datatypes/clock.h"
 #include "managers/input_manager.h"
 #include "glad/glad.h"
+#include "stb/stb.h"
 #include "assets/shader.h"
 
 int WINDOW_WIDTH_DEFAULT = 1280;
@@ -88,8 +89,6 @@ void Engine::InitSdl() {
 }
 
 void Engine::InitOpenGl() {
-    glm::vec4 poop{ 1.0f, 2.0f, 3.0f, 1.0f };
-    std::cout << glm::to_string(poop) << std::endl;
 }
 
 SDL_Renderer *Engine::GetRenderer() {
@@ -120,7 +119,6 @@ void Engine::SetFps(int targetFps) {
     fps = targetFps;
     cycleTime = (1.0f / static_cast<float>(fps));
 }
-
 
 void Engine::Update(double deltaTime) {
     SDL_Event event;
@@ -160,15 +158,19 @@ void Engine::RunLoop() {
             // 0
             -0.5f, -0.5f, 0.0f, // left
             1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f,
             // 1
             0.5f, -0.5f, 0.0f, // right
             0.0f, 1.0f, 0.0f,
+            1.0f, 0.0f,
             // 2
             -0.5f, 0.5f, 0.0f, // top left
             0.0f, 0.0f, 1.0f,
+            0.0f, 1.0f,
             // 3
             0.5f, 0.5f, 0.0f, // top right
-            0.0f, 0.0f, 1.0f
+            0.0f, 0.0f, 1.0f,
+            1.0f, 1.0f,
     };
 
     GLuint vertexArrayObject = 0;
@@ -203,7 +205,7 @@ void Engine::RunLoop() {
                           3,
                           GL_FLOAT,
                           GL_FALSE,
-                          (sizeof(GLfloat) * 6),
+                          (sizeof(GLfloat) * 8),
                           (void*) 0);
 
     // rgb
@@ -212,21 +214,53 @@ void Engine::RunLoop() {
                           3,
                           GL_FLOAT,
                           GL_FALSE,
-                          (sizeof(GLfloat) * 6),
+                          (sizeof(GLfloat) * 8),
                           (GLvoid*) (sizeof(GLfloat) * 3));
+
+    // texcoords
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2,
+                          2,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          (sizeof(GLfloat) * 8),
+                          (GLvoid*) (sizeof(GLfloat) * 6));
 
     // something!
     glBindVertexArray(0);
     glDisableVertexAttribArray(0);
 
-    glm::vec3 uOffset;
+    glm::vec3 uOffset{ 0.0f, 0.0f, -1.0f };
 
     Shader shader = Shader();
     shader.Load("E:\\shader2.asset");
 
-    /// TEMP
 
     float totalTime = 0.0f;
+
+    glm::mat4 perspective = glm::perspective(glm::radians(90.0f), (float) windowWidth / (float) windowHeight, 0.1f, 30.0f);
+
+    int imageWidth, imageHeight, channelsCount;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char *bytes = stbi_load(R"(C:\Users\Jo\Pictures\alex worm.png)", &imageWidth, &imageHeight, &channelsCount, 0);
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, bytes);
+
+    stbi_image_free(bytes);
+    glBindTexture(GL_TEXTURE0, 0);
+
+    /// TEMP
 
     loopRunning = true;
     while (loopRunning)
@@ -262,22 +296,23 @@ void Engine::RunLoop() {
 
             glBindVertexArray(vertexArrayObject);
             glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+            glBindTexture(GL_TEXTURE_2D, texture);
+
+            glUseProgram(shader.GetProgram());
+            glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), uOffset) * glm::rotate(glm::mat4(1.0f), glm::radians((totalTime / 10) * 360), glm::vec3(0.0f, 1.0f, 0.0f));
+            shader.SetUniform("u_modelMatrix", modelMatrix);
+            shader.SetUniform("u_projection", perspective);
 
             GlCheck(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
 
-            glUseProgram(shader.GetProgram());
 
             float s = sin(totalTime);
-            float c = cos(totalTime);
-            uOffset.x = s;
-            uOffset.y = -c;
-            uOffset.z = s;
-
-            glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), uOffset);
-            shader.SetUniform("u_modelMatrix", modelMatrix);
-            std::cout << "updating " << deltaTime << std::endl;
             totalTime += deltaTime;
+
+            //uOffset.z += s;
+
+
 
             Render();
             SDL_GL_SwapWindow(window);
