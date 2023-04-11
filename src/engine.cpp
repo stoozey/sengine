@@ -273,7 +273,9 @@ void Engine::RunLoop() {
             uOffset.x = s;
             uOffset.y = -c;
             uOffset.z = s;
-            shader.SetUniform("u_Offset", uOffset);
+
+            glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), uOffset);
+            shader.SetUniform("u_modelMatrix", modelMatrix);
             std::cout << "updating " << deltaTime << std::endl;
             totalTime += deltaTime;
 

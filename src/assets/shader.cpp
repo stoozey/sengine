@@ -76,6 +76,11 @@ void Shader::SetUniform(const std::string &name, glm::vec4 value) {
     glUniform4f(data.location, value.x, value.y, value.z, value.w);
 }
 
+void Shader::SetUniform(const std::string &name, glm::mat4 value) {
+    UniformData data = GetUniformData(name);
+    glUniformMatrix4fv(data.location, 1, GL_FALSE, &value[0][0]);
+}
+
 ShaderData Shader::GenerateEncodedShaderData() {
     std::string vertexEncoded = macaron::Base64::Encode(shaderData.vertexShader);
     std::string fragmentEncoded = macaron::Base64::Encode(shaderData.fragmentShader);
