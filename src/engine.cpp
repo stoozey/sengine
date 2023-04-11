@@ -136,15 +136,34 @@ void Engine::RunLoop() {
 
     /// TEMP
 
-    // vb 1
+    const std::vector<GLfloat> vertexData {
+        //// 1
+        // left
+        -0.5f, -0.5f, 0.0f,
+        1.0f, 0.0f, 0.0f,
 
-    const std::vector<GLfloat> vertexPosition {
-            -0.8f, -0.8f, 0.0f,
-            0.8f, -0.8f, 0.0f,
-            0.0f, 0.8f, 0.0f,
+        // right
+        0.5f, -0.5f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+
+        // top
+        -0.5f, 0.5f, 0.0f,
+        0.0f, 0.0f, 1.0f,
+
+        //// 2
+        // right
+        0.5f, -0.5f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+
+        // top
+        0.5f, 0.5f, 0.0f,
+        0.0f, 0.0f, 1.0f
+
+        // left
+        -0.5f, 0.5f, 0.0f,
+        0.0f, 0.0f, 1.0f
     };
 
-    // poop
     GLuint vertexArrayObject = 0;
     glGenVertexArrays(1, &vertexArrayObject);
     glBindVertexArray(vertexArrayObject);
@@ -153,49 +172,37 @@ void Engine::RunLoop() {
     glGenBuffers(1, &vertexBufferObject);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
     glBufferData(GL_ARRAY_BUFFER,
-                 vertexPosition.size() * sizeof(GLfloat),
-                 vertexPosition.data(),
+                 vertexData.size() * sizeof(GLfloat),
+                 vertexData.data(),
                  GL_STATIC_DRAW);
 
+    // xyz
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glVertexAttribPointer(0,
+                          3,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          (sizeof(GLfloat) * 6),
+                          (void*) 0);
 
-    // vb 2
-    const std::vector<GLfloat> vertexColour {
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f,
-    };
-
-    GLuint vertexBufferObject2 = 1;
-    glGenBuffers(1, &vertexBufferObject2);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject2);
-    glBufferData(GL_ARRAY_BUFFER,
-                 vertexColour.size() * sizeof(GLfloat),
-                 vertexColour.data(),
-                 GL_STATIC_DRAW);
-
+    // rgb
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1,
                           3,
                           GL_FLOAT,
                           GL_FALSE,
-                          0,
-                          nullptr);
+                          (sizeof(GLfloat) * 6),
+                          (GLvoid*) (sizeof(GLfloat) * 3));
 
     // something!
     glBindVertexArray(0);
     glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
 
 
     Shader shader = Shader();
     shader.Load("E:\\shader2.asset");
 
     /// TEMP
-
-    std::cout << shader.shaderData.vertexShader << std::endl<< std::endl<< std::endl<< std::endl<< std::endl<< std::endl;
-    std::cout << shader.shaderData.fragmentShader << std::endl<< std::endl<< std::endl<< std::endl<< std::endl<< std::endl;
 
     loopRunning = true;
     while (loopRunning)
@@ -223,19 +230,19 @@ void Engine::RunLoop() {
             glDisable(GL_DEPTH_TEST);
             glDisable(GL_CULL_FACE);
 
+
             glViewport(0, 0, windowWidth, windowHeight);
             glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
             glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 
-            glUseProgram(shader.GetProgram());
-
-
             glBindVertexArray(vertexArrayObject);
             glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
 
+
+            glUseProgram(shader.GetProgram());
 
             Render();
             SDL_GL_SwapWindow(window);
