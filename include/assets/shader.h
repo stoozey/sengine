@@ -3,14 +3,14 @@
 
 #include <glm/glm.hpp>
 #include <map>
+#include <glad.h>
 
 #include "assets/asset.h"
-#include "glad/glad.h"
 
 struct ShaderData {
     char vertexShader[4096];
     char fragmentShader[4096];
-    bool encoded = true;
+    bool encoded = false;
 };
 
 struct UniformData {

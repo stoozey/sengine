@@ -4,12 +4,12 @@
 #include <fstream>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <glad.h>
+#include <stb.h>
 
 #include "engine.h"
 #include "datatypes/clock.h"
 #include "managers/input_manager.h"
-#include "glad/glad.h"
-#include "stb/stb.h"
 #include "assets/shader.h"
 
 int WINDOW_WIDTH_DEFAULT = 1280;
@@ -279,6 +279,7 @@ void Engine::RunLoop() {
             last = now;
             now = SDL_GetPerformanceCounter();
             deltaTime = ((static_cast<double>(now - last) * 1000 / static_cast<double>(SDL_GetPerformanceFrequency())) * 0.01);
+            totalTime += static_cast<float>(deltaTime);
             //g_PhysicsManager.Update(cycleTime);
 
             g_InputManager->Poll();
@@ -299,16 +300,14 @@ void Engine::RunLoop() {
             glBindTexture(GL_TEXTURE_2D, texture);
 
             glUseProgram(shader.GetProgram());
-            glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), uOffset) * glm::rotate(glm::mat4(1.0f), glm::radians((totalTime / 10) * 360), glm::vec3(0.0f, 1.0f, 0.0f));
+            glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.5 + sin(totalTime), 1.0f));
+            glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians((totalTime / 10) * 360), glm::vec3(0.0f, 1.0f, 0.0f));
+            glm::mat4 translation = glm::translate(glm::mat4(1.0f), uOffset);
+            glm::mat4 modelMatrix = (translation * rotation * scale);
             shader.SetUniform("u_modelMatrix", modelMatrix);
             shader.SetUniform("u_projection", perspective);
 
             GlCheck(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-
-
-
-            float s = sin(totalTime);
-            totalTime += deltaTime;
 
             //uOffset.z += s;
 
