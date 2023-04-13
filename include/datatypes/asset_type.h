@@ -3,7 +3,8 @@
 
 enum class AssetType {
     Sprite,
-    Shader
+    Shader,
+    Model
 };
 
 #endif //SENGINE_TEST1_ASSET_TYPE_H
