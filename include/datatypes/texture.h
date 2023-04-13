@@ -5,17 +5,16 @@
 #include <glad.h>
 
 struct Texture {
-    Texture(GLenum textureTypeAidan, size_t textureDataSizeAidan, char *textureDataAidan) {
-        textureType = textureTypeAidan;
-        textureDataSize = textureDataSizeAidan;
-        textureData = textureDataAidan;
+//    Texture(GLenum textureTypeAidan, size_t textureDataSizeAidan, char *textureDataAidan) {
+//        textureType = textureTypeAidan;
+//        textureDataSize = textureDataSizeAidan;
+//        textureData = textureDataAidan;
+//    }
 
-    }
-
-    ~Texture() {
-        std::cout << "destroying" << std::endl;
-        delete textureData;
-    }
+//    ~Texture() {
+//        std::cout << "destroying" << std::endl;
+//        delete textureData;
+//    }
 
     GLenum textureType;
     size_t textureDataSize;

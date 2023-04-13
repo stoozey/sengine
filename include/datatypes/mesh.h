@@ -9,7 +9,7 @@ struct Mesh {
     std::vector<GLfloat> vertices;
     std::vector<GLfloat> colours;
     std::vector<GLfloat> texCoords;
-    std::shared_ptr<Texture> texture;
+    Texture texture;
 };
 
 #endif //SENGINE_TEST1_MESH_H

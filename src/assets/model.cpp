@@ -42,14 +42,16 @@ void Model::Load(const std::string &filePath) {
         // load texture
         GLenum textureType;
         file.read(reinterpret_cast<char*>(&textureType), sizeof(GLenum));
+        std::cout << "textureType " << textureType << std::endl;
 
         uint32_t textureDataSize;
         file.read(reinterpret_cast<char*>(&textureDataSize), sizeof(uint32_t));
+        std::cout << "textureDataSize  " << textureDataSize << std::endl;
 
         char *textureData = new char[textureDataSize];
         file.read(textureData, textureDataSize);
 
-        mesh.texture = std::make_shared<Texture>(textureType, textureDataSize, textureData);
+        mesh.texture = Texture{ textureType, textureDataSize, textureData };
         meshes.push_back(mesh);
     }
 
@@ -72,14 +74,14 @@ void Model::Save(const std::string &filePath) {
         WriteGlFloatVector(file, mesh.texCoords);
 
         // write texture
-        std::shared_ptr<Texture> texture = mesh.texture;
-        GLenum textureType = texture->textureType;
+        Texture texture = mesh.texture;
+        GLenum textureType = texture.textureType;
         file.write(reinterpret_cast<char*>(&textureType), sizeof(GLenum));
 
         uint32_t textureDataSize;
         file.write(reinterpret_cast<char*>(&textureDataSize), sizeof(uint32_t));
 
-        char *textureData = texture->textureData;
+        char *textureData = texture.textureData;
         file.write(textureData, textureDataSize);
     }
 

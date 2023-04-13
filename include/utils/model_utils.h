@@ -5,8 +5,8 @@
 
 #include "assets/model.h"
 
-Model ObjToModel(const std::string &filePath);
+void ObjToModel(const std::string &filePath, Model &out);
 
-Model SceneToModel(const aiScene *scene, const std::vector<std::shared_ptr<Texture>> &textures);
+void SceneToModel(const aiScene *scene, const std::vector<Texture> &textures, Model &out);
 
 #endif //SENGINE_TEST1_MODEL_UTILS_H
