@@ -9,7 +9,10 @@ void WriteGlFloatVector(std::fstream &file, std::vector<GLfloat> &inVector) {
     uint32_t size = inVector.size();
     std::cout << "writing size " << size << std::endl;
     file.write(reinterpret_cast<char*>(&size), sizeof(uint32_t));
-    file.write(reinterpret_cast<char*>(inVector.data()), static_cast<uint32_t>(size));
+
+    for (GLfloat value : inVector) {
+        file.write(reinterpret_cast<char*>(&value), sizeof(GLfloat));
+    }
 }
 
 void ReadGlFloatVector(std::fstream &file, std::vector<GLfloat> &outVector) {
@@ -82,9 +85,8 @@ void Model::Save(const std::string &filePath) {
         // write texture
         Texture texture = mesh.texture;
         GLenum textureType = texture.textureType;
+        size_t textureDataSize = texture.textureDataSize;
         file.write(reinterpret_cast<char*>(&textureType), sizeof(GLenum));
-
-        size_t textureDataSize;
         file.write(reinterpret_cast<char*>(&textureDataSize), sizeof(size_t));
 
         std::cout << "saving " << textureType << ", " << textureDataSize << std::endl;

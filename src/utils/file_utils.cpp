@@ -12,7 +12,7 @@ size_t FileReadAllBytes(const std::string &filePath, char **out) {
     stream.seekg(0, std::ios::beg);
 
     char *buffer = new char[length];
-    stream.read(buffer, std::fstream::end);
+    stream.read(buffer, length);
 
     *out = buffer;
     return length;
