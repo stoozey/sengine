@@ -3,6 +3,6 @@
 
 #include <string>
 
-void FileReadAllBytes(const std::string &filePath, char *buffer);
+size_t FileReadAllBytes(const std::string &filePath, char **out);
 
 #endif //SENGINE_TEST1_FILE_UTIL_H

@@ -3,12 +3,17 @@
 
 #include "utils/file_util.h"
 
-void FileReadAllBytes(const std::string &filePath, char *buffer) {
+size_t FileReadAllBytes(const std::string &filePath, char **out) {
     std::fstream stream;
-    stream.open(filePath, std::ios::in);
+    stream.open(filePath, std::ios::binary | std::ios::in);
 
     stream.seekg(0, std::ios::end);
     size_t length = stream.tellg();
     stream.seekg(0, std::ios::beg);
+
+    char *buffer = new char[length];
     stream.read(buffer, length);
+
+    *out = buffer;
+    return length;
 }

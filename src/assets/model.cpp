@@ -7,8 +7,8 @@ AssetInfo Model::assetInfo = AssetInfo{ AssetType::Model };
 
 void WriteGlFloatVector(std::fstream &file, std::vector<GLfloat> &inVector) {
     uint32_t size = inVector.size();
-    file.write(reinterpret_cast<char*>(size), sizeof(uint32_t));
-    file.write(reinterpret_cast<char*>(inVector.data()), static_cast<uint32_t>(sizeof(GLfloat) * size));
+    file.write(reinterpret_cast<char*>(&size), sizeof(uint32_t));
+    file.write(reinterpret_cast<char*>(inVector.data()), static_cast<uint32_t>(size));
 }
 
 void ReadGlFloatVector(std::fstream &file, std::vector<GLfloat> &outVector) {
@@ -25,7 +25,7 @@ void ReadGlFloatVector(std::fstream &file, std::vector<GLfloat> &outVector) {
 
 void Model::Load(const std::string &filePath) {
     std::fstream file;
-    file.open(filePath, std::ios::in);
+    file.open(filePath, std::ios::binary | std::ios::in);
     ReadAssetInfo(file);
 
     short totalMeshes;
@@ -33,6 +33,8 @@ void Model::Load(const std::string &filePath) {
 
     for (int i = 0; i < totalMeshes; i++) {
         Mesh mesh;
+
+        // load vectors
         ReadGlFloatVector(file, mesh.vertices);
         ReadGlFloatVector(file, mesh.colours);
         ReadGlFloatVector(file, mesh.texCoords);
@@ -41,15 +43,13 @@ void Model::Load(const std::string &filePath) {
         GLenum textureType;
         file.read(reinterpret_cast<char*>(&textureType), sizeof(GLenum));
 
-        size_t pos = file.tellg();
-        file.seekg(0, std::fstream::end);
-        size_t endPos = file.tellg();
-        size_t sizeLeft = (endPos - pos);
-        file.seekg(pos, std::fstream::beg);
+        uint32_t textureDataSize;
+        file.read(reinterpret_cast<char*>(&textureDataSize), sizeof(uint32_t));
 
-        char *textureData;
-        file.read(textureData, sizeLeft);
-        mesh.texture = { textureType, textureData };
+        char *textureData = new char[textureDataSize];
+        file.read(textureData, textureDataSize);
+
+        mesh.texture = std::make_shared<Texture>(textureType, textureDataSize, textureData);
         meshes.push_back(mesh);
     }
 
@@ -58,25 +58,29 @@ void Model::Load(const std::string &filePath) {
 
 void Model::Save(const std::string &filePath) {
     std::fstream file;
-    file.open(filePath, std::ios::out);
+    file.open(filePath, std::ios::binary | std::ios::out | std::ios::trunc);
     WriteAssetInfo(file, assetInfo);
 
-    short totalMeshes = static_cast<short>(meshes.size());
-    file.write(reinterpret_cast<char*>(totalMeshes), sizeof(short));
-
+    size_t totalMeshes = meshes.size();
+    file.write(reinterpret_cast<char*>(&totalMeshes), sizeof(size_t));
     for (int i = 0; i < totalMeshes; i++) {
         Mesh mesh = meshes[i];
+
+        // write vectors
         WriteGlFloatVector(file, mesh.vertices);
         WriteGlFloatVector(file, mesh.colours);
         WriteGlFloatVector(file, mesh.texCoords);
 
-        // load texture
-        Texture texture = mesh.texture;
-        GLenum textureType = texture.textureType;
-        file.write(reinterpret_cast<char*>(textureType), sizeof(GLenum));
+        // write texture
+        std::shared_ptr<Texture> texture = mesh.texture;
+        GLenum textureType = texture->textureType;
+        file.write(reinterpret_cast<char*>(&textureType), sizeof(GLenum));
 
-        char *textureData = texture.textureData;
-        file.write(textureData, sizeof(textureData));
+        uint32_t textureDataSize;
+        file.write(reinterpret_cast<char*>(&textureDataSize), sizeof(uint32_t));
+
+        char *textureData = texture->textureData;
+        file.write(textureData, textureDataSize);
     }
 
     file.close();

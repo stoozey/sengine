@@ -158,49 +158,24 @@ void Engine::RunLoop() {
 
     /// TEMP
 
-//    const std::vector<GLfloat> vertexData{
-//            // 0
-//            -0.5f, -0.5f, 0.0f, // left
-//            1.0f, 0.0f, 0.0f,
-//            0.0f, 0.0f,
-//            // 1
-//            0.5f, -0.5f, 0.0f, // right
-//            0.0f, 1.0f, 0.0f,
-//            1.0f, 0.0f,
-//            // 2
-//            -0.5f, 0.5f, 0.0f, // top left
-//            0.0f, 0.0f, 1.0f,
-//            0.0f, 1.0f,
-//            // 3
-//            0.5f, 0.5f, 0.0f, // top right
-//            0.0f, 0.0f, 1.0f,
-//            1.0f, 1.0f,
-//    };
-
-
-
-    std::vector<std::string> texturePathsCum;
-    for (int i = 0; i < scene->mNumMaterials; i++) {
-        aiMaterial *material = scene->mMaterials[i];
-        if (material->GetTextureCount(aiTextureType_DIFFUSE) < 0) continue;
-
-        aiString path;
-        if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-            std::string fullPath = "E:/";
-            fullPath += path.data;
-            texturePathsCum.push_back(fullPath);
-
-            m_Textures[i] = new Texture(GL_TEXTURE_2D, fullPath.c_str());
-
-            if (!m_Textures[i]->Load()) {
-                printf("Error loading texture '%s'\n", fullPath.c_str());
-                delete m_Textures[i];
-                m_Textures[i] = NULL;
-                Ret = false;
-            }
-        }
-    }
-
+    const std::vector<GLfloat> vertexData{
+            // 0
+            -0.5f, -0.5f, 0.0f, // left
+            1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f,
+            // 1
+            0.5f, -0.5f, 0.0f, // right
+            0.0f, 1.0f, 0.0f,
+            1.0f, 0.0f,
+            // 2
+            -0.5f, 0.5f, 0.0f, // top left
+            0.0f, 0.0f, 1.0f,
+            0.0f, 1.0f,
+            // 3
+            0.5f, 0.5f, 0.0f, // top right
+            0.0f, 0.0f, 1.0f,
+            1.0f, 1.0f,
+    };
 
     GLuint vertexArrayObject = 0;
     glGenVertexArrays(1, &vertexArrayObject);
@@ -214,19 +189,19 @@ void Engine::RunLoop() {
                  vertexData.data(),
                  GL_STATIC_DRAW);
 
-//    // setup ibo
-//    const std::vector<GLuint> indexBufferData {
-//        2, 0, 1,
-//        3, 2, 1
-//    };
-//
-//    GLuint indexBufferObject = 0;
-//    glGenBuffers(1, &indexBufferObject);
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-//                 indexBufferData.size() * sizeof(GLuint),
-//                 indexBufferData.data(),
-//                 GL_STATIC_DRAW);
+    // setup ibo
+    const std::vector<GLuint> indexBufferData {
+        2, 0, 1,
+        3, 2, 1
+    };
+
+    GLuint indexBufferObject = 0;
+    glGenBuffers(1, &indexBufferObject);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 indexBufferData.size() * sizeof(GLuint),
+                 indexBufferData.data(),
+                 GL_STATIC_DRAW);
 
     // xyz
     glEnableVertexAttribArray(0);

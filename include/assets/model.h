@@ -12,7 +12,6 @@
 
 class Model : public Asset {
 public:
-    Model();
     static Model FromFile(const std::string &filePath);
 
     void Save(const std::string &filePath);
@@ -21,7 +20,6 @@ public:
     std::vector<Mesh> meshes;
 private:
     static AssetInfo assetInfo;
-
 };
 
 #endif //SENGINE_TEST1_MODEL_H
