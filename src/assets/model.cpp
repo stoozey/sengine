@@ -14,6 +14,7 @@ void WriteGlFloatVector(std::fstream &file, std::vector<GLfloat> &inVector) {
 void ReadGlFloatVector(std::fstream &file, std::vector<GLfloat> &outVector) {
     int size;
     file.read(reinterpret_cast<char*>(&size), sizeof(int));
+    std::cout << "found size is " << size << std::endl;
 
     for (int i = 0; i < size; i++) {
         GLfloat value;
@@ -30,13 +31,17 @@ void Model::Load(const std::string &filePath) {
 
     short totalMeshes;
     file.read(reinterpret_cast<char*>(&totalMeshes), sizeof(short));
+    std::cout << "totalMeshes " << totalMeshes << std::endl;
 
     for (int i = 0; i < totalMeshes; i++) {
         Mesh mesh;
 
         // load vectors
+        std::cout << "loading vertices" << std::endl;
         ReadGlFloatVector(file, mesh.vertices);
+        std::cout << "loading colours" << std::endl;
         ReadGlFloatVector(file, mesh.colours);
+        std::cout << "loading texCoords" << std::endl;
         ReadGlFloatVector(file, mesh.texCoords);
 
         // load texture
@@ -44,8 +49,8 @@ void Model::Load(const std::string &filePath) {
         file.read(reinterpret_cast<char*>(&textureType), sizeof(GLenum));
         std::cout << "textureType " << textureType << std::endl;
 
-        uint32_t textureDataSize;
-        file.read(reinterpret_cast<char*>(&textureDataSize), sizeof(uint32_t));
+        size_t textureDataSize;
+        file.read(reinterpret_cast<char*>(&textureDataSize), sizeof(size_t));
         std::cout << "textureDataSize  " << textureDataSize << std::endl;
 
         char *textureData = new char[textureDataSize];
@@ -78,11 +83,13 @@ void Model::Save(const std::string &filePath) {
         GLenum textureType = texture.textureType;
         file.write(reinterpret_cast<char*>(&textureType), sizeof(GLenum));
 
-        uint32_t textureDataSize;
-        file.write(reinterpret_cast<char*>(&textureDataSize), sizeof(uint32_t));
+        size_t textureDataSize;
+        file.write(reinterpret_cast<char*>(&textureDataSize), sizeof(size_t));
+
+        std::cout << "saving " << textureType << ", " << textureDataSize << std::endl;
 
         char *textureData = texture.textureData;
-        file.write(textureData, textureDataSize);
+        file.write(textureData, static_cast<signed long long>(textureDataSize));
     }
 
     file.close();
