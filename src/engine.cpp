@@ -6,6 +6,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glad.h>
 #include <stb.h>
+#include <assimp/Importer.hpp>
 
 #include "engine.h"
 #include "datatypes/clock.h"

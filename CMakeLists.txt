@@ -38,6 +38,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libstdc++ -
 # thirdparty
 add_subdirectory(thirdparty)
 target_include_directories(${PROJECT_NAME} PUBLIC thirdparty)
+target_link_libraries(${PROJECT_NAME} PUBLIC assimp)
 target_link_libraries(${PROJECT_NAME} PUBLIC glm)
 target_link_libraries(${PROJECT_NAME} PUBLIC stb)
 
