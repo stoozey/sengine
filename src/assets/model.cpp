@@ -7,13 +7,14 @@ AssetInfo Model::assetInfo = AssetInfo{ AssetType::Model };
 
 void WriteGlFloatVector(std::fstream &file, std::vector<GLfloat> &inVector) {
     uint32_t size = inVector.size();
+    std::cout << "writing size " << size << std::endl;
     file.write(reinterpret_cast<char*>(&size), sizeof(uint32_t));
     file.write(reinterpret_cast<char*>(inVector.data()), static_cast<uint32_t>(size));
 }
 
 void ReadGlFloatVector(std::fstream &file, std::vector<GLfloat> &outVector) {
-    int size;
-    file.read(reinterpret_cast<char*>(&size), sizeof(int));
+    uint32_t size;
+    file.read(reinterpret_cast<char*>(&size), sizeof(uint32_t ));
     std::cout << "found size is " << size << std::endl;
 
     for (int i = 0; i < size; i++) {
@@ -68,10 +69,10 @@ void Model::Save(const std::string &filePath) {
     file.open(filePath, std::ios::binary | std::ios::out | std::ios::trunc);
     WriteAssetInfo(file, assetInfo);
 
-    size_t totalMeshes = meshes.size();
-    file.write(reinterpret_cast<char*>(&totalMeshes), sizeof(size_t));
+    short totalMeshes = meshes.size();
+    file.write(reinterpret_cast<char*>(&totalMeshes), sizeof(short));
     for (int i = 0; i < totalMeshes; i++) {
-        Mesh mesh = meshes[i];
+        Mesh mesh = meshes.at(i);
 
         // write vectors
         WriteGlFloatVector(file, mesh.vertices);
@@ -89,7 +90,7 @@ void Model::Save(const std::string &filePath) {
         std::cout << "saving " << textureType << ", " << textureDataSize << std::endl;
 
         char *textureData = texture.textureData;
-        file.write(textureData, static_cast<signed long long>(textureDataSize));
+        file.write(textureData, textureDataSize);
     }
 
     file.close();
