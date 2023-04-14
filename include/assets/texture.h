@@ -6,17 +6,19 @@
 namespace assets {
     class Texture : public Asset {
     public:
-        static Texture FromFile(const std::string &filePath);
+        Texture();
+        ~Texture();
 
         void Save(const std::string &filePath);
         void Load(const std::string &filePath);
+        void LoadFromFile(const std::string &filePath);
     private:
         static structs::AssetInfo assetInfo;
 
-        unsigned int width;
-        unsigned int height;
+        int width;
+        int height;
         size_t dataSize;
-        char *data;
+        unsigned char *data;
     };
 }
 

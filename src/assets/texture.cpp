@@ -4,6 +4,19 @@
 #include "assets/texture.h"
 
 namespace assets {
+    Texture::Texture() {
+        width = 0;
+        height = 0;
+        dataSize = 0;
+        data = nullptr;
+    }
+
+    Texture::~Texture() {
+        if (data) {
+            stbi_image_free(data);
+        }
+    }
+
     void Texture::Save(const std::string &filePath) {
 
     }
@@ -12,12 +25,13 @@ namespace assets {
 
     }
 
-    //Texture Texture::FromFile(const std::string &filePath) {
-    //    //if (!std::filesystem::exists(filePath)) throw std::invalid_argument(std::format("file"));
-    //
-    //    stbi_set_flip_vertically_on_load(true);
-    //
-    //    int imageWidth, imageHeight, channelsCount;
-    //    unsigned char *bytes = stbi_load(filePath.c_str(), &imageWidth, &imageHeight, &channelsCount, 0);
-    //}
+    void Texture::LoadFromFile(const std::string &filePath) {
+        if (!std::filesystem::exists(filePath)) throw std::invalid_argument(filePath);
+
+        stbi_set_flip_vertically_on_load(true);
+
+        int totalChannels;
+        data = stbi_load(filePath.c_str(), &width, &height, &totalChannels, 0);
+        dataSize = (width * totalChannels);
+    }
 }

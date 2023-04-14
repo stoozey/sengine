@@ -10,7 +10,7 @@ namespace assets {
     structs::AssetInfo Shader::assetInfo{structs::AssetType::Shader};
 
     Shader::Shader() {
-        shaderData = {"", ""};
+        programData = { "", ""};
         program = -1;
     }
 
@@ -18,7 +18,7 @@ namespace assets {
         SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "w");
         WriteAssetInfo(file, assetInfo);
 
-        structs::ShaderProgramData data = ((shaderData.encoded) ? GenerateEncodedShaderData() : shaderData);
+        structs::ShaderProgramData data = ((programData.encoded) ? GenerateEncodedShaderData() : programData);
         SDL_RWwrite(file, reinterpret_cast<char *>(&data), sizeof(structs::ShaderProgramData), 1);
         SDL_RWclose(file);
     }
@@ -32,7 +32,7 @@ namespace assets {
         SDL_RWclose(file);
 
         std::string vertexShader, fragmentShader;
-        if (shaderData.encoded)
+        if (programData.encoded)
         {
             macaron::Base64::Decode(encodedData.vertexShader, vertexShader);
             macaron::Base64::Decode(encodedData.fragmentShader, fragmentShader);
@@ -42,8 +42,8 @@ namespace assets {
             fragmentShader = encodedData.fragmentShader;
         }
 
-        strcpy(shaderData.vertexShader, vertexShader.c_str());
-        strcpy(shaderData.fragmentShader, fragmentShader.c_str());
+        strcpy(programData.vertexShader, vertexShader.c_str());
+        strcpy(programData.fragmentShader, fragmentShader.c_str());
         CreateProgram();
     }
 
@@ -88,8 +88,8 @@ namespace assets {
     }
 
     structs::ShaderProgramData Shader::GenerateEncodedShaderData() {
-        std::string vertexEncoded = macaron::Base64::Encode(shaderData.vertexShader);
-        std::string fragmentEncoded = macaron::Base64::Encode(shaderData.fragmentShader);
+        std::string vertexEncoded = macaron::Base64::Encode(programData.vertexShader);
+        std::string fragmentEncoded = macaron::Base64::Encode(programData.fragmentShader);
 
         structs::ShaderProgramData data{"", ""};
         strcpy(data.vertexShader, vertexEncoded.c_str());
@@ -111,8 +111,8 @@ namespace assets {
         DeleteProgram();
 
         program = glCreateProgram();
-        GLuint vertexShader = Compile(GL_VERTEX_SHADER, shaderData.vertexShader);
-        GLuint fragmentShader = Compile(GL_FRAGMENT_SHADER, shaderData.fragmentShader);
+        GLuint vertexShader = Compile(GL_VERTEX_SHADER, programData.vertexShader);
+        GLuint fragmentShader = Compile(GL_FRAGMENT_SHADER, programData.fragmentShader);
 
         glAttachShader(program, vertexShader);
         glAttachShader(program, fragmentShader);

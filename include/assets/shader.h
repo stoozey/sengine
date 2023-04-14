@@ -26,13 +26,10 @@ namespace assets {
         void SetUniform(const std::string &name, glm::vec4 value);
         void SetUniform(const std::string &name, glm::mat4 value);
 
-        structs::ShaderProgramData shaderData;
+        structs::ShaderProgramData programData;
     private:
         static structs::AssetInfo assetInfo;
         static GLuint Compile(GLuint shaderType, const char *source);
-
-        GLuint program;
-        std::map<std::string, structs::ShaderUniformData> uniformData;
 
         structs::ShaderProgramData GenerateEncodedShaderData();
         structs::ShaderUniformData GetUniformData(const std::string &name);
@@ -40,6 +37,9 @@ namespace assets {
         void CreateProgram();
         void DeleteProgram();
         void FetchUniforms();
+
+        GLuint program;
+        std::map<std::string, structs::ShaderUniformData> uniformData;
     };
 }
 
