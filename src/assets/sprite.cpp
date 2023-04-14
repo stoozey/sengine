@@ -1,79 +1,86 @@
 #include <iostream>
 
 #include "assets/sprite.h"
+#include "structs/assets/asset_info.h"
+#include "structs/assets/asset_type.h"
+#include "core/engine.h"
 
-AssetInfo Sprite::assetInfo{ AssetType::Sprite };
+namespace assets {
+    structs::AssetInfo Sprite::assetInfo{structs::AssetType::Sprite};
 
-Sprite::Sprite(SDL_Renderer *sdlRenderer) {
-    renderer = ((sdlRenderer == nullptr) ? g_Engine->GetRenderer() : sdlRenderer);
-    surface = nullptr;
-    texture = nullptr;
-    width = 0;
-    height = 0;
-}
-
-std::shared_ptr<Sprite> Sprite::FromImage(SDL_Renderer *sdlRenderer, const std::string &filename) {
-    std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(sdlRenderer);
-    SDL_RWops *file = SDL_RWFromFile(filename.c_str(), "r");
-    sprite->LoadImage(file);
-    SDL_RWclose(file);
-
-    return sprite;
-}
-
-Sprite::~Sprite() {
-    if (texture) {
-        SDL_DestroyTexture(texture);
+    Sprite::Sprite(SDL_Renderer *sdlRenderer) {
+        renderer = ((sdlRenderer == nullptr) ? g_Engine->GetRenderer() : sdlRenderer);
+        surface = nullptr;
+        texture = nullptr;
+        width = 0;
+        height = 0;
     }
 
-    if (surface) {
-        SDL_FreeSurface(surface);
+    std::shared_ptr<Sprite> Sprite::FromImage(SDL_Renderer *sdlRenderer, const std::string &filename) {
+        std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(sdlRenderer);
+        SDL_RWops *file = SDL_RWFromFile(filename.c_str(), "r");
+        sprite->LoadImage(file);
+        SDL_RWclose(file);
+
+        return sprite;
     }
-}
 
-void Sprite::LoadImage(SDL_RWops *file) {
-    surface = IMG_Load_RW(file, 0);
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    Sprite::~Sprite() {
+        if (texture)
+        {
+            SDL_DestroyTexture(texture);
+        }
 
-    SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
-}
+        if (surface)
+        {
+            SDL_FreeSurface(surface);
+        }
+    }
 
-void Sprite::Save(const std::string &filePath) {
-    SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "w");
-    WriteAssetInfo(file, assetInfo);
+    void Sprite::LoadImage(SDL_RWops *file) {
+        surface = IMG_Load_RW(file, 0);
+        texture = SDL_CreateTextureFromSurface(renderer, surface);
 
-    IMG_SavePNG_RW(surface, file, 0);
-    SDL_RWclose(file);
-}
+        SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+    }
 
-void Sprite::Load(const std::string &filePath) {
-    SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "r");
-    std::cout << "read asset info " << file->type << std::endl;
-    ReadAssetInfo(file);
+    void Sprite::Save(const std::string &filePath) {
+        SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "w");
+        WriteAssetInfo(file, assetInfo);
 
-    LoadImage(file);
-    SDL_RWclose(file);
-}
+        IMG_SavePNG_RW(surface, file, 0);
+        SDL_RWclose(file);
+    }
 
-void Sprite::SetRenderer(SDL_Renderer *sdlRenderer) {
-    renderer = sdlRenderer;
-}
+    void Sprite::Load(const std::string &filePath) {
+        SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "r");
+        std::cout << "read asset info " << file->type << std::endl;
+        ReadAssetInfo(file);
 
-SDL_FRect Sprite::GetFRect(const Vector2 &position) {
-    return { position.x, position.y, (float) width, (float) height };
-}
+        LoadImage(file);
+        SDL_RWclose(file);
+    }
 
-int Sprite::GetWidth() {
-    return width;
-}
+    void Sprite::SetRenderer(SDL_Renderer *sdlRenderer) {
+        renderer = sdlRenderer;
+    }
 
-int Sprite::GetHeight() {
-    return height;
-}
+    SDL_FRect Sprite::GetFRect(const structs::Vector2 &position) {
+        return {position.x, position.y, (float) width, (float) height};
+    }
 
-void Sprite::Render(const Vector2 &position) {
-    if (!texture) return;
+    int Sprite::GetWidth() {
+        return width;
+    }
 
-    SDL_FRect rect = GetFRect(position);
-    SDL_RenderCopyF(renderer, texture, nullptr, &rect);
+    int Sprite::GetHeight() {
+        return height;
+    }
+
+    void Sprite::Render(const structs::Vector2 &position) {
+        if (!texture) return;
+
+        SDL_FRect rect = GetFRect(position);
+        SDL_RenderCopyF(renderer, texture, nullptr, &rect);
+    }
 }

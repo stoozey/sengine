@@ -1,122 +1,129 @@
 #include "managers/input_manager.h"
-#include "engine.h"
+#include "core/engine.h"
+#include "structs/input/mouse_button.h"
+#include "structs/input/input_state.h"
 
-InputManager *g_InputManager = new InputManager();
+managers::InputManager *g_InputManager = new managers::InputManager();
 
-InputManager::InputManager() {
-    mousePosition = {0, 0};
+namespace managers {
+    InputManager::InputManager() {
+        mousePosition = {0, 0};
 
-    for (int i = (int) MouseButton::LeftClick; i != (int) MouseButton::None; i++) {
-        std::map<Input, int> map = {
-                {Input::Down, 0},
-                {Input::Pressed, 0},
-                {Input::Released, 0}
-        };
+        for (int i = (int) structs::MouseButton::LeftClick; i != (int) structs::MouseButton::None; i++)
+        {
+            std::map<structs::InputState, int> map = {
+                    {structs::InputState::Down,     0},
+                    {structs::InputState::Pressed,  0},
+                    {structs::InputState::Released, 0}
+            };
 
-        MouseButton mouseInput = static_cast<MouseButton>(i);
-        mouseStates.insert(std::pair<MouseButton, std::map<Input, int>>(mouseInput, map));
-    }
-}
-
-void InputManager::Poll() {
-    PollMouse();
-    PollInputs();
-}
-
-void InputManager::PollMouse() {
-    // mouse pos
-    int mouseX, mouseY;
-    const Uint32 mouseInputs = SDL_GetMouseState(&mouseX, &mouseY);
-    SDL_RenderWindowToLogical(g_Engine->GetRenderer(), mouseX, mouseY, &mousePosition.x, &mousePosition.y);
-
-    // set map
-    SetMapState(mouseStates.find(MouseButton::LeftClick)->second, (mouseInputs & SDL_BUTTON_LMASK));
-    SetMapState(mouseStates.find(MouseButton::MiddleClick)->second, (mouseInputs & SDL_BUTTON_MMASK));
-    SetMapState(mouseStates.find(MouseButton::RightClick)->second, (mouseInputs & SDL_BUTTON_RMASK));
-}
-
-void InputManager::PollInputs() {
-    const Uint8 *keyInputs = const_cast <Uint8*> (SDL_GetKeyboardState(nullptr));
-    for (auto &pair : keyMap) {
-        std::string name = pair.first;
-        std::vector<int> scanCodes = pair.second;
-
-        int isDown = 0;
-        for (int scanCode : scanCodes) {
-            if (keyInputs[scanCode] != 0)
-            {
-                isDown = 1;
-                break;
-            }
+            structs::MouseButton mouseInput = static_cast<structs::MouseButton>(i);
+            mouseStates.insert(std::pair<structs::MouseButton, std::map<structs::InputState, int>>(mouseInput, map));
         }
-
-        SetMapState(inputStates.find(name)->second, isDown);
     }
-}
 
-int InputManager::GetMapState(std::map<Input, int> &map, Input inputState) {
-    return map.find(inputState)->second;
-}
+    void InputManager::Poll() {
+        PollMouse();
+        PollInputs();
+    }
 
-void InputManager::SetMapState(std::map<Input, int> &map, int isDown) {
-    auto down = map.find(Input::Down);
-    auto pressed = map.find(Input::Pressed);
-    auto released = map.find(Input::Released);
+    void InputManager::PollMouse() {
+        // mouse pos
+        int mouseX, mouseY;
+        const Uint32 mouseInputs = SDL_GetMouseState(&mouseX, &mouseY);
+        SDL_RenderWindowToLogical(g_Engine->GetRenderer(), mouseX, mouseY, &mousePosition.x, &mousePosition.y);
 
-    int downPrevious = down->second;
-    map[Input::Released] = ((downPrevious) && (!isDown));
-    map[Input::Pressed] = ((!downPrevious) && (isDown));
-    map[Input::Down] = isDown;
-}
+        // set map
+        SetMapState(mouseStates.find(structs::MouseButton::LeftClick)->second, (mouseInputs & SDL_BUTTON_LMASK));
+        SetMapState(mouseStates.find(structs::MouseButton::MiddleClick)->second, (mouseInputs & SDL_BUTTON_MMASK));
+        SetMapState(mouseStates.find(structs::MouseButton::RightClick)->second, (mouseInputs & SDL_BUTTON_RMASK));
+    }
 
-int InputManager::GetMouseDown(MouseButton mouseInput) {
-    auto state = mouseStates.find(mouseInput)->second;
-    return GetMapState(state, Input::Down);
-}
+    void InputManager::PollInputs() {
+        const Uint8 *keyInputs = const_cast <Uint8 *> (SDL_GetKeyboardState(nullptr));
+        for (auto &pair: keyMap)
+        {
+            std::string name = pair.first;
+            std::vector<int> scanCodes = pair.second;
 
-int InputManager::GetMousePressed(MouseButton mouseInput) {
-    auto state = mouseStates.find(mouseInput)->second;
-    return GetMapState(state, Input::Pressed);
-}
+            int isDown = 0;
+            for (int scanCode: scanCodes)
+            {
+                if (keyInputs[scanCode] != 0)
+                {
+                    isDown = 1;
+                    break;
+                }
+            }
 
-int InputManager::GetMouseReleased(MouseButton mouseInput) {
-    auto state = mouseStates.find(mouseInput)->second;
-    return GetMapState(state, Input::Released);
-}
+            SetMapState(inputStates.find(name)->second, isDown);
+        }
+    }
 
-Vector2 InputManager::GetMousePosition() {
-    return mousePosition;
-}
+    int InputManager::GetMapState(std::map<structs::InputState, int> &map, structs::InputState inputState) {
+        return map.find(inputState)->second;
+    }
 
-void InputManager::DefineInput(const std::string &inputName) {
-    std::vector<int> keysVector;
-    keyMap.insert(std::pair<std::string, std::vector<int>>(inputName, keysVector));
+    void InputManager::SetMapState(std::map<structs::InputState, int> &map, int isDown) {
+        auto down = map.find(structs::InputState::Down);
+        auto pressed = map.find(structs::InputState::Pressed);
+        auto released = map.find(structs::InputState::Released);
 
-    std::map<Input, int> map;
-    map[Input::Down] = 0;
-    map[Input::Pressed] = 0;
-    map[Input::Released] = 0;
+        int downPrevious = down->second;
+        map[structs::InputState::Released] = ((downPrevious) && (!isDown));
+        map[structs::InputState::Pressed] = ((!downPrevious) && (isDown));
+        map[structs::InputState::Down] = isDown;
+    }
 
-    inputStates.insert(std::pair<std::string, std::map<Input, int>>(inputName, map));
-}
+    int InputManager::GetMouseDown(structs::MouseButton mouseInput) {
+        auto state = mouseStates.find(mouseInput)->second;
+        return GetMapState(state, structs::InputState::Down);
+    }
 
-void InputManager::TrackInput(const std::string &inputName, int scanCode) {
-    auto keys = keyMap.find(inputName);
-    std::vector<int> &scanCodes = keys->second;
-    scanCodes.emplace_back(scanCode);
-}
+    int InputManager::GetMousePressed(structs::MouseButton mouseInput) {
+        auto state = mouseStates.find(mouseInput)->second;
+        return GetMapState(state, structs::InputState::Pressed);
+    }
 
-int InputManager::GetInputDown(const std::string &inputName) {
-    auto state = inputStates.find(inputName)->second;
-    return GetMapState(state, Input::Down);
-}
+    int InputManager::GetMouseReleased(structs::MouseButton mouseInput) {
+        auto state = mouseStates.find(mouseInput)->second;
+        return GetMapState(state, structs::InputState::Released);
+    }
 
-int InputManager::GetInputPressed(const std::string &inputName) {
-    auto state = inputStates.find(inputName)->second;
-    return GetMapState(state, Input::Pressed);
-}
+    structs::Vector2 InputManager::GetMousePosition() {
+        return mousePosition;
+    }
 
-int InputManager::GetInputReleased(const std::string &inputName) {
-    auto state = inputStates.find(inputName)->second;
-    return GetMapState(state, Input::Released);
+    void InputManager::DefineInput(const std::string &inputName) {
+        std::vector<int> keysVector;
+        keyMap.insert(std::pair<std::string, std::vector<int>>(inputName, keysVector));
+
+        std::map<structs::InputState, int> map;
+        map[structs::InputState::Down] = 0;
+        map[structs::InputState::Pressed] = 0;
+        map[structs::InputState::Released] = 0;
+
+        inputStates.insert(std::pair<std::string, std::map<structs::InputState, int>>(inputName, map));
+    }
+
+    void InputManager::TrackInput(const std::string &inputName, int scanCode) {
+        auto keys = keyMap.find(inputName);
+        std::vector<int> &scanCodes = keys->second;
+        scanCodes.emplace_back(scanCode);
+    }
+
+    int InputManager::GetInputDown(const std::string &inputName) {
+        auto state = inputStates.find(inputName)->second;
+        return GetMapState(state, structs::InputState::Down);
+    }
+
+    int InputManager::GetInputPressed(const std::string &inputName) {
+        auto state = inputStates.find(inputName)->second;
+        return GetMapState(state, structs::InputState::Pressed);
+    }
+
+    int InputManager::GetInputReleased(const std::string &inputName) {
+        auto state = inputStates.find(inputName)->second;
+        return GetMapState(state, structs::InputState::Released);
+    }
 }

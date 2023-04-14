@@ -3,9 +3,11 @@
 
 #include "components/component.h"
 
-class SpriteRendererComponent : Component {
-private:
+namespace components {
+    class SpriteRendererComponent : Component {
+    private:
 
-};
+    };
+}
 
 #endif //SENGINE_SPRITE_RENDERER_COMPONENT_H

@@ -6,49 +6,41 @@
 #include <glad.h>
 
 #include "assets/asset.h"
+#include "structs/shaders/shader_program_data.h"
+#include "structs/shaders/shader_uniform_data.h"
 
-struct ShaderData {
-    char vertexShader[4096];
-    char fragmentShader[4096];
-    bool encoded = false;
-};
+namespace assets {
+    class Shader : public Asset {
+    public:
+        Shader();
 
-struct UniformData {
-    GLuint type;
-    GLint location;
-};
+        void Save(const std::string &filePath) override;
+        void Load(const std::string &filePath) override;
 
-class Shader : public Asset {
-public:
+        GLuint GetProgram() const;
+        bool ProgramExists() const;
 
-    Shader();
-    void Save(const std::string &filePath) override;
-    void Load(const std::string &filePath) override;
+        void SetUniform(const std::string &name, float value);
+        void SetUniform(const std::string &name, glm::vec2 value);
+        void SetUniform(const std::string &name, glm::vec3 value);
+        void SetUniform(const std::string &name, glm::vec4 value);
+        void SetUniform(const std::string &name, glm::mat4 value);
 
-    GLuint GetProgram() const;
-    bool ProgramExists() const;
+        structs::ShaderProgramData shaderData;
+    private:
+        static structs::AssetInfo assetInfo;
+        static GLuint Compile(GLuint shaderType, const char *source);
 
-    void SetUniform(const std::string &name, float value);
-    void SetUniform(const std::string &name, glm::vec2 value);
-    void SetUniform(const std::string &name, glm::vec3 value);
-    void SetUniform(const std::string &name, glm::vec4 value);
-    void SetUniform(const std::string &name, glm::mat4 value);
+        GLuint program;
+        std::map<std::string, structs::ShaderUniformData> uniformData;
 
-    ShaderData shaderData;
-private:
-    static AssetInfo assetInfo;
-    static GLuint Compile(GLuint shaderType, const char *source);
+        structs::ShaderProgramData GenerateEncodedShaderData();
+        structs::ShaderUniformData GetUniformData(const std::string &name);
 
-    ShaderData GenerateEncodedShaderData();
-
-    std::map<std::string, UniformData> uniformData;
-    UniformData GetUniformData(const std::string &name);
-
-    GLuint program;
-    void CreateProgram();
-    void DeleteProgram();
-
-    void FetchUniforms();
-};
+        void CreateProgram();
+        void DeleteProgram();
+        void FetchUniforms();
+    };
+}
 
 #endif //SENGINE_TEST1_SHADER_H

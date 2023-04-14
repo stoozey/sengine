@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
-project(sengine VERSION 1.0.0 DESCRIPTION "taking a mean shit right now!")
-
 set(CMAKE_CXX_STANDARD 20)
+project(sengine VERSION 1.0.0 DESCRIPTION "taking a mean shit right now!")
 
 include(GNUInstallDirs)
 
@@ -10,7 +9,6 @@ file(GLOB_RECURSE SENGINE_SRC_FILES "${PROJECT_SOURCE_DIR}/src/*.cpp" "${PROJECT
 file(GLOB_RECURSE SENGINE_INCLUDE_FILES "${PROJECT_SOURCE_DIR}/include/*.h")
 add_library(${PROJECT_NAME} SHARED ${SENGINE_SRC_FILES} ${SENGINE_INCLUDE_FILES})
 
-# datafiles
 target_include_directories(${PROJECT_NAME} PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>"
@@ -25,12 +23,11 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # packages
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
-#find_package(ASSIMP REQUIRED)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2IMAGE_INCLUDE_DIRS})
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${SDL2IMAGE_INCLUDE_DIRS})
 
-set(SENGINE_SDL_LINKER_FLAGS SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image) # ${ASSIMP_LIBRARIES}
+set(SENGINE_SDL_LINKER_FLAGS SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SENGINE_SDL_LINKER_FLAGS})
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libstdc++ -static-libgcc -lmingw32 ${SENGINE_SDL_LINKER_FLAGS} -mconsole)
@@ -41,6 +38,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC thirdparty)
 target_link_libraries(${PROJECT_NAME} PUBLIC assimp)
 target_link_libraries(${PROJECT_NAME} PUBLIC glm)
 target_link_libraries(${PROJECT_NAME} PUBLIC stb)
+target_link_libraries(${PROJECT_NAME} PUBLIC glad)
 
 # build commands
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

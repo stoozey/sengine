@@ -7,53 +7,45 @@
 #include <utility>
 #include <string>
 
-#include "datatypes/vector2.h"
+#include "structs/vector2.h"
+#include "structs/input/mouse_button.h"
+#include "structs/input/input_state.h"
 
-enum class MouseButton {
-    LeftClick,
-    MiddleClick,
-    RightClick,
-    None,
-};
+namespace managers {
+    class InputManager {
+    public:
+        InputManager();
 
-enum class Input {
-    Pressed,
-    Down,
-    Released,
-};
+        void Poll();
 
-class InputManager {
-public:
-    InputManager();
+        void DefineInput(const std::string &inputName);
+        void TrackInput(const std::string &inputName, int scanCode);
 
-    void Poll();
+        structs::Vector2 GetMousePosition();
 
-    void DefineInput(const std::string &inputName);
-    void TrackInput(const std::string &inputName, int scanCode);
+        int GetMouseDown(structs::MouseButton mouseInput);
+        int GetMousePressed(structs::MouseButton mouseInput);
+        int GetMouseReleased(structs::MouseButton mouseInput);
 
-    int GetMouseDown(MouseButton mouseInput);
-    int GetMousePressed(MouseButton mouseInput);
-    int GetMouseReleased(MouseButton mouseInput);
-    Vector2 GetMousePosition();
+        int GetInputDown(const std::string &inputName);
+        int GetInputPressed(const std::string &inputName);
+        int GetInputReleased(const std::string &inputName);
+    private:
+        std::map<std::string, std::map<structs::InputState, int>> inputStates;
+        std::map<structs::MouseButton, std::map<structs::InputState, int>> mouseStates;
 
-    int GetInputDown(const std::string &inputName);
-    int GetInputPressed(const std::string &inputName);
-    int GetInputReleased(const std::string &inputName);
-private:
-    void PollMouse();
-    void PollInputs();
+        std::map<std::string, std::vector<int>> keyMap;
 
-    void SetMapState(std::map<Input, int> &map, int down);
-    int GetMapState(std::map<Input, int> &map, Input inputState);
+        structs::Vector2 mousePosition;
 
-    std::map<std::string, std::map<Input, int>> inputStates;
-    std::map<MouseButton, std::map<Input, int>> mouseStates;
+        void PollMouse();
+        void PollInputs();
 
-    std::map<std::string, std::vector<int>> keyMap;
+        void SetMapState(std::map<structs::InputState, int> &map, int down);
+        int GetMapState(std::map<structs::InputState, int> &map, structs::InputState inputState);
+    };
+}
 
-    Vector2 mousePosition;
-};
-
-extern InputManager *g_InputManager;
+extern managers::InputManager *g_InputManager;
 
 #endif //SENGINE_INPUT_MANAGER_H

@@ -4,19 +4,22 @@
 #include <memory>
 
 #include "assets/asset.h"
-#include "datatypes/asset_path.h"
+#include "structs/assets/asset_path.h"
 
-class AssetManager {
-public:
-    static Asset *LoadAsset(AssetPath& assetPath);
-    static void UnLoadAsset(AssetPath& assetPath);
+namespace managers {
+    class AssetManager {
+    public:
+        static assets::Asset *LoadAsset(structs::AssetPath &assetPath);
+        static void UnLoadAsset(structs::AssetPath &assetPath);
 
-    static Asset *GetAsset(AssetPath& assetPath);
-    static bool AssetExists(AssetPath& assetPath);
-private:
-    static std::map<std::string, Asset*> assets;
-};
+        static assets::Asset *GetAsset(structs::AssetPath &assetPath);
+        static bool AssetExists(structs::AssetPath &assetPath);
+    private:
+        static std::map<std::string, assets::Asset *> assets;
+        static std::map<structs::AssetType, assets::Asset *> defaultAssets;
+    };
+}
 
-//extern AssetManager *g_AssetManager;
+extern managers::AssetManager *g_AssetManager;
 
 #endif //SENGINE_ASSET_MANAGER_H

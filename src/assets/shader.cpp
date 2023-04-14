@@ -1,154 +1,161 @@
 #include <iostream>
+#include <base64.h>
 
 #include "assets/shader.h"
-#include "base64/base64.h"
+#include "structs/shaders/shader_program_data.h"
+#include "structs/assets/asset_info.h"
+#include "structs/assets/asset_type.h"
 
-AssetInfo Shader::assetInfo{ AssetType::Shader };
+namespace assets {
+    structs::AssetInfo Shader::assetInfo{structs::AssetType::Shader};
 
-Shader::Shader() {
-    shaderData = { "", "" };
-    program = -1;
-}
-
-void Shader::Save(const std::string &filePath) {
-    SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "w");
-    WriteAssetInfo(file, assetInfo);
-
-    ShaderData data = ((shaderData.encoded) ? GenerateEncodedShaderData() : shaderData);
-    SDL_RWwrite(file, reinterpret_cast<char*>(&data), sizeof(ShaderData), 1);
-    SDL_RWclose(file);
-}
-
-void Shader::Load(const std::string &filePath) {
-    SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "r");
-    ReadAssetInfo(file);
-
-    ShaderData encodedData;
-    SDL_RWread(file, reinterpret_cast<char*>(&encodedData), sizeof(ShaderData), 1);
-    SDL_RWclose(file);
-
-    std::string vertexShader, fragmentShader;
-    if (shaderData.encoded) {
-        macaron::Base64::Decode(encodedData.vertexShader, vertexShader);
-        macaron::Base64::Decode(encodedData.fragmentShader, fragmentShader);
-    } else {
-        vertexShader = encodedData.vertexShader;
-        fragmentShader = encodedData.fragmentShader;
+    Shader::Shader() {
+        shaderData = {"", ""};
+        program = -1;
     }
 
-    strcpy(shaderData.vertexShader, vertexShader.c_str());
-    strcpy(shaderData.fragmentShader, fragmentShader.c_str());
-    CreateProgram();
-}
+    void Shader::Save(const std::string &filePath) {
+        SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "w");
+        WriteAssetInfo(file, assetInfo);
 
-GLuint Shader::GetProgram() const {
-    return program;
-}
+        structs::ShaderProgramData data = ((shaderData.encoded) ? GenerateEncodedShaderData() : shaderData);
+        SDL_RWwrite(file, reinterpret_cast<char *>(&data), sizeof(structs::ShaderProgramData), 1);
+        SDL_RWclose(file);
+    }
 
-bool Shader::ProgramExists() const {
-    return (program > 0);
-}
+    void Shader::Load(const std::string &filePath) {
+        SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "r");
+        ReadAssetInfo(file);
 
-UniformData Shader::GetUniformData(const std::string &name) {
-    auto find = uniformData.find(name);
-    if (find == uniformData.end()) throw std::invalid_argument(name);
+        structs::ShaderProgramData encodedData;
+        SDL_RWread(file, reinterpret_cast<char *>(&encodedData), sizeof(structs::ShaderProgramData), 1);
+        SDL_RWclose(file);
 
-    return find->second;
-}
+        std::string vertexShader, fragmentShader;
+        if (shaderData.encoded)
+        {
+            macaron::Base64::Decode(encodedData.vertexShader, vertexShader);
+            macaron::Base64::Decode(encodedData.fragmentShader, fragmentShader);
+        } else
+        {
+            vertexShader = encodedData.vertexShader;
+            fragmentShader = encodedData.fragmentShader;
+        }
 
-void Shader::SetUniform(const std::string &name, float value) {
-    UniformData data = GetUniformData(name);
-    glUniform1f(data.location, value);
-}
+        strcpy(shaderData.vertexShader, vertexShader.c_str());
+        strcpy(shaderData.fragmentShader, fragmentShader.c_str());
+        CreateProgram();
+    }
 
-void Shader::SetUniform(const std::string &name, glm::vec2 value) {
-    UniformData data = GetUniformData(name);
-    glUniform2f(data.location, value.x, value.y);
-}
+    GLuint Shader::GetProgram() const {
+        return program;
+    }
 
-void Shader::SetUniform(const std::string &name, glm::vec3 value) {
-    UniformData data = GetUniformData(name);
-    glUniform3f(data.location, value.x, value.y, value.z);
-}
+    bool Shader::ProgramExists() const {
+        return (program > 0);
+    }
 
-void Shader::SetUniform(const std::string &name, glm::vec4 value) {
-    UniformData data = GetUniformData(name);
-    glUniform4f(data.location, value.x, value.y, value.z, value.w);
-}
+    structs::ShaderUniformData Shader::GetUniformData(const std::string &name) {
+        auto find = uniformData.find(name);
+        if (find == uniformData.end()) throw std::invalid_argument(name);
 
-void Shader::SetUniform(const std::string &name, glm::mat4 value) {
-    UniformData data = GetUniformData(name);
-    glUniformMatrix4fv(data.location, 1, GL_FALSE, &value[0][0]);
-}
+        return find->second;
+    }
 
-ShaderData Shader::GenerateEncodedShaderData() {
-    std::string vertexEncoded = macaron::Base64::Encode(shaderData.vertexShader);
-    std::string fragmentEncoded = macaron::Base64::Encode(shaderData.fragmentShader);
+    void Shader::SetUniform(const std::string &name, float value) {
+        structs::ShaderUniformData data = GetUniformData(name);
+        glUniform1f(data.location, value);
+    }
 
-    ShaderData data{ "", "" };
-    strcpy(data.vertexShader, vertexEncoded.c_str());
-    strcpy(data.fragmentShader, fragmentEncoded.c_str());
-    return data;
-}
+    void Shader::SetUniform(const std::string &name, glm::vec2 value) {
+        structs::ShaderUniformData data = GetUniformData(name);
+        glUniform2f(data.location, value.x, value.y);
+    }
 
-GLuint Shader::Compile(GLuint shaderType, const char *source) {
-    //if ((shaderType != GL_VERTEX_SHADER) && (shaderType != GL_FRAGMENT_SHADER)) return -1;
+    void Shader::SetUniform(const std::string &name, glm::vec3 value) {
+        structs::ShaderUniformData data = GetUniformData(name);
+        glUniform3f(data.location, value.x, value.y, value.z);
+    }
 
-    GLuint shaderObject = glCreateShader(shaderType);
-    glShaderSource(shaderObject, 1, &source, nullptr);
-    glCompileShader(shaderObject);
+    void Shader::SetUniform(const std::string &name, glm::vec4 value) {
+        structs::ShaderUniformData data = GetUniformData(name);
+        glUniform4f(data.location, value.x, value.y, value.z, value.w);
+    }
 
-    return shaderObject;
-}
+    void Shader::SetUniform(const std::string &name, glm::mat4 value) {
+        structs::ShaderUniformData data = GetUniformData(name);
+        glUniformMatrix4fv(data.location, 1, GL_FALSE, &value[0][0]);
+    }
 
-void Shader::CreateProgram() {
-    DeleteProgram();
+    structs::ShaderProgramData Shader::GenerateEncodedShaderData() {
+        std::string vertexEncoded = macaron::Base64::Encode(shaderData.vertexShader);
+        std::string fragmentEncoded = macaron::Base64::Encode(shaderData.fragmentShader);
 
-    program = glCreateProgram();
-    GLuint vertexShader = Compile(GL_VERTEX_SHADER, shaderData.vertexShader);
-    GLuint fragmentShader = Compile(GL_FRAGMENT_SHADER, shaderData.fragmentShader);
+        structs::ShaderProgramData data{"", ""};
+        strcpy(data.vertexShader, vertexEncoded.c_str());
+        strcpy(data.fragmentShader, fragmentEncoded.c_str());
+        return data;
+    }
 
-    glAttachShader(program, vertexShader);
-    glAttachShader(program, fragmentShader);
-    glLinkProgram(program);
+    GLuint Shader::Compile(GLuint shaderType, const char *source) {
+        //if ((shaderType != GL_VERTEX_SHADER) && (shaderType != GL_FRAGMENT_SHADER)) return -1;
 
-    glValidateProgram(program);
+        GLuint shaderObject = glCreateShader(shaderType);
+        glShaderSource(shaderObject, 1, &source, nullptr);
+        glCompileShader(shaderObject);
 
-    FetchUniforms();
-}
+        return shaderObject;
+    }
 
-void Shader::DeleteProgram() {
-    if (!ProgramExists()) return;
+    void Shader::CreateProgram() {
+        DeleteProgram();
 
-    glDeleteProgram(program);
-    program = -1;
+        program = glCreateProgram();
+        GLuint vertexShader = Compile(GL_VERTEX_SHADER, shaderData.vertexShader);
+        GLuint fragmentShader = Compile(GL_FRAGMENT_SHADER, shaderData.fragmentShader);
 
-    uniformData.clear();
-};
+        glAttachShader(program, vertexShader);
+        glAttachShader(program, fragmentShader);
+        glLinkProgram(program);
 
-void Shader::FetchUniforms() {
-    if (!ProgramExists()) return;
+        glValidateProgram(program);
 
-    GLint i;
-    GLint count;
+        FetchUniforms();
+    }
 
-    GLint size; // size of the variable
-    GLenum type; // type of the variable (float, vec3 or mat4, etc)
+    void Shader::DeleteProgram() {
+        if (!ProgramExists()) return;
 
-    const GLsizei bufSize = 16; // maximum name length
-    GLchar name[bufSize]; // variable name in GLSL
-    GLsizei length; // name length
+        glDeleteProgram(program);
+        program = -1;
 
-    glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &count);
+        uniformData.clear();
+    };
 
-    for (i = 0; i < count; i++)
-    {
-        glGetActiveUniform(program, (GLuint)i, bufSize, &length, &size, &type, name);
+    void Shader::FetchUniforms() {
+        if (!ProgramExists()) return;
 
-        GLint location = glGetUniformLocation(program, name);
-        UniformData data{ type, location };
-        uniformData.insert({name, data});
+        GLint i;
+        GLint count;
 
-        std::cout << name << " " << type << std::endl;
+        GLint size; // size of the variable
+        GLenum type; // type of the variable (float, vec3 or mat4, etc)
+
+        const GLsizei bufSize = 16; // maximum name length
+        GLchar name[bufSize]; // variable name in GLSL
+        GLsizei length; // name length
+
+        glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &count);
+
+        for (i = 0; i < count; i++)
+        {
+            glGetActiveUniform(program, (GLuint) i, bufSize, &length, &size, &type, name);
+
+            GLint location = glGetUniformLocation(program, name);
+            structs::ShaderUniformData data{ type, location };
+            uniformData.insert({name, data});
+
+            std::cout << name << " " << type << std::endl;
+        }
     }
 }

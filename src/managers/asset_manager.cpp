@@ -3,49 +3,64 @@
 #include "managers/asset_manager.h"
 #include "assets/sprite.h"
 #include "assets/shader.h"
+#include "assets/model.h"
+#include "structs/assets/asset_type.h"
+#include "structs/assets/asset_path.h"
 
-//AssetManager *g_AssetManager = new AssetManager();
+managers::AssetManager *g_AssetManager = new managers::AssetManager();
 
-std::map<std::string, Asset*> AssetManager::assets = std::map<std::string, Asset*>();
+namespace managers {
+    std::map<std::string, assets::Asset *> AssetManager::assets = std::map<std::string, assets::Asset*>();
 
-Asset *AssetManager::LoadAsset(AssetPath& assetPath) {
-    const std::string path = assetPath.GetFullPath();
-    Asset *asset = GetAsset(assetPath);
-    if ((std::filesystem::exists(path)) && (asset == nullptr)) {
-        switch (assetPath.assetType) {
-            case AssetType::Sprite: {
-                asset = new Sprite(nullptr);
-                break;
+    assets::Asset *AssetManager::LoadAsset(structs::AssetPath &assetPath) {
+        const std::string path = assetPath.GetFullPath();
+        assets::Asset *asset = GetAsset(assetPath);
+        if ((std::filesystem::exists(path)) && (asset == nullptr))
+        {
+            switch (assetPath.assetType)
+            {
+                case structs::AssetType::Sprite:
+                {
+                    asset = new assets::Sprite(nullptr);
+                    break;
+                }
+
+                case structs::AssetType::Shader:
+                {
+                    asset = new assets::Shader();
+                    break;
+                }
+
+                case structs::AssetType::Model:
+                {
+                    asset = new assets::Model();
+                    break;
+                }
             }
 
-            case AssetType::Shader: {
-                asset = new Shader();
-                break;
-            }
+            asset->Load(path);
+            assets.insert({path, asset});
         }
 
-        asset->Load(path);
-        assets.insert({path, asset});
+        return asset;
     }
 
-    return asset;
-}
+    void AssetManager::UnLoadAsset(structs::AssetPath &assetPath) {
+        const std::string path = assetPath.GetFullPath();
+        auto find = assets.find(path);
+        if (find == assets.end()) return;
 
-void AssetManager::UnLoadAsset(AssetPath& assetPath) {
-    const std::string path = assetPath.GetFullPath();
-    auto find = assets.find(path);
-    if (find == assets.end()) return;
+        assets.erase(find);
+        delete find->second;
+    }
 
-    assets.erase(find);
-    delete find->second;
-}
+    assets::Asset *AssetManager::GetAsset(structs::AssetPath &assetPath) {
+        const std::string path = assetPath.GetFullPath();
+        auto find = assets.find(path);
+        return ((find == assets.end()) ? nullptr : find->second);
+    }
 
-Asset *AssetManager::GetAsset(AssetPath& assetPath) {
-    const std::string path = assetPath.GetFullPath();
-    auto find = assets.find(path);
-    return ((find == assets.end()) ? nullptr : find->second);
-}
-
-bool AssetManager::AssetExists(AssetPath& assetPath) {
-    return (GetAsset(assetPath) != nullptr);
+    bool AssetManager::AssetExists(structs::AssetPath &assetPath) {
+        return (GetAsset(assetPath) != nullptr);
+    }
 }

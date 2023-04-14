@@ -1,33 +1,42 @@
 #include "loop_runners/entity_loop_runner.h"
+#include "core/entity.h"
 
-void EntityLoopRunner::AddEntity(const std::shared_ptr<Entity> &entity) {
-    entities.emplace_back(entity);
-}
-
-void EntityLoopRunner::Update(double deltaTime) {
-    for (auto &entity : entities) {
-        entity->PreUpdate(deltaTime);
+namespace loopRunners {
+    void EntityLoopRunner::AddEntity(std::shared_ptr<core::Entity> entity) {
+        entities.emplace_back(entity);
     }
 
-    for (auto &entity : entities) {
-        entity->Update(deltaTime);
+    void EntityLoopRunner::Update(double deltaTime) {
+        for (auto &entity: entities)
+        {
+            entity->PreUpdate(deltaTime);
+        }
+
+        for (auto &entity: entities)
+        {
+            entity->Update(deltaTime);
+        }
+
+        for (auto &entity: entities)
+        {
+            entity->PostUpdate(deltaTime);
+        }
     }
 
-    for (auto &entity : entities) {
-        entity->PostUpdate(deltaTime);
-    }
-}
+    void EntityLoopRunner::Render() {
+        for (auto &entity: entities)
+        {
+            entity->PreRender();
+        }
 
-void EntityLoopRunner::Render() {
-    for (auto &entity : entities) {
-        entity->PreRender();
-    }
+        for (auto &entity: entities)
+        {
+            entity->Render();
+        }
 
-    for (auto &entity : entities) {
-        entity->Render();
-    }
-
-    for (auto &entity : entities) {
-        entity->PostRender();
+        for (auto &entity: entities)
+        {
+            entity->PostRender();
+        }
     }
 }

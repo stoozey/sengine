@@ -1,21 +1,25 @@
 #include "assets/asset.h"
 
-void Asset::WriteAssetInfo(SDL_RWops *file, AssetInfo &assetInfo) {
-    SDL_RWwrite(file, reinterpret_cast<char*>(&assetInfo), sizeof(AssetInfo), 1);
-}
+namespace assets {
+    const size_t ASSET_INFO_SIZE = sizeof(structs::AssetInfo);
 
-void Asset::WriteAssetInfo(std::fstream &file, AssetInfo &assetInfo) {
-    file.write(reinterpret_cast<char*>(&assetInfo), sizeof(AssetInfo));
-}
+    void Asset::WriteAssetInfo(SDL_RWops *file, structs::AssetInfo &assetInfo) {
+        SDL_RWwrite(file, reinterpret_cast<char *>(&assetInfo), ASSET_INFO_SIZE, 1);
+    }
 
-AssetInfo Asset::ReadAssetInfo(SDL_RWops *file) {
-    AssetInfo assetInfo{ };
-    SDL_RWread(file, reinterpret_cast<char*>(&assetInfo), sizeof(AssetInfo), 1);
-    return assetInfo;
-}
+    void Asset::WriteAssetInfo(std::fstream &file, structs::AssetInfo &assetInfo) {
+        file.write(reinterpret_cast<char *>(&assetInfo), ASSET_INFO_SIZE);
+    }
 
-AssetInfo Asset::ReadAssetInfo(std::fstream &file) {
-    AssetInfo assetInfo{ };
-    file.read(reinterpret_cast<char*>(&assetInfo), sizeof(AssetInfo));
-    return assetInfo;
+    structs::AssetInfo Asset::ReadAssetInfo(SDL_RWops *file) {
+        structs::AssetInfo assetInfo{};
+        SDL_RWread(file, reinterpret_cast<char *>(&assetInfo), ASSET_INFO_SIZE, 1);
+        return assetInfo;
+    }
+
+    structs::AssetInfo Asset::ReadAssetInfo(std::fstream &file) {
+        structs::AssetInfo assetInfo{};
+        file.read(reinterpret_cast<char *>(&assetInfo), ASSET_INFO_SIZE);
+        return assetInfo;
+    }
 }
