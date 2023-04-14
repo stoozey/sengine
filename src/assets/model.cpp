@@ -38,7 +38,7 @@ namespace assets {
         ReadAssetInfo(file);
 
         short totalMeshes;
-        file.read(reinterpret_cast<char *>(&totalMeshes), sizeof(short));
+        file.read(reinterpret_cast<char*>(&totalMeshes), sizeof(short));
         std::cout << "totalMeshes " << totalMeshes << std::endl;
 
         for (int i = 0; i < totalMeshes; i++)

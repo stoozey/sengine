@@ -25,6 +25,10 @@ namespace structs {
                 case AssetType::Model:
                     pathPrefix += "model/";
                     break;
+
+                case AssetType::Texture:
+                    pathPrefix += "texture/";
+                    break;
             }
 
             return pathPrefix;

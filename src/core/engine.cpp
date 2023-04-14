@@ -15,6 +15,7 @@
 #include "managers/input_manager.h"
 #include "assets/shader.h"
 #include "assets/model.h"
+#include "assets/texture.h"
 #include "managers/asset_manager.h"
 
 core::Engine *g_Engine = new core::Engine();
@@ -170,49 +171,64 @@ namespace core {
         /// TEMP
 
 
-        assets::Model model;
-        model.Load("E:/testmodel1.asset");
-        std::cout << "yeahhhh" << std::endl;
+//        assets::Model model;
+//        model.Load("E:/testmodel1.asset");
+//        std::cout << "yeahhhh" << std::endl;
+//
+//        std::vector<GLfloat> vertexData{};
+//
+//        for (int o = 0; o < model.meshes.size(); o++)
+//        {
+//            std::cout << "mesh " << o << std::endl;
+//            structs::Mesh &mesh = model.meshes[0];
+//            std::cout << mesh.vertices.size() << std::endl;
+//            std::vector<GLfloat> &vertices = mesh.vertices;
+//            std::vector<GLfloat> &colours = mesh.colours;
+//            std::vector<GLfloat> &texCoords = mesh.texCoords;
+//            unsigned long long totalVertices = mesh.vertices.size();
+//            for (int i = 0; i < totalVertices; i += 3)
+//            {
+//                const int i1 = i;
+//                const int i2 = (i + 1);
+//                const int i3 = (i + 2);
+//
+//                if (vertexData.size() > i1)
+//                {
+//                    vertexData.push_back(vertices.at(i1));
+//                    vertexData.push_back(vertices.at(i2));
+//                    vertexData.push_back(vertices.at(i3));
+//                }
+//
+//                if (colours.size() > i1)
+//                {
+//                    vertexData.push_back(colours.at(i1));
+//                    vertexData.push_back(colours.at(i2));
+//                    vertexData.push_back(colours.at(i3));
+//                }
+//
+//                if (vertices.size() > i1)
+//                {
+//                    vertexData.push_back(texCoords.at(i1));
+//                    vertexData.push_back(texCoords.at(i2));
+//                    vertexData.push_back(texCoords.at(i3));
+//                }
+//            }
+//        }
 
-        std::vector<GLfloat> vertexData{};
-
-        for (int o = 0; o < model.meshes.size(); o++)
-        {
-            std::cout << "mesh " << o << std::endl;
-            structs::Mesh &mesh = model.meshes[0];
-            std::cout << mesh.vertices.size() << std::endl;
-            std::vector<GLfloat> &vertices = mesh.vertices;
-            std::vector<GLfloat> &colours = mesh.colours;
-            std::vector<GLfloat> &texCoords = mesh.texCoords;
-            unsigned long long totalVertices = mesh.vertices.size();
-            for (int i = 0; i < totalVertices; i += 3)
-            {
-                const int i1 = i;
-                const int i2 = (i + 1);
-                const int i3 = (i + 2);
-
-                if (vertexData.size() > i1)
-                {
-                    vertexData.push_back(vertices.at(i1));
-                    vertexData.push_back(vertices.at(i2));
-                    vertexData.push_back(vertices.at(i3));
-                }
-
-                if (colours.size() > i1)
-                {
-                    vertexData.push_back(colours.at(i1));
-                    vertexData.push_back(colours.at(i2));
-                    vertexData.push_back(colours.at(i3));
-                }
-
-                if (vertices.size() > i1)
-                {
-                    vertexData.push_back(texCoords.at(i1));
-                    vertexData.push_back(texCoords.at(i2));
-                    vertexData.push_back(texCoords.at(i3));
-                }
-            }
-        }
+        const std::vector<GLfloat> vertexData{
+                // 0
+                -0.5f, -0.5f, 0.0f, // left
+                0.0f, 0.0f,
+                // 1
+                0.5f, -0.5f, 0.0f, // right
+                1.0f, 0.0f,
+                // 2
+                -0.5f, 0.5f, 0.0f, // top left
+                0.0f, 1.0f,
+                // 3
+                0.5f, 0.5f, 0.0f, // top right
+                1.0f, 1.0f,
+        };
 
         GLuint vertexArrayObject = 0;
         glGenVertexArrays(1, &vertexArrayObject);
@@ -226,13 +242,27 @@ namespace core {
                      vertexData.data(),
                      GL_STATIC_DRAW);
 
+        // setup ibo
+        const std::vector<GLuint> indexBufferData {
+                2, 0, 1,
+                3, 2, 1
+        };
+
+        GLuint indexBufferObject = 0;
+        glGenBuffers(1, &indexBufferObject);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                     indexBufferData.size() * sizeof(GLuint),
+                     indexBufferData.data(),
+                     GL_STATIC_DRAW);
+
         // xyz
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0,
                               3,
                               GL_FLOAT,
                               GL_FALSE,
-                              (sizeof(GLfloat) * 6),
+                              (sizeof(GLfloat) * 5),
                               (void *) 0);
 //
 //    // rgb
@@ -247,10 +277,10 @@ namespace core {
         // texcoords
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1,
-                              3,
+                              2,
                               GL_FLOAT,
                               GL_FALSE,
-                              (sizeof(GLfloat) * 6),
+                              (sizeof(GLfloat) * 5),
                               (GLvoid *) (sizeof(GLfloat) * 3));
 
         // something!
@@ -274,21 +304,22 @@ namespace core {
 //    unsigned char *bytes = stbi_load_from_memory(
 //            reinterpret_cast<const stbi_uc *>(model.meshes[0].texture.textureData), (int)model.meshes[0].texture.textureDataSize, &imageWidth, &imageHeight, &channelsCount, 0);
 //
-//    GLuint texture;
-//    glGenTextures(1, &texture);
-//    glActiveTexture(GL_TEXTURE0);
-//    glBindTexture(GL_TEXTURE_2D, texture);
-//
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-//
-//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, bytes);
-//
-//    stbi_image_free(bytes);
-//    glBindTexture(GL_TEXTURE0, 0);
+        structs::AssetPath assetPath{ structs::AssetType::Texture, "test" };
+        assets::Texture *texture = dynamic_cast<assets::Texture*>(g_AssetManager->LoadAsset(assetPath));
+        GLuint textureId;
+        glGenTextures(1, &textureId);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width, texture->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data);
+
+        glBindTexture(GL_TEXTURE0, 0);
 
         /// TEMP
 
@@ -340,8 +371,7 @@ namespace core {
                 shader.SetUniform("u_modelMatrix", modelMatrix);
                 shader.SetUniform("u_projection", perspective);
 
-                std::cout << "drawing" << std::endl;
-                //GlCheck(glDrawElements(GL_TRIANGLES, model.meshes[0].vertices.size(), GL_UNSIGNED_INT, nullptr));
+                GlCheck(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
                 //uOffset.z += s;
 

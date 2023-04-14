@@ -4,6 +4,7 @@
 #include "assets/sprite.h"
 #include "assets/shader.h"
 #include "assets/model.h"
+#include "assets/texture.h"
 #include "structs/assets/asset_type.h"
 #include "structs/assets/asset_path.h"
 
@@ -34,6 +35,12 @@ namespace managers {
                 case structs::AssetType::Model:
                 {
                     asset = new assets::Model();
+                    break;
+                }
+
+                case structs::AssetType::Texture:
+                {
+                    asset = new assets::Texture();
                     break;
                 }
             }

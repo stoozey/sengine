@@ -2,6 +2,7 @@
 #define SENGINE_TEST1_TEXTURE1_H
 
 #include "assets/asset.h"
+#include "structs/assets/asset_info.h"
 
 namespace assets {
     class Texture : public Asset {
@@ -12,13 +13,15 @@ namespace assets {
         void Save(const std::string &filePath);
         void Load(const std::string &filePath);
         void LoadFromFile(const std::string &filePath);
-    private:
-        static structs::AssetInfo assetInfo;
 
         int width;
         int height;
-        size_t dataSize;
+        long long dataSize;
         unsigned char *data;
+    private:
+        static structs::AssetInfo assetInfo;
+
+        void Free();
     };
 }
 
