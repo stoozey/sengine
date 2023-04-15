@@ -2,8 +2,6 @@
 
 #include "managers/asset_manager.h"
 #include "assets/texture.h"
-#include "structs/assets/asset_type.h"
-#include "structs/assets/asset_path.h"
 
 managers::AssetManager *g_AssetManager = new managers::AssetManager();
 

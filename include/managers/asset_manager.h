@@ -8,7 +8,6 @@
 #include "assets/shader.h"
 #include "assets/model.h"
 #include "assets/texture.h"
-#include "structs/assets/asset_path.h"
 
 namespace managers {
     const std::string ASSET_DEFAULT_NAME = ".default";
