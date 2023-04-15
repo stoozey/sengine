@@ -1,7 +1,4 @@
-#include <filesystem>
-
 #include "managers/asset_manager.h"
-#include "assets/texture.h"
 
 managers::AssetManager *g_AssetManager = new managers::AssetManager();
 

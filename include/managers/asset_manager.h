@@ -2,6 +2,8 @@
 #define SENGINE_ASSET_MANAGER_H
 
 #include <memory>
+#include <filesystem>
+#include <spdlog/spdlog.h>
 
 #include "assets/asset.h"
 #include "assets/sprite.h"
@@ -29,8 +31,8 @@ namespace managers {
                 assets.insert({assetPath, asset});
             } else {
                 const std::string defaultAssetPath = GetAssetPath<T>(ASSET_DEFAULT_NAME);
-                std::cout << "not found, using default: " << defaultAssetPath << std::endl;
-                if (!std::filesystem::exists(defaultAssetPath)) throw std::invalid_argument(assetPath);
+                spdlog::warn("asset \"" + assetPath + "\" not found, using default");
+                if (!std::filesystem::exists(defaultAssetPath)) spdlog::critical("missing default asset \"" + defaultAssetPath + "\""); throw;
 
                 return LoadAsset<T>(ASSET_DEFAULT_NAME);
             }
