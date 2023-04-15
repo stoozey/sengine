@@ -43,8 +43,12 @@ target_link_libraries(${PROJECT_NAME} PUBLIC spdlog)
 
 # build commands
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rm -R
+        $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/resources)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${PROJECT_SOURCE_DIR}/internal-datafiles"
+        "${PROJECT_SOURCE_DIR}/datafiles"
         $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

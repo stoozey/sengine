@@ -12,4 +12,8 @@ Put this black magic in your project's CMakeLists.txt:
 ---
 
 ### Datafiles
-Create a folder in your project's root directory called `datafiles`. Inside that, make another folder called `assets`. All assets should be placed in their respective sub-folders inside the `assets` folder. The name of the folder is a non-plural name of the asset type (`texture`, `shader`, `model`, etc.).
+Datafiles are copied to the output directory upon build.
+
+Create a folder in your project's root directory called `datafiles`. Inside that, make another folder called `resources`.
+
+Assets should be stored in `datafiles > resources > assets`. All assets should be placed in their respective sub-folders. The folder is called the non-plural name of the asset type (`texture`, `shader`, `model`, etc.).

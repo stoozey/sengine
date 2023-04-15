@@ -13,7 +13,7 @@
 
 namespace managers {
     const std::string ASSET_DEFAULT_NAME = ".default";
-    const std::string ASSET_FILE_PREFIX = "assets/";
+    const std::string ASSET_FILE_PREFIX = "resources/assets/";
     const std::string ASSET_FILE_SUFFIX = ".asset";
 
     class AssetManager {
@@ -32,9 +32,9 @@ namespace managers {
             } else {
                 const std::string defaultAssetPath = GetAssetPath<T>(ASSET_DEFAULT_NAME);
                 spdlog::warn("asset \"" + assetPath + "\" not found, using default");
-                if (!std::filesystem::exists(defaultAssetPath)) spdlog::critical("missing default asset \"" + defaultAssetPath + "\""); throw;
+                if (!std::filesystem::exists(defaultAssetPath)) { spdlog::critical("missing default asset \"" + defaultAssetPath + "\""); throw; }
 
-                return LoadAsset<T>(ASSET_DEFAULT_NAME);
+                asset = LoadAsset<T>(ASSET_DEFAULT_NAME);
             }
 
             return asset;
