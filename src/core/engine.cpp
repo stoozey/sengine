@@ -295,8 +295,7 @@ namespace core {
 
         float totalTime = 0.0f;
 
-        glm::mat4 perspective = glm::perspective(glm::radians(90.0f), (float) windowWidth / (float) windowHeight, 0.1f,
-                                                 30.0f);
+        glm::mat4 perspective = glm::perspective(glm::radians(90.0f), (float) windowWidth / (float) windowHeight, 0.1f, 30.0f);
 
         std::cout << "yuhhh" << std::endl;
 //    int imageWidth, imageHeight, channelsCount;
@@ -304,7 +303,7 @@ namespace core {
 //    unsigned char *bytes = stbi_load_from_memory(
 //            reinterpret_cast<const stbi_uc *>(model.meshes[0].texture.textureData), (int)model.meshes[0].texture.textureDataSize, &imageWidth, &imageHeight, &channelsCount, 0);
 //
-        assets::Texture *texture = dynamic_cast<assets::Texture*>(g_AssetManager->LoadAsset({ structs::AssetType::Texture, "test" }));
+        assets::Texture *texture = g_AssetManager->LoadAsset<assets::Texture>("aaaa");
         //assets::Texture *texture = new assets::Texture();
         //texture->Load("E:\\Project Source\\CLion\\sengine-test1\\cmake-build-debug\\assets\\texture\\test.asset");
         //texture->Load("E:\\texture1.asset");

@@ -1,9 +1,6 @@
 #include <filesystem>
 
 #include "managers/asset_manager.h"
-#include "assets/sprite.h"
-#include "assets/shader.h"
-#include "assets/model.h"
 #include "assets/texture.h"
 #include "structs/assets/asset_type.h"
 #include "structs/assets/asset_path.h"
@@ -15,66 +12,23 @@ namespace managers {
         assets = std::map<std::string, assets::Asset*>();
     }
 
-    assets::Asset *AssetManager::LoadAsset(const structs::AssetPath &assetPath) {
-        const std::string path = assetPath.GetFullPath();
-        assets::Asset *asset = GetAsset(assetPath);
-        if ((std::filesystem::exists(path)) && (asset == nullptr))
-        {
-            switch (assetPath.assetType)
-            {
-                case structs::AssetType::Sprite:
-                {
-                    asset = new assets::Sprite(nullptr);
-                    break;
-                }
-
-                case structs::AssetType::Shader:
-                {
-                    asset = new assets::Shader();
-                    break;
-                }
-
-                case structs::AssetType::Model:
-                {
-                    asset = new assets::Model();
-                    break;
-                }
-
-                case structs::AssetType::Texture:
-                {
-                    asset = new assets::Texture();
-                    break;
-                }
-            }
-
-            std::cout << "loading from " << path << std::endl;
-            asset->Load(path);
-            assets.insert({path, asset});
-        }
-
-        return asset;
+    template<>
+    std::string AssetManager::GetAssetPath<assets::Sprite>(const std::string &assetName) {
+        return (ASSET_FILE_PREFIX  + "sprite/" + assetName + ASSET_FILE_PREFIX);
     }
 
-    void AssetManager::UnLoadAsset(const structs::AssetPath &assetPath) {
-        const std::string path = assetPath.GetFullPath();
-        auto find = assets.find(path);
-        if (find == assets.end()) return;
-
-        assets.erase(find);
-        delete find->second;
+    template<>
+    std::string AssetManager::GetAssetPath<assets::Shader>(const std::string &assetName) {
+        return (ASSET_FILE_PREFIX + "shader/" + assetName + ASSET_FILE_SUFFIX);
     }
 
-    assets::Asset *AssetManager::GetAsset(const structs::AssetPath &assetPath) {
-        const std::string path = assetPath.GetFullPath();
-        auto find = assets.find(path);
-        return ((find == assets.end()) ? nullptr : find->second);
+    template<>
+    std::string AssetManager::GetAssetPath<assets::Model>(const std::string &assetName) {
+        return (ASSET_FILE_PREFIX + "model/" + assetName + ASSET_FILE_SUFFIX);
     }
 
-    bool AssetManager::AssetExists(const structs::AssetPath &assetPath) {
-        return (GetAsset(assetPath) != nullptr);
+    template<>
+    std::string AssetManager::GetAssetPath<assets::Texture>(const std::string &assetName) {
+        return (ASSET_FILE_PREFIX + "texture/" + assetName + ASSET_FILE_SUFFIX);
     }
-
-    assets::Asset *AssetManager::GetDefaultAsset(structs::AssetType assetType) {
-        return LoadAsset({ assetType, ".default" });
-    };
 }

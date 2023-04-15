@@ -5,5 +5,6 @@ add_subdirectory(glm)
 add_subdirectory(stb)
 add_subdirectory(assimp)
 add_subdirectory(glad)
+add_subdirectory(plog)
 
 target_include_directories(${PROJECT_NAME} PUBLIC KHR base64)
