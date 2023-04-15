@@ -2,13 +2,18 @@
 #define SENGINE_ASSET_PATH_H
 
 #include <string>
+#include <filesystem>
 
 #include "structs/assets/asset_type.h"
 
 namespace structs {
     struct AssetPath {
-        const AssetType assetType;
-        const std::string &path;
+        AssetType assetType;
+        const char *path;
+
+        const std::string GetPath() const {
+            return std::string(path);
+        }
 
         [[nodiscard]] std::string GetPathPrefix() const {
             std::string pathPrefix = "assets/";
@@ -34,7 +39,7 @@ namespace structs {
             return pathPrefix;
         }
 
-        std::string GetFullPath() {
+        std::string GetFullPath() const {
             std::string prefix = GetPathPrefix();
             return (prefix + path + ".asset");
         }

@@ -9,14 +9,18 @@
 namespace managers {
     class AssetManager {
     public:
-        static assets::Asset *LoadAsset(structs::AssetPath &assetPath);
-        static void UnLoadAsset(structs::AssetPath &assetPath);
+        AssetManager();
 
-        static assets::Asset *GetAsset(structs::AssetPath &assetPath);
-        static bool AssetExists(structs::AssetPath &assetPath);
+        assets::Asset *LoadAsset(const structs::AssetPath &assetPath);
+        void UnLoadAsset(const structs::AssetPath &assetPath);
+
+        assets::Asset *GetAsset(const structs::AssetPath &assetPath);
+        bool AssetExists(const structs::AssetPath &assetPath);
+
+        assets::Asset *GetDefaultAsset(structs::AssetType assetType);
     private:
-        static std::map<std::string, assets::Asset *> assets;
-        static std::map<structs::AssetType, assets::Asset *> defaultAssets;
+        std::map<std::string, assets::Asset*> assets;
+        std::map<structs::AssetType, assets::Asset*> defaultAssets;
     };
 }
 

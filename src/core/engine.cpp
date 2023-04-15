@@ -304,8 +304,10 @@ namespace core {
 //    unsigned char *bytes = stbi_load_from_memory(
 //            reinterpret_cast<const stbi_uc *>(model.meshes[0].texture.textureData), (int)model.meshes[0].texture.textureDataSize, &imageWidth, &imageHeight, &channelsCount, 0);
 //
-        structs::AssetPath assetPath{ structs::AssetType::Texture, "test" };
-        assets::Texture *texture = dynamic_cast<assets::Texture*>(g_AssetManager->LoadAsset(assetPath));
+        assets::Texture *texture = dynamic_cast<assets::Texture*>(g_AssetManager->LoadAsset({ structs::AssetType::Texture, "test" }));
+        //assets::Texture *texture = new assets::Texture();
+        //texture->Load("E:\\Project Source\\CLion\\sengine-test1\\cmake-build-debug\\assets\\texture\\test.asset");
+        //texture->Load("E:\\texture1.asset");
         GLuint textureId;
         glGenTextures(1, &textureId);
         glActiveTexture(GL_TEXTURE0);
@@ -360,7 +362,7 @@ namespace core {
 
                 glBindVertexArray(vertexArrayObject);
                 glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-                //glBindTexture(GL_TEXTURE_2D, texture);
+                glBindTexture(GL_TEXTURE_2D, textureId);
 
                 glUseProgram(shader.GetProgram());
                 glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.5 + sin(totalTime), 1.0f));

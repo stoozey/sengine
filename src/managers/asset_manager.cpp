@@ -11,9 +11,11 @@
 managers::AssetManager *g_AssetManager = new managers::AssetManager();
 
 namespace managers {
-    std::map<std::string, assets::Asset *> AssetManager::assets = std::map<std::string, assets::Asset*>();
+    AssetManager::AssetManager() {
+        assets = std::map<std::string, assets::Asset*>();
+    }
 
-    assets::Asset *AssetManager::LoadAsset(structs::AssetPath &assetPath) {
+    assets::Asset *AssetManager::LoadAsset(const structs::AssetPath &assetPath) {
         const std::string path = assetPath.GetFullPath();
         assets::Asset *asset = GetAsset(assetPath);
         if ((std::filesystem::exists(path)) && (asset == nullptr))
@@ -45,6 +47,7 @@ namespace managers {
                 }
             }
 
+            std::cout << "loading from " << path << std::endl;
             asset->Load(path);
             assets.insert({path, asset});
         }
@@ -52,7 +55,7 @@ namespace managers {
         return asset;
     }
 
-    void AssetManager::UnLoadAsset(structs::AssetPath &assetPath) {
+    void AssetManager::UnLoadAsset(const structs::AssetPath &assetPath) {
         const std::string path = assetPath.GetFullPath();
         auto find = assets.find(path);
         if (find == assets.end()) return;
@@ -61,13 +64,17 @@ namespace managers {
         delete find->second;
     }
 
-    assets::Asset *AssetManager::GetAsset(structs::AssetPath &assetPath) {
+    assets::Asset *AssetManager::GetAsset(const structs::AssetPath &assetPath) {
         const std::string path = assetPath.GetFullPath();
         auto find = assets.find(path);
         return ((find == assets.end()) ? nullptr : find->second);
     }
 
-    bool AssetManager::AssetExists(structs::AssetPath &assetPath) {
+    bool AssetManager::AssetExists(const structs::AssetPath &assetPath) {
         return (GetAsset(assetPath) != nullptr);
     }
+
+    assets::Asset *AssetManager::GetDefaultAsset(structs::AssetType assetType) {
+        return LoadAsset({ assetType, ".default" });
+    };
 }
