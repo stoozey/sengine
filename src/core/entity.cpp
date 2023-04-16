@@ -1,4 +1,4 @@
-#include "core/entity.h"
+#include "core/entity.hpp"
 
 namespace core {
     Entity::Entity() {

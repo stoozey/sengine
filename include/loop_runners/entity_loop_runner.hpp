@@ -5,8 +5,8 @@
 #include <vector>
 #include <memory>
 
-#include "loop_runners/loop_runner.h"
-#include "core/entity.h"
+#include "loop_runners/loop_runner.hpp"
+#include "core/entity.hpp"
 
 namespace loopRunners {
     class EntityLoopRunner : public LoopRunner {

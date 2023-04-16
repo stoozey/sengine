@@ -7,10 +7,10 @@
 #include <fstream>
 #include <SDL.h>
 
-#include "structs/assets/asset_info.h"
-#include "structs/assets/asset_type.h"
-#include "structs/mesh.h"
-#include "structs/texture.h"
+#include "structs/assets/asset_info.hpp"
+#include "structs/assets/asset_type.hpp"
+#include "structs/mesh.hpp"
+#include "structs/texture.hpp"
 
 namespace assets {
     class Asset {

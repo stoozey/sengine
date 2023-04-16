@@ -6,12 +6,12 @@
 #include <stb.h>
 #include <assimp/Importer.hpp>
 
-#include "core/engine.h"
-#include "structs/clock.h"
-#include "managers/input_manager.h"
-#include "assets/shader.h"
-#include "assets/texture.h"
-#include "managers/asset_manager.h"
+#include "core/engine.hpp"
+#include "structs/clock.hpp"
+#include "managers/input_manager.hpp"
+#include "assets/shader.hpp"
+#include "assets/texture.hpp"
+#include "managers/asset_manager.hpp"
 
 core::Engine *g_Engine = new core::Engine();
 

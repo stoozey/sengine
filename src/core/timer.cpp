@@ -1,6 +1,6 @@
 #include <utility>
 
-#include "core/timer.h"
+#include "core/timer.hpp"
 
 namespace core {
     void Timer::SetTriggerInterval(int triggerIntervalMilliseconds, std::function<void()> onTrigger) {

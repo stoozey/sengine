@@ -7,8 +7,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "assets/asset.h"
-#include "structs/mesh.h"
+#include "assets/asset.hpp"
+#include "structs/mesh.hpp"
 
 namespace assets {
     class Model : public Asset {

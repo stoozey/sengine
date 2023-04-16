@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "assets/sprite.h"
-#include "structs/assets/asset_info.h"
-#include "structs/assets/asset_type.h"
-#include "core/engine.h"
+#include "assets/sprite.hpp"
+#include "structs/assets/asset_info.hpp"
+#include "structs/assets/asset_type.hpp"
+#include "core/engine.hpp"
 
 namespace assets {
     structs::AssetInfo Sprite::assetInfo{structs::AssetType::Sprite};

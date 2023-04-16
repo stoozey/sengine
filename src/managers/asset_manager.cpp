@@ -1,4 +1,4 @@
-#include "managers/asset_manager.h"
+#include "managers/asset_manager.hpp"
 
 managers::AssetManager *g_AssetManager = new managers::AssetManager();
 

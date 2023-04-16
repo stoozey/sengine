@@ -1,4 +1,4 @@
-#include "loop_runners/entity_loop_runner.h"
+#include "loop_runners/entity_loop_runner.hpp"
 
 namespace loopRunners {
     void EntityLoopRunner::Update(double deltaTime) {

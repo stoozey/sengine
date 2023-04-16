@@ -5,9 +5,9 @@
 #include <map>
 #include <glad.h>
 
-#include "assets/asset.h"
-#include "structs/shaders/shader_program_data.h"
-#include "structs/shaders/shader_uniform_data.h"
+#include "assets/asset.hpp"
+#include "structs/shaders/shader_program_data.hpp"
+#include "structs/shaders/shader_uniform_data.hpp"
 
 namespace assets {
     class Shader : public Asset {

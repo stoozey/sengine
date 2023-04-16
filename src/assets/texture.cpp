@@ -2,9 +2,9 @@
 #include <filesystem>
 #include <iostream>
 
-#include "assets/texture.h"
-#include "structs/assets/asset_info.h"
-#include "structs/assets/asset_type.h"
+#include "assets/texture.hpp"
+#include "structs/assets/asset_info.hpp"
+#include "structs/assets/asset_type.hpp"
 
 namespace assets {
     structs::AssetInfo Texture::assetInfo{ structs::AssetType::Texture };

@@ -1,4 +1,4 @@
-#include "assets/asset.h"
+#include "assets/asset.hpp"
 
 namespace assets {
     const size_t ASSET_INFO_SIZE = sizeof(structs::AssetInfo);

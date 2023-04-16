@@ -3,7 +3,7 @@
 
 #include <functional>
 
-#include "structs/clock.h"
+#include "structs/clock.hpp"
 
 namespace core {
     class Timer {

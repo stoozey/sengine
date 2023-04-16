@@ -2,7 +2,7 @@
 #include <iostream>
 #include <glad.h>
 
-#include "assets/model.h"
+#include "assets/model.hpp"
 
 namespace assets {
     structs::AssetInfo Model::assetInfo = structs::AssetInfo{ structs::AssetType::Model };

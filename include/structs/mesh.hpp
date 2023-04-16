@@ -5,7 +5,7 @@
 #include <glad.h>
 #include <iostream>
 
-#include "structs/texture.h"
+#include "structs/texture.hpp"
 
 namespace structs {
     struct Mesh {

@@ -1,10 +1,10 @@
 #include <iostream>
 #include <base64.h>
 
-#include "assets/shader.h"
-#include "structs/shaders/shader_program_data.h"
-#include "structs/assets/asset_info.h"
-#include "structs/assets/asset_type.h"
+#include "assets/shader.hpp"
+#include "structs/shaders/shader_program_data.hpp"
+#include "structs/assets/asset_info.hpp"
+#include "structs/assets/asset_type.hpp"
 
 namespace assets {
     structs::AssetInfo Shader::assetInfo{structs::AssetType::Shader};

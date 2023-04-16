@@ -1,8 +1,8 @@
 #ifndef SENGINE_TEST1_TEXTURE1_H
 #define SENGINE_TEST1_TEXTURE1_H
 
-#include "assets/asset.h"
-#include "structs/assets/asset_info.h"
+#include "assets/asset.hpp"
+#include "structs/assets/asset_info.hpp"
 
 namespace assets {
     class Texture : public Asset {

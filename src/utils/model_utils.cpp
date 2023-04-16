@@ -2,10 +2,10 @@
 #include <filesystem>
 #include <glad.h>
 
-#include "assets/model.h"
-#include "structs/texture.h"
-#include "utils/model_util.h"
-#include "utils/file_util.h"
+#include "assets/model.hpp"
+#include "structs/texture.hpp"
+#include "utils/model_util.hpp"
+#include "utils/file_util.hpp"
 
 namespace utils {
     const int CHANNEL_INDEX = 0;

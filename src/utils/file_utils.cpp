@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "utils/file_util.h"
+#include "utils/file_util.hpp"
 
 namespace utils {
     size_t FileReadAllBytes(const std::string &filePath, char **out) {

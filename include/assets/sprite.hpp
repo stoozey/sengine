@@ -4,8 +4,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "assets/asset.h"
-#include "structs/vector2.h"
+#include "assets/asset.hpp"
+#include "structs/vector2.hpp"
 
 namespace assets {
     class Sprite : public Asset {

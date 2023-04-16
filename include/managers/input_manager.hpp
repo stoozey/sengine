@@ -7,9 +7,9 @@
 #include <utility>
 #include <string>
 
-#include "structs/vector2.h"
-#include "structs/input/mouse_button.h"
-#include "structs/input/input_state.h"
+#include "structs/vector2.hpp"
+#include "structs/input/mouse_button.hpp"
+#include "structs/input/input_state.hpp"
 
 namespace managers {
     class InputManager {

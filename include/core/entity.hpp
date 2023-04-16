@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "structs/vector3.h"
-#include "components/component.h"
+#include "structs/vector3.hpp"
+#include "components/component.hpp"
 
 namespace core {
     class Entity {

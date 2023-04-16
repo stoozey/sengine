@@ -5,9 +5,9 @@
 #include <list>
 #include <memory>
 
-#include "loop_runners/loop_runner.h"
-#include "loop_runners/entity_loop_runner.h"
-#include "structs/loop_runners/loop_runner_type.h"
+#include "loop_runners/loop_runner.hpp"
+#include "loop_runners/entity_loop_runner.hpp"
+#include "structs/loop_runners/loop_runner_type.hpp"
 
 namespace core {
     class Engine {

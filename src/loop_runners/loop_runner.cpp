@@ -1,5 +1,5 @@
-#include "loop_runners/loop_runner.h"
-#include "structs/loop_runners/loop_runner_type.h"
+#include "loop_runners/loop_runner.hpp"
+#include "structs/loop_runners/loop_runner_type.hpp"
 
 namespace loopRunners {
     structs::LoopRunnerType LoopRunner::GetLoopRunnerType() {

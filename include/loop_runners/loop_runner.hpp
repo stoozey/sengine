@@ -1,7 +1,7 @@
 #ifndef SENGINE_LOOP_RUNNER_H
 #define SENGINE_LOOP_RUNNER_H
 
-#include "structs/loop_runners/loop_runner_type.h"
+#include "structs/loop_runners/loop_runner_type.hpp"
 
 namespace loopRunners {
     class LoopRunner {

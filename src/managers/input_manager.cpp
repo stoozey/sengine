@@ -1,7 +1,7 @@
-#include "managers/input_manager.h"
-#include "core/engine.h"
-#include "structs/input/mouse_button.h"
-#include "structs/input/input_state.h"
+#include "managers/input_manager.hpp"
+#include "core/engine.hpp"
+#include "structs/input/mouse_button.hpp"
+#include "structs/input/input_state.hpp"
 
 managers::InputManager *g_InputManager = new managers::InputManager();
 

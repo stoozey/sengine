@@ -5,11 +5,11 @@
 #include <filesystem>
 #include <spdlog/spdlog.h>
 
-#include "assets/asset.h"
-#include "assets/sprite.h"
-#include "assets/shader.h"
-#include "assets/model.h"
-#include "assets/texture.h"
+#include "assets/asset.hpp"
+#include "assets/sprite.hpp"
+#include "assets/shader.hpp"
+#include "assets/model.hpp"
+#include "assets/texture.hpp"
 
 namespace managers {
     const std::string ASSET_DEFAULT_NAME = ".default";

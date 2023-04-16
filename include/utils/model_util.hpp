@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "assets/model.h"
+#include "assets/model.hpp"
 
 namespace utils {
     void ObjToModel(const std::string &filePath, assets::Model &out);
