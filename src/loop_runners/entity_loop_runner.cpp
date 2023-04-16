@@ -1,11 +1,6 @@
 #include "loop_runners/entity_loop_runner.h"
-#include "core/entity.h"
 
 namespace loopRunners {
-    void EntityLoopRunner::AddEntity(std::shared_ptr<core::Entity> entity) {
-        entities.emplace_back(entity);
-    }
-
     void EntityLoopRunner::Update(double deltaTime) {
         for (auto &entity: entities)
         {

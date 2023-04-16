@@ -14,6 +14,8 @@ namespace assets {
         height = 0;
         dataSize = 0;
         data = nullptr;
+
+        textureId = 0;
     }
 
     Texture::~Texture() {
@@ -52,6 +54,8 @@ namespace assets {
         file.read(reinterpret_cast<char*>(data), dataSize);
 
         file.close();
+
+        BindTexture();
     }
 
     void Texture::LoadFromFile(const std::string &filePath) {
@@ -65,9 +69,26 @@ namespace assets {
         std::cout << dataSize << std::endl;
     }
 
+    void Texture::BindTexture() {
+        glGenTextures(1, &textureId);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
     void Texture::Free() {
         if (data) {
             stbi_image_free(data);
+            glDeleteTextures(1, &textureId);
         }
 
         width = 0;

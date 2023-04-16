@@ -13,29 +13,24 @@ namespace core {
     class Engine {
     public:
         Engine();
-
         ~Engine();
 
         void Initialize();
 
         SDL_Renderer *GetRenderer();
-
         SDL_Window *GetWindow();
-
         SDL_GLContext *GetGlContext();
 
         std::shared_ptr<loopRunners::LoopRunner> GetLoopRunner(structs::LoopRunnerType loopRunnerType);
 
         void AddLoopRunner(std::shared_ptr<loopRunners::LoopRunner> &loopRunner);
-
         void SetFps(int targetFps);
-
         void Update(double deltaTime);
-
         void Render();
-
         void RunLoop();
 
+        int GetWindowWidth();
+        int GetWindowHeight();
     private:
         SDL_Renderer *renderer;
         SDL_Window *window;

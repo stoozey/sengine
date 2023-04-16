@@ -7,4 +7,4 @@ add_subdirectory(assimp)
 add_subdirectory(glad)
 add_subdirectory(spdlog)
 
-target_include_directories(${PROJECT_NAME} PUBLIC KHR base64)
+target_include_directories(${PROJECT_NAME} PUBLIC KHR base64 boost)

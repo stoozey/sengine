@@ -11,7 +11,10 @@
 namespace loopRunners {
     class EntityLoopRunner : public LoopRunner {
     public:
-        void AddEntity(std::shared_ptr<core::Entity> entity);
+        template<typename T = core::Entity>
+        void AddEntity(std::shared_ptr<T> entity) {
+            entities.emplace_back((std::shared_ptr<core::Entity>) entity);
+        }
 
         void Update(double deltaTime) override;
         void Render() override;

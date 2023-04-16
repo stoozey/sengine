@@ -18,9 +18,12 @@ namespace assets {
         int height;
         long long dataSize;
         unsigned char *data;
+
+        GLuint textureId;
     private:
         static structs::AssetInfo assetInfo;
 
+        void BindTexture();
         void Free();
     };
 }
