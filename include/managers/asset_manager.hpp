@@ -24,17 +24,19 @@ namespace managers {
         T *LoadAsset(const std::string &assetName) {
             const std::string assetPath = GetAssetPath<T>(assetName);
             T *asset = GetAsset<T>(assetName);
-            if ((std::filesystem::exists(assetPath)) && (asset == nullptr))
-            {
+            if ((std::filesystem::exists(assetPath)) && (asset == nullptr)) {
                 asset = new T();
                 asset->Load(assetPath);
-                assets.insert({assetPath, asset});
+                assets.insert({ assetPath, asset });
             }
 
             if (asset == nullptr) {
                 const std::string defaultAssetPath = GetAssetPath<T>(ASSET_DEFAULT_NAME);
                 spdlog::warn("asset \"" + assetPath + "\" not found, using default");
-                if (!std::filesystem::exists(defaultAssetPath)) { spdlog::critical("missing default asset \"" + defaultAssetPath + "\""); throw; }
+                if (!std::filesystem::exists(defaultAssetPath)) {
+                    spdlog::critical("missing default asset \"" + defaultAssetPath + "\"");
+                    throw;
+                }
 
                 asset = LoadAsset<T>(ASSET_DEFAULT_NAME);
             }
@@ -56,7 +58,7 @@ namespace managers {
         T *GetAsset(const std::string &assetName) {
             const std::string assetPath = GetAssetPath<T>(assetName);
             auto find = assets.find(assetPath);
-            return dynamic_cast<T*>(((find == assets.end()) ? nullptr : find->second));
+            return dynamic_cast<T *>(((find == assets.end()) ? nullptr : find->second));
         }
 
         template<typename T>
@@ -72,8 +74,8 @@ namespace managers {
         template<typename T>
         std::string GetAssetPath(const std::string &assetName);
     private:
-        std::map<std::string, assets::Asset*> assets;
-        std::map<structs::AssetType, assets::Asset*> defaultAssets;
+        std::map<std::string, assets::Asset *> assets;
+        std::map<structs::AssetType, assets::Asset *> defaultAssets;
     };
 }
 
