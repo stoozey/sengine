@@ -193,7 +193,6 @@ namespace core {
 
                 g_InputManager->Poll();
 
-                std::cout << "updating" << std::endl;
                 Update(deltaTime);
 
                 // Render
@@ -204,7 +203,6 @@ namespace core {
                 glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
                 glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-                std::cout << "rendering" << std::endl;
                 Render();
                 SDL_GL_SwapWindow(window);
             }

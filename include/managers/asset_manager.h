@@ -29,7 +29,9 @@ namespace managers {
                 asset = new T();
                 asset->Load(assetPath);
                 assets.insert({assetPath, asset});
-            } else {
+            }
+
+            if (asset == nullptr) {
                 const std::string defaultAssetPath = GetAssetPath<T>(ASSET_DEFAULT_NAME);
                 spdlog::warn("asset \"" + assetPath + "\" not found, using default");
                 if (!std::filesystem::exists(defaultAssetPath)) { spdlog::critical("missing default asset \"" + defaultAssetPath + "\""); throw; }
