@@ -13,8 +13,7 @@ namespace utils {
     void ObjToModel(const std::string &filePath, assets::Model &out) {
         std::cout << "1" << std::endl;
         Assimp::Importer importer;
-        const aiScene *scene = importer.ReadFile(filePath, aiProcess_CalcTangentSpace | aiProcess_Triangulate |
-                                                           aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
+        const aiScene *scene = importer.ReadFile(filePath, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
 
         std::cout << "2" << std::endl;
         std::vector<structs::Texture> textures;
