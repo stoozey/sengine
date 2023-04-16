@@ -6,7 +6,6 @@
 #include <spdlog/spdlog.h>
 
 #include "assets/asset.hpp"
-#include "assets/sprite.hpp"
 #include "assets/shader.hpp"
 #include "assets/model.hpp"
 #include "assets/texture.hpp"

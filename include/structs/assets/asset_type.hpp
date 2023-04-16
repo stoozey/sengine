@@ -3,7 +3,6 @@
 
 namespace structs {
     enum class AssetType {
-        Sprite,
         Shader,
         Model,
         Texture

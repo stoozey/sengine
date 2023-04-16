@@ -8,11 +8,6 @@ namespace managers {
     }
 
     template<>
-    std::string AssetManager::GetAssetPath<assets::Sprite>(const std::string &assetName) {
-        return (ASSET_FILE_PREFIX + "sprite/" + assetName + ASSET_FILE_PREFIX);
-    }
-
-    template<>
     std::string AssetManager::GetAssetPath<assets::Shader>(const std::string &assetName) {
         return (ASSET_FILE_PREFIX + "shader/" + assetName + ASSET_FILE_SUFFIX);
     }
