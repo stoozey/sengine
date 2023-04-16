@@ -43,7 +43,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC spdlog)
 
 # build commands
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E rm -R
+        COMMAND ${CMAKE_COMMAND} -E rm -R -f
         $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/resources)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
