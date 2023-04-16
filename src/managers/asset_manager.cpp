@@ -4,12 +4,12 @@ managers::AssetManager *g_AssetManager = new managers::AssetManager();
 
 namespace managers {
     AssetManager::AssetManager() {
-        assets = std::map<std::string, assets::Asset*>();
+        assets = std::map<std::string, assets::Asset *>();
     }
 
     template<>
     std::string AssetManager::GetAssetPath<assets::Sprite>(const std::string &assetName) {
-        return (ASSET_FILE_PREFIX  + "sprite/" + assetName + ASSET_FILE_PREFIX);
+        return (ASSET_FILE_PREFIX + "sprite/" + assetName + ASSET_FILE_PREFIX);
     }
 
     template<>

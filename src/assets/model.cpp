@@ -12,8 +12,7 @@ namespace assets {
         std::cout << "writing size " << size << std::endl;
         file.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
 
-        for (GLfloat value: inVector)
-        {
+        for (GLfloat value: inVector) {
             file.write(reinterpret_cast<char *>(&value), sizeof(GLfloat));
         }
     }
@@ -23,8 +22,7 @@ namespace assets {
         file.read(reinterpret_cast<char *>(&size), sizeof(uint32_t));
         std::cout << "found size is " << size << std::endl;
 
-        for (int i = 0; i < size; i++)
-        {
+        for (int i = 0; i < size; i++) {
             GLfloat value;
             file.read(reinterpret_cast<char *>(&value), sizeof(GLfloat));
 
@@ -38,11 +36,10 @@ namespace assets {
         ReadAssetInfo(file);
 
         short totalMeshes;
-        file.read(reinterpret_cast<char*>(&totalMeshes), sizeof(short));
+        file.read(reinterpret_cast<char *>(&totalMeshes), sizeof(short));
         std::cout << "totalMeshes " << totalMeshes << std::endl;
 
-        for (int i = 0; i < totalMeshes; i++)
-        {
+        for (int i = 0; i < totalMeshes; i++) {
             structs::Mesh mesh;
 
             // load vectors
@@ -65,7 +62,7 @@ namespace assets {
             char *textureData = new char[textureDataSize];
             file.read(textureData, textureDataSize);
 
-            mesh.texture = structs::Texture{textureType, textureDataSize, textureData};
+            mesh.texture = structs::Texture{ textureType, textureDataSize, textureData };
             meshes.push_back(mesh);
         }
 
@@ -80,8 +77,7 @@ namespace assets {
 
         short totalMeshes = meshes.size();
         file.write(reinterpret_cast<char *>(&totalMeshes), sizeof(short));
-        for (int i = 0; i < totalMeshes; i++)
-        {
+        for (int i = 0; i < totalMeshes; i++) {
             structs::Mesh mesh = meshes.at(i);
 
             // write vectors

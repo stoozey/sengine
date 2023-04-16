@@ -7,10 +7,10 @@
 #include "structs/assets/asset_type.hpp"
 
 namespace assets {
-    structs::AssetInfo Shader::assetInfo{structs::AssetType::Shader};
+    structs::AssetInfo Shader::assetInfo{ structs::AssetType::Shader };
 
     Shader::Shader() {
-        programData = { "", ""};
+        programData = { "", "" };
         program = -1;
     }
 
@@ -32,12 +32,10 @@ namespace assets {
         SDL_RWclose(file);
 
         std::string vertexShader, fragmentShader;
-        if (programData.encoded)
-        {
+        if (programData.encoded) {
             macaron::Base64::Decode(encodedData.vertexShader, vertexShader);
             macaron::Base64::Decode(encodedData.fragmentShader, fragmentShader);
-        } else
-        {
+        } else {
             vertexShader = encodedData.vertexShader;
             fragmentShader = encodedData.fragmentShader;
         }
@@ -91,7 +89,7 @@ namespace assets {
         std::string vertexEncoded = macaron::Base64::Encode(programData.vertexShader);
         std::string fragmentEncoded = macaron::Base64::Encode(programData.fragmentShader);
 
-        structs::ShaderProgramData data{"", ""};
+        structs::ShaderProgramData data{ "", "" };
         strcpy(data.vertexShader, vertexEncoded.c_str());
         strcpy(data.fragmentShader, fragmentEncoded.c_str());
         return data;
@@ -147,13 +145,12 @@ namespace assets {
 
         glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &count);
 
-        for (i = 0; i < count; i++)
-        {
+        for (i = 0; i < count; i++) {
             glGetActiveUniform(program, (GLuint) i, bufSize, &length, &size, &type, name);
 
             GLint location = glGetUniformLocation(program, name);
             structs::ShaderUniformData data{ type, location };
-            uniformData.insert({name, data});
+            uniformData.insert({ name, data });
 
             std::cout << name << " " << type << std::endl;
         }

@@ -2,7 +2,7 @@
 
 namespace core {
     Entity::Entity() {
-        position = {0, 0};
+        position = { 0, 0 };
     }
 
     void Entity::PreUpdate(double deltaTime) { }

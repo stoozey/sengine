@@ -12,13 +12,13 @@ namespace assets {
     }
 
     structs::AssetInfo Asset::ReadAssetInfo(SDL_RWops *file) {
-        structs::AssetInfo assetInfo{};
+        structs::AssetInfo assetInfo{ };
         SDL_RWread(file, reinterpret_cast<char *>(&assetInfo), ASSET_INFO_SIZE, 1);
         return assetInfo;
     }
 
     structs::AssetInfo Asset::ReadAssetInfo(std::fstream &file) {
-        structs::AssetInfo assetInfo{};
+        structs::AssetInfo assetInfo{ };
         file.read(reinterpret_cast<char *>(&assetInfo), ASSET_INFO_SIZE);
         return assetInfo;
     }

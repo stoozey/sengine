@@ -6,7 +6,7 @@
 #include "core/engine.hpp"
 
 namespace assets {
-    structs::AssetInfo Sprite::assetInfo{structs::AssetType::Sprite};
+    structs::AssetInfo Sprite::assetInfo{ structs::AssetType::Sprite };
 
     Sprite::Sprite(SDL_Renderer *sdlRenderer) {
         renderer = ((sdlRenderer == nullptr) ? g_Engine->GetRenderer() : sdlRenderer);
@@ -26,13 +26,11 @@ namespace assets {
     }
 
     Sprite::~Sprite() {
-        if (texture)
-        {
+        if (texture) {
             SDL_DestroyTexture(texture);
         }
 
-        if (surface)
-        {
+        if (surface) {
             SDL_FreeSurface(surface);
         }
     }
@@ -66,7 +64,7 @@ namespace assets {
     }
 
     SDL_FRect Sprite::GetFRect(const structs::Vector2 &position) {
-        return {position.x, position.y, (float) width, (float) height};
+        return { position.x, position.y, (float) width, (float) height };
     }
 
     int Sprite::GetWidth() {

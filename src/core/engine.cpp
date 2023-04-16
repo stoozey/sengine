@@ -21,15 +21,13 @@ namespace core {
     int FPS_DEFAULT = 60;
 
     static void GlClearAllErrors() {
-        while (glGetError() != GL_NO_ERROR)
-        {
+        while (glGetError() != GL_NO_ERROR) {
 
         }
     }
 
     static bool GlCheckErrorStatus(const char *functionName, int line) {
-        while (GLenum error = glGetError())
-        {
+        while (GLenum error = glGetError()) {
             std::cout << "OPENGL ERROR: " << error << " occurred at " << line << ":" << functionName << std::endl;
             return true;
         }
@@ -37,7 +35,7 @@ namespace core {
         return false;
     }
 
-    #define GlCheck(x) GlClearAllErrors(); x; GlCheckErrorStatus(#x, __LINE__);
+#define GlCheck(x) GlClearAllErrors(); x; GlCheckErrorStatus(#x, __LINE__);
 
 
     Engine::Engine() {
@@ -56,8 +54,7 @@ namespace core {
     }
 
     Engine::~Engine() {
-        if (window != nullptr)
-        {
+        if (window != nullptr) {
             SDL_DestroyWindow(window);
         }
 
@@ -72,8 +69,7 @@ namespace core {
     void Engine::InitSdl() {
         SDL_CreateWindowAndRenderer(windowWidth, windowHeight, (SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL), &window,
                                     &renderer);
-        if ((window == nullptr) || (renderer == nullptr))
-        {
+        if ((window == nullptr) || (renderer == nullptr)) {
             std::cout << "Engine::Initialize failed (window or renderer was null)" << std::endl;
             exit(1);
         }
@@ -85,14 +81,12 @@ namespace core {
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
 
         glContext = SDL_GL_CreateContext(window);
-        if (glContext == nullptr)
-        {
+        if (glContext == nullptr) {
             std::cout << "Engine::Initialize failed (glContext was null)" << std::endl;
             exit(1);
         }
 
-        if (!gladLoadGLLoader(SDL_GL_GetProcAddress))
-        {
+        if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
             std::cout << "Engine::Initialize failed (glad wasn't initialized)" << std::endl;
             exit(1);
         }
@@ -126,8 +120,7 @@ namespace core {
     }
 
     std::shared_ptr<loopRunners::LoopRunner> Engine::GetLoopRunner(structs::LoopRunnerType loopRunnerType) {
-        for (auto &loopRunner: loopRunners)
-        {
+        for (auto &loopRunner: loopRunners) {
             if (loopRunner->GetLoopRunnerType() == loopRunnerType) return loopRunner;
         }
 
@@ -141,12 +134,9 @@ namespace core {
 
     void Engine::Update(double deltaTime) {
         SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            switch (event.type)
-            {
-                case SDL_QUIT:
-                {
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT: {
                     loopRunning = false;
                     break;
                 }
@@ -171,13 +161,11 @@ namespace core {
         float accumulatedSeconds = 0.0f;
 
         loopRunning = true;
-        while (loopRunning)
-        {
+        while (loopRunning) {
             systemClock.Tick();
             accumulatedSeconds += systemClock.elapsedSeconds;
 
-            if (std::isgreater(accumulatedSeconds, cycleTime))
-            {
+            if (std::isgreater(accumulatedSeconds, cycleTime)) {
                 accumulatedSeconds = -cycleTime;
 
                 // Update

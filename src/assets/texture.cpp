@@ -27,11 +27,11 @@ namespace assets {
         file.open(filePath, std::ios::binary | std::ios::out | std::ios::trunc);
         WriteAssetInfo(file, assetInfo);
 
-        file.write(reinterpret_cast<char*>(&width), sizeof(int));
-        file.write(reinterpret_cast<char*>(&height), sizeof(int));
+        file.write(reinterpret_cast<char *>(&width), sizeof(int));
+        file.write(reinterpret_cast<char *>(&height), sizeof(int));
 
-        file.write(reinterpret_cast<char*>(&dataSize), sizeof(long long));
-        file.write(reinterpret_cast<char*>(data), dataSize);
+        file.write(reinterpret_cast<char *>(&dataSize), sizeof(long long));
+        file.write(reinterpret_cast<char *>(data), dataSize);
 
         file.close();
         std::cout << "saving as w: " << width << ", h: " << height << ", size: " << dataSize << std::endl;
@@ -45,13 +45,13 @@ namespace assets {
         file.open(filePath, std::ios::binary | std::ios::in);
         ReadAssetInfo(file);
 
-        file.read(reinterpret_cast<char*>(&width), sizeof(int));
-        file.read(reinterpret_cast<char*>(&height), sizeof(int));
+        file.read(reinterpret_cast<char *>(&width), sizeof(int));
+        file.read(reinterpret_cast<char *>(&height), sizeof(int));
 
-        file.read(reinterpret_cast<char*>(&dataSize), sizeof(long long));
+        file.read(reinterpret_cast<char *>(&dataSize), sizeof(long long));
 
         data = new unsigned char[dataSize];
-        file.read(reinterpret_cast<char*>(data), dataSize);
+        file.read(reinterpret_cast<char *>(data), dataSize);
 
         file.close();
 

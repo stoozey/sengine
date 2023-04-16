@@ -7,14 +7,13 @@ managers::InputManager *g_InputManager = new managers::InputManager();
 
 namespace managers {
     InputManager::InputManager() {
-        mousePosition = {0, 0};
+        mousePosition = { 0, 0 };
 
-        for (int i = (int) structs::MouseButton::LeftClick; i != (int) structs::MouseButton::None; i++)
-        {
+        for (int i = (int) structs::MouseButton::LeftClick; i != (int) structs::MouseButton::None; i++) {
             std::map<structs::InputState, int> map = {
-                    {structs::InputState::Down,     0},
-                    {structs::InputState::Pressed,  0},
-                    {structs::InputState::Released, 0}
+                    { structs::InputState::Down,     0 },
+                    { structs::InputState::Pressed,  0 },
+                    { structs::InputState::Released, 0 }
             };
 
             structs::MouseButton mouseInput = static_cast<structs::MouseButton>(i);
@@ -41,16 +40,13 @@ namespace managers {
 
     void InputManager::PollInputs() {
         const Uint8 *keyInputs = const_cast <Uint8 *> (SDL_GetKeyboardState(nullptr));
-        for (auto &pair: keyMap)
-        {
+        for (auto &pair: keyMap) {
             std::string name = pair.first;
             std::vector<int> scanCodes = pair.second;
 
             int isDown = 0;
-            for (int scanCode: scanCodes)
-            {
-                if (keyInputs[scanCode] != 0)
-                {
+            for (int scanCode: scanCodes) {
+                if (keyInputs[scanCode] != 0) {
                     isDown = 1;
                     break;
                 }
