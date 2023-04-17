@@ -1,46 +1,24 @@
-#include <filesystem>
+#include "managers/asset_manager.hpp"
 
-#include "managers/asset_manager.h"
-#include "assets/sprite.h"
+managers::AssetManager *g_AssetManager = new managers::AssetManager();
 
-
-//AssetManager *g_AssetManager = new AssetManager();
-
-std::map<std::string, Asset*> AssetManager::assets = std::map<std::string, Asset*>();
-
-Asset *AssetManager::LoadAsset(AssetPath& assetPath) {
-    const std::string path = assetPath.GetFullPath();
-    Asset *asset = GetAsset(assetPath);
-    if ((std::filesystem::exists(path)) && (asset == nullptr)) {
-        switch (assetPath.assetType) {
-            case AssetType::Sprite: {
-                asset = new Sprite(nullptr);
-                break;
-            }
-        }
-
-        asset->Load(path);
-        assets.insert({path, asset});
+namespace managers {
+    AssetManager::AssetManager() {
+        assets = std::map<std::string, std::shared_ptr<assets::Asset>>();
     }
 
-    return asset;
-}
+    template<>
+    std::string AssetManager::GetAssetPath<assets::Shader>(const std::string &assetName) {
+        return (ASSET_FILE_PREFIX + "shader/" + assetName + ASSET_FILE_SUFFIX);
+    }
 
-void AssetManager::UnLoadAsset(AssetPath& assetPath) {
-    const std::string path = assetPath.GetFullPath();
-    auto find = assets.find(path);
-    if (find == assets.end()) return;
+    template<>
+    std::string AssetManager::GetAssetPath<assets::Model>(const std::string &assetName) {
+        return (ASSET_FILE_PREFIX + "model/" + assetName + ASSET_FILE_SUFFIX);
+    }
 
-    assets.erase(find);
-    delete find->second;
-}
-
-Asset *AssetManager::GetAsset(AssetPath& assetPath) {
-    const std::string path = assetPath.GetFullPath();
-    auto find = assets.find(path);
-    return ((find == assets.end()) ? nullptr : find->second);
-}
-
-bool AssetManager::AssetExists(AssetPath& assetPath) {
-    return (GetAsset(assetPath) != nullptr);
+    template<>
+    std::string AssetManager::GetAssetPath<assets::Texture>(const std::string &assetName) {
+        return (ASSET_FILE_PREFIX + "texture/" + assetName + ASSET_FILE_SUFFIX);
+    }
 }

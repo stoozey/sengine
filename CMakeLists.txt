@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.22)
-project(sengine VERSION 1.0.0 DESCRIPTION "taking a mean shit right now!")
-
 set(CMAKE_CXX_STANDARD 20)
+project(sengine VERSION 1.0.0 DESCRIPTION "taking a mean shit right now!")
 
 include(GNUInstallDirs)
 
-file(GLOB_RECURSE SENGINE_SRC_FILES "${PROJECT_SOURCE_DIR}/src/*.cpp")
+# source files
+file(GLOB_RECURSE SENGINE_SRC_FILES "${PROJECT_SOURCE_DIR}/src/*.cpp" "${PROJECT_SOURCE_DIR}/src/*.c")
 file(GLOB_RECURSE SENGINE_INCLUDE_FILES "${PROJECT_SOURCE_DIR}/include/*.h")
 add_library(${PROJECT_NAME} SHARED ${SENGINE_SRC_FILES} ${SENGINE_INCLUDE_FILES})
 
@@ -20,7 +20,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         PUBLIC_HEADER "${SENGINE_INCLUDE_FILES}"
         )
 
-
+# packages
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 
@@ -30,12 +30,25 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${SDL2IMAGE_INCLUDE_DIR
 set(SENGINE_SDL_LINKER_FLAGS SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SENGINE_SDL_LINKER_FLAGS})
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libgcc -static-libstdc++ -lmingw32 ${SENGINE_SDL_LINKER_FLAGS} -mconsole)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libstdc++ -static-libgcc -lmingw32 ${SENGINE_SDL_LINKER_FLAGS} -mconsole)
 
+# thirdparty
+add_subdirectory(thirdparty)
+target_include_directories(${PROJECT_NAME} PUBLIC thirdparty)
+target_link_libraries(${PROJECT_NAME} PUBLIC assimp)
+target_link_libraries(${PROJECT_NAME} PUBLIC glm)
+target_link_libraries(${PROJECT_NAME} PUBLIC stb)
+target_link_libraries(${PROJECT_NAME} PUBLIC glad)
+target_link_libraries(${PROJECT_NAME} PUBLIC spdlog)
+
+# build commands
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rm -R -f
+        $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/resources)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${PROJECT_SOURCE_DIR}/internal-datafiles"
+        "${PROJECT_SOURCE_DIR}/datafiles"
         $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
