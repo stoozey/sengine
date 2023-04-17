@@ -1,5 +1,5 @@
 # SEngine-2
-A custom game engine written in C++
+A custom--unfinished--game engine written in C++
 
 ## Setup
 
