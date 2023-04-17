@@ -4,7 +4,7 @@ managers::AssetManager *g_AssetManager = new managers::AssetManager();
 
 namespace managers {
     AssetManager::AssetManager() {
-        assets = std::map<std::string, assets::Asset *>();
+        assets = std::map<std::string, std::shared_ptr<assets::Asset>>();
     }
 
     template<>
