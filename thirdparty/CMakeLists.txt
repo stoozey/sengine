@@ -6,5 +6,6 @@ add_subdirectory(stb)
 add_subdirectory(assimp)
 add_subdirectory(glad)
 add_subdirectory(spdlog)
+add_subdirectory(entt)
 
 target_include_directories(${PROJECT_NAME} PUBLIC KHR base64 boost)
