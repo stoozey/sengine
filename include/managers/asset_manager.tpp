@@ -36,7 +36,7 @@ namespace managers {
     std::shared_ptr<T> AssetManager::GetAsset(const std::string &assetName) {
         const std::string assetPath = GetAssetPath<T>(assetName);
         auto find = assets.find(assetPath);
-        return dynamic_pointer_cast<T>(((find == assets.end()) ? nullptr : find->second));
+        return dynamic_pointer_cast<T>((find == assets.end()) ? nullptr : find->second);
     }
 
     template<typename T = assets::Asset>
