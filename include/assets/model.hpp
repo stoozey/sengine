@@ -16,7 +16,6 @@ namespace assets {
         static Model FromFile(const std::string &filePath);
 
         void Save(const std::string &filePath);
-
         void Load(const std::string &filePath);
 
         std::vector<structs::Mesh> meshes;
