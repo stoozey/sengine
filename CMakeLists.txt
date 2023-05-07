@@ -4,6 +4,10 @@ project(sengine VERSION 1.0.0 DESCRIPTION "taking a mean shit right now!")
 
 include(GNUInstallDirs)
 
+#add_compile_definitions(SENGINE_VERSION=${CMAKE_PROJECT_VERSION})
+#configure_file(sengine_config.h.in ${CMAKE_BINARY_DIR}/generated/sengine_config.h)
+#include_directories(${CMAKE_BINARY_DIR}/generated/)
+
 # source files
 file(GLOB_RECURSE SENGINE_SRC_FILES "${PROJECT_SOURCE_DIR}/src/*.cpp" "${PROJECT_SOURCE_DIR}/src/*.c")
 file(GLOB_RECURSE SENGINE_INCLUDE_FILES "${PROJECT_SOURCE_DIR}/include/*.h")
@@ -41,6 +45,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC stb)
 target_link_libraries(${PROJECT_NAME} PUBLIC glad)
 target_link_libraries(${PROJECT_NAME} PUBLIC spdlog)
 target_link_libraries(${PROJECT_NAME} PUBLIC EnTT)
+target_link_libraries(${PROJECT_NAME} PUBLIC crossguid)
 
 # build commands
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

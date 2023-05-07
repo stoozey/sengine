@@ -9,8 +9,6 @@ namespace assets {
     public:
         void Save(const std::string &filePath) override;
         void Load(const std::string &filePath) override;
-    private:
-        static structs::AssetInfo assetInfo;
     };
 }
 

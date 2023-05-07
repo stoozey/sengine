@@ -5,7 +5,8 @@ namespace structs {
     enum class AssetType {
         Shader,
         Model,
-        Texture
+        Texture,
+        Sound
     };
 }
 

@@ -15,16 +15,17 @@
 namespace assets {
     class Asset {
     public:
+        Asset(structs::AssetType assetType);
+
         virtual void Save(const std::string &filePath) = 0;
         virtual void Load(const std::string &filePath) = 0;
     protected:
-        static void WriteAssetInfo(SDL_RWops *file, structs::AssetInfo &assetInfo);
         static void WriteAssetInfo(std::fstream &file, structs::AssetInfo &assetInfo);
-
-        static structs::AssetInfo ReadAssetInfo(SDL_RWops *file);
         static structs::AssetInfo ReadAssetInfo(std::fstream &file);
+
+        structs::AssetInfo assetInfo{};
     private:
-        std::vector<structs::Mesh> meshes;
+        static int assetVersion;
     };
 }
 

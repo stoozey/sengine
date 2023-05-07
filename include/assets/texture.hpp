@@ -21,8 +21,6 @@ namespace assets {
 
         GLuint textureId;
     private:
-        static structs::AssetInfo assetInfo;
-
         void BindTexture();
         void Free();
     };

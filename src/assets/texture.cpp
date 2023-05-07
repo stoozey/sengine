@@ -7,9 +7,7 @@
 #include "structs/assets/asset_type.hpp"
 
 namespace assets {
-    structs::AssetInfo Texture::assetInfo{ structs::AssetType::Texture };
-
-    Texture::Texture() {
+    Texture::Texture() : Asset(structs::AssetType::Texture) {
         width = 0;
         height = 0;
         dataSize = 0;

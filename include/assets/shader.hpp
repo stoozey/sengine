@@ -28,7 +28,6 @@ namespace assets {
 
         structs::ShaderProgramData programData;
     private:
-        static structs::AssetInfo assetInfo;
         static GLuint Compile(GLuint shaderType, const char *source);
 
         structs::ShaderProgramData GenerateEncodedShaderData();

@@ -7,29 +7,31 @@
 #include "structs/assets/asset_type.hpp"
 
 namespace assets {
-    structs::AssetInfo Shader::assetInfo{ structs::AssetType::Shader };
-
-    Shader::Shader() {
+    Shader::Shader() : assets::Asset(structs::AssetType::Shader) {
         programData = { "", "" };
         program = -1;
     }
 
     void Shader::Save(const std::string &filePath) {
-        SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "w");
+        std::fstream file;
+        file.open(filePath, std::ios::binary | std::ios::out | std::ios::trunc);
+
         WriteAssetInfo(file, assetInfo);
 
         structs::ShaderProgramData data = ((programData.encoded) ? GenerateEncodedShaderData() : programData);
-        SDL_RWwrite(file, reinterpret_cast<char *>(&data), sizeof(structs::ShaderProgramData), 1);
-        SDL_RWclose(file);
+        file.write(reinterpret_cast<char *>(&data), sizeof(structs::ShaderProgramData));
+        file.close();
     }
 
     void Shader::Load(const std::string &filePath) {
-        SDL_RWops *file = SDL_RWFromFile(filePath.c_str(), "r");
+        std::fstream file;
+        file.open(filePath, std::ios::binary | std::ios::in);
+
         ReadAssetInfo(file);
 
         structs::ShaderProgramData encodedData;
-        SDL_RWread(file, reinterpret_cast<char *>(&encodedData), sizeof(structs::ShaderProgramData), 1);
-        SDL_RWclose(file);
+        file.read(reinterpret_cast<char *>(&encodedData), sizeof(structs::ShaderProgramData));
+        file.close();
 
         std::string vertexShader, fragmentShader;
         if (programData.encoded) {

@@ -5,8 +5,6 @@
 #include "assets/model.hpp"
 
 namespace assets {
-    structs::AssetInfo Model::assetInfo = structs::AssetInfo{ structs::AssetType::Model };
-
     void WriteGlFloatVector(std::fstream &file, std::vector<GLfloat> &inVector) {
         uint32_t size = inVector.size();
         std::cout << "writing size " << size << std::endl;
@@ -28,6 +26,10 @@ namespace assets {
 
             outVector.push_back(value);
         }
+    }
+
+    Model::Model() : Asset(structs::AssetType::Model) {
+
     }
 
     void Model::Load(const std::string &filePath) {
