@@ -3,6 +3,23 @@ A custom--unfinished--game engine written in C++
 
 ## Setup
 
+### main.cpp
+To get started with a basic window and a loop runner active:
+```cpp
+#include <SEngine-2/include/loop_runners/entity_loop_runner.hpp>
+#include <SEngine-2/include/core/engine.hpp>
+
+int main(int argv, char **args) {
+    g_Engine->Initialize();
+
+    auto entityLoopRunner = std::make_shared<loopRunners::EntityLoopRunner>();
+    g_Engine->AddLoopRunner<loopRunners::EntityLoopRunner>(entityLoopRunner);
+
+    g_Engine->RunLoop();
+    return 0;
+}
+```
+
 ### CMake
 Put this black magic in your project's CMakeLists.txt:
   
