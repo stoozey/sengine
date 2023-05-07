@@ -24,7 +24,7 @@ namespace core {
         std::shared_ptr<loopRunners::LoopRunner> GetLoopRunner(structs::LoopRunnerType loopRunnerType);
 
         template<typename T>
-        void Engine::AddLoopRunner(std::shared_ptr<T> &loopRunner);
+        void AddLoopRunner(std::shared_ptr<T> &loopRunner);
 
         void SetFps(int targetFps);
         void Update(double deltaTime);
