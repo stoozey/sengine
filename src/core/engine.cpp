@@ -115,10 +115,6 @@ namespace core {
         return windowHeight;
     }
 
-    void Engine::AddLoopRunner(std::shared_ptr<loopRunners::LoopRunner> &loopRunner) {
-        loopRunners.push_back(loopRunner);
-    }
-
     std::shared_ptr<loopRunners::LoopRunner> Engine::GetLoopRunner(structs::LoopRunnerType loopRunnerType) {
         for (auto &loopRunner: loopRunners) {
             if (loopRunner->GetLoopRunnerType() == loopRunnerType) return loopRunner;
