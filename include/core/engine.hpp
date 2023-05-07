@@ -23,7 +23,9 @@ namespace core {
 
         std::shared_ptr<loopRunners::LoopRunner> GetLoopRunner(structs::LoopRunnerType loopRunnerType);
 
-        void AddLoopRunner(std::shared_ptr<loopRunners::LoopRunner> &loopRunner);
+        template<typename T>
+        void Engine::AddLoopRunner(std::shared_ptr<T> &loopRunner);
+
         void SetFps(int targetFps);
         void Update(double deltaTime);
         void Render();
@@ -52,6 +54,6 @@ namespace core {
     };
 }
 
+#include "engine.tpp"
 extern core::Engine *g_Engine;
-
 #endif //SENGINE_ENGINE_H
