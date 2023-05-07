@@ -1,3 +1,15 @@
 [submodule "thirdparty/assimp"]
 	path = thirdparty/assimp
 	url = https://github.com/assimp/assimp
+[submodule "thirdparty/crossguid"]
+	path = thirdparty/crossguid
+	url = https://github.com/graeme-hill/crossguid
+[submodule "thirdparty/entt"]
+	path = thirdparty/entt
+	url = https://github.com/skypjack/entt
+[submodule "thirdparty/glm"]
+	path = thirdparty/glm
+	url = https://github.com/g-truc/glm
+[submodule "thirdparty/spdlog"]
+	path = thirdparty/spdlog
+	url = https://github.com/gabime/spdlog
