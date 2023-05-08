@@ -6,8 +6,8 @@ A custom--unfinished--game engine written in C++
 ### main.cpp
 To get started with a basic window and a loop runner active:
 ```cpp
-#include <SEngine-2/include/loop_runners/entity_loop_runner.hpp>
-#include <SEngine-2/include/core/engine.hpp>
+#include <sengine/include/loop_runners/entity_loop_runner.hpp>
+#include <sengine/include/core/engine.hpp>
 
 int main(int argv, char **args) {
     g_Engine->Initialize();
