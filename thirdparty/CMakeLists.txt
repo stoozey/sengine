@@ -10,4 +10,4 @@ add_subdirectory(entt)
 add_subdirectory(crossguid)
 add_subdirectory(nativefiledialog-extended)
 
-target_include_directories(${PROJECT_NAME} PUBLIC KHR base64 boost)
+target_include_directories(${PROJECT_NAME} PUBLIC KHR base64 boost dlg freetype ft2build.h)

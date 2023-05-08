@@ -20,6 +20,8 @@ int main(int argv, char **args) {
 }
 ```
 
+---
+
 ### CMake
 Put this black magic in your project's CMakeLists.txt:
   
