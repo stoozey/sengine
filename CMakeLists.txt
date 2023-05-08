@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 set(CMAKE_CXX_STANDARD 20)
-project(SEngine-2 VERSION 1.0.0 DESCRIPTION "taking a mean shit right now!")
+project(sengine VERSION 1.0.0 DESCRIPTION "taking a mean shit right now!")
 
 include(GNUInstallDirs)
 
