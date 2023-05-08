@@ -10,8 +10,8 @@ namespace assets {
         Texture();
         ~Texture();
 
-        void Save(const std::string &filePath);
-        void Load(const std::string &filePath);
+        void Save(const std::string &filePath) override;
+        void Load(const std::string &filePath) override;
         void LoadFromFile(const std::string &filePath);
 
         int width;

@@ -116,12 +116,12 @@ namespace core {
             }
         }
 
-        for (auto &loopRunner: loopRunners)
+        for (auto &loopRunner : loopRunners)
             loopRunner->Update(deltaTime);
     }
 
     void Engine::Render() {
-        for (auto &loopRunner: loopRunners)
+        for (auto &loopRunner : loopRunners)
             loopRunner->Render();
     }
 
@@ -150,7 +150,7 @@ namespace core {
                 deltaTime = (
                         (static_cast<double>(now - last) * 1000 / static_cast<double>(SDL_GetPerformanceFrequency())) *
                         0.01);
-                //g_PhysicsManager.Update(cycleTime);
+                //g_PhysicsManager.Update(deltaTime);
 
                 g_InputManager->Poll();
 

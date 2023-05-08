@@ -6,7 +6,8 @@ namespace structs {
         Shader,
         Model,
         Texture,
-        Sound
+        Sound,
+        Font
     };
 }
 
