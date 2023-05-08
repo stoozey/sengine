@@ -46,6 +46,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC glad)
 target_link_libraries(${PROJECT_NAME} PUBLIC spdlog)
 target_link_libraries(${PROJECT_NAME} PUBLIC EnTT)
 target_link_libraries(${PROJECT_NAME} PUBLIC crossguid)
+target_link_libraries(${PROJECT_NAME} PUBLIC nfd)
 
 # build commands
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

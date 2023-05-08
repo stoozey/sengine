@@ -13,3 +13,9 @@
 [submodule "thirdparty/spdlog"]
 	path = thirdparty/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "thirdparty/nativefiledialog-cmake"]
+	path = thirdparty/nativefiledialog-cmake
+	url = https://github.com/stoozey/nativefiledialog-cmake
+[submodule "thirdparty/nativefiledialog-extended"]
+	path = thirdparty/nativefiledialog-extended
+	url = https://github.com/btzy/nativefiledialog-extended

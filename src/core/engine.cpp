@@ -5,6 +5,8 @@
 #include <glad.h>
 #include <stb.h>
 #include <assimp/Importer.hpp>
+#include <spdlog/spdlog.h>
+#include <nfd.h>
 
 #include "core/engine.hpp"
 #include "structs/clock.hpp"
@@ -19,24 +21,6 @@ namespace core {
     int WINDOW_WIDTH_DEFAULT = 1280;
     int WINDOW_HEIGHT_DEFAULT = 720;
     int FPS_DEFAULT = 60;
-
-    static void GlClearAllErrors() {
-        while (glGetError() != GL_NO_ERROR) {
-
-        }
-    }
-
-    static bool GlCheckErrorStatus(const char *functionName, int line) {
-        while (GLenum error = glGetError()) {
-            std::cout << "OPENGL ERROR: " << error << " occurred at " << line << ":" << functionName << std::endl;
-            return true;
-        }
-
-        return false;
-    }
-
-#define GlCheck(x) GlClearAllErrors(); x; GlCheckErrorStatus(#x, __LINE__);
-
 
     Engine::Engine() {
         renderer = nullptr;
@@ -63,7 +47,6 @@ namespace core {
 
     void Engine::Initialize() {
         InitSdl();
-        InitOpenGl();
     }
 
     void Engine::InitSdl() {
@@ -92,7 +75,10 @@ namespace core {
         }
     }
 
-    void Engine::InitOpenGl() {
+    void Engine::InitNfd() {
+        if (NFD_Init() != NFD_OKAY) {
+
+        }
     }
 
     SDL_Renderer *Engine::GetRenderer() {

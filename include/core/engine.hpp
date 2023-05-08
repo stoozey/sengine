@@ -49,8 +49,7 @@ namespace core {
         int windowHeight;
 
         void InitSdl();
-
-        void InitOpenGl();
+        void InitNfd();
     };
 }
 

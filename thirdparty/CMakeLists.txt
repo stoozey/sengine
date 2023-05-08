@@ -8,5 +8,6 @@ add_subdirectory(glad)
 add_subdirectory(spdlog)
 add_subdirectory(entt)
 add_subdirectory(crossguid)
+add_subdirectory(nativefiledialog-extended)
 
 target_include_directories(${PROJECT_NAME} PUBLIC KHR base64 boost)
