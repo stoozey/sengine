@@ -11,9 +11,7 @@
 #include "core/engine.hpp"
 #include "structs/clock.hpp"
 #include "managers/input_manager.hpp"
-#include "assets/shader.hpp"
-#include "assets/texture.hpp"
-#include "managers/asset_manager.hpp"
+#include "core/log.hpp"
 
 core::Engine *g_Engine = new core::Engine();
 
@@ -42,20 +40,18 @@ namespace core {
             SDL_DestroyWindow(window);
         }
 
+        NFD_Quit();
         SDL_Quit();
     }
 
     void Engine::Initialize() {
         InitSdl();
+        InitNfd();
     }
 
     void Engine::InitSdl() {
-        SDL_CreateWindowAndRenderer(windowWidth, windowHeight, (SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL), &window,
-                                    &renderer);
-        if ((window == nullptr) || (renderer == nullptr)) {
-            std::cout << "Engine::Initialize failed (window or renderer was null)" << std::endl;
-            exit(1);
-        }
+        SDL_CreateWindowAndRenderer(windowWidth, windowHeight, (SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL), &window, &renderer);
+        if ((window == nullptr) || (renderer == nullptr)) core::Log::Critical("Engine::Initialize failed (window or renderer was null)");
 
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
@@ -64,21 +60,16 @@ namespace core {
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
 
         glContext = SDL_GL_CreateContext(window);
-        if (glContext == nullptr) {
-            std::cout << "Engine::Initialize failed (glContext was null)" << std::endl;
-            exit(1);
-        }
+        if (glContext == nullptr) core::Log::Critical("Engine::Initialize failed (glContext was null)");
 
-        if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
-            std::cout << "Engine::Initialize failed (glad wasn't initialized)" << std::endl;
-            exit(1);
-        }
+        if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) core::Log::Critical("Engine::Initialize failed (glad wasn't initialized)");
     }
 
     void Engine::InitNfd() {
-        if (NFD_Init() != NFD_OKAY) {
+        if (NFD_Init() == NFD_OKAY) return;
 
-        }
+        std::string error = NFD_GetError();
+        core::Log::Critical("NFD failed to initialize: {}", error);
     }
 
     SDL_Renderer *Engine::GetRenderer() {

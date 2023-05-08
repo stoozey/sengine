@@ -3,9 +3,9 @@
 
 #include <memory>
 #include <filesystem>
-#include <spdlog/spdlog.h>
 #include <utility>
 
+#include "core/log.hpp"
 #include "assets/asset.hpp"
 #include "assets/shader.hpp"
 #include "assets/model.hpp"

@@ -13,17 +13,15 @@ namespace managers {
             }
         }
         catch(const std::exception &e) {
-            spdlog::warn("an error occured when trying to get asset ", assetName, ":", e.what());
+            core::Log::Warn("an error occured when trying to get asset ", assetName, ":", e.what());
             asset = nullptr;
         }
 
         if (asset == nullptr) {
+            core::Log::Warn("asset \"{}\" not found, using default", assetPath);
+
             const std::string defaultAssetPath = GetAssetPath<T>(ASSET_DEFAULT_NAME);
-            spdlog::warn("asset \"{}\" not found, using default", assetPath);
-            if (!std::filesystem::exists(defaultAssetPath)) {
-                spdlog::critical("missing default asset \"" + defaultAssetPath + "\"");
-                throw;
-            }
+            if (!std::filesystem::exists(defaultAssetPath)) core::Log::Error("missing default asset \"{}\"", defaultAssetPath);
 
             asset = LoadAsset<T>(ASSET_DEFAULT_NAME);
         }

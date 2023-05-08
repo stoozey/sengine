@@ -1,7 +1,7 @@
 #include <crossguid/guid.hpp>
-#include <spdlog/spdlog.h>
 
 #include "assets/asset.hpp"
+#include "core/log.hpp"
 
 namespace assets {
     const size_t ASSET_INFO_SIZE = sizeof(structs::AssetInfo);
@@ -22,10 +22,7 @@ namespace assets {
         int readAssetVersion;
         file.read(reinterpret_cast<char *>(&readAssetVersion), sizeof(int));
 
-        if (readAssetVersion != assetVersion) {
-            spdlog::critical("asset version mismatch (read: {}, expected: {})", readAssetVersion, assetVersion);
-            throw;
-        }
+        if (readAssetVersion != assetVersion) core::Log::Error("asset version mismatch (read: {}, expected: {})", readAssetVersion, assetVersion);
 
         structs::AssetInfo assetInfo{ };
         file.read(reinterpret_cast<char *>(&assetInfo), ASSET_INFO_SIZE);
