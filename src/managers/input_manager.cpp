@@ -1,3 +1,5 @@
+#include <spdlog/spdlog.h>
+
 #include "managers/input_manager.hpp"
 #include "core/engine.hpp"
 #include "structs/input/mouse_button.hpp"
@@ -6,9 +8,7 @@
 managers::InputManager *g_InputManager = new managers::InputManager();
 
 namespace managers {
-    InputManager::InputManager() {
-        mousePosition = { 0, 0 };
-
+    InputManager::InputManager() : mousePosition() {
         for (int i = (int) structs::MouseButton::LeftClick; i != (int) structs::MouseButton::None; i++) {
             std::map<structs::InputState, int> map = {
                     { structs::InputState::Down,     0 },
@@ -16,7 +16,7 @@ namespace managers {
                     { structs::InputState::Released, 0 }
             };
 
-            structs::MouseButton mouseInput = static_cast<structs::MouseButton>(i);
+            auto mouseInput = static_cast<structs::MouseButton>(i);
             mouseStates.insert(std::pair<structs::MouseButton, std::map<structs::InputState, int>>(mouseInput, map));
         }
     }
@@ -56,10 +56,6 @@ namespace managers {
         }
     }
 
-    int InputManager::GetMapState(std::map<structs::InputState, int> &map, structs::InputState inputState) {
-        return map.find(inputState)->second;
-    }
-
     void InputManager::SetMapState(std::map<structs::InputState, int> &map, int isDown) {
         auto down = map.find(structs::InputState::Down);
         auto pressed = map.find(structs::InputState::Pressed);
@@ -69,6 +65,21 @@ namespace managers {
         map[structs::InputState::Released] = ((downPrevious) && (!isDown));
         map[structs::InputState::Pressed] = ((!downPrevious) && (isDown));
         map[structs::InputState::Down] = isDown;
+    }
+
+    int InputManager::GetMapState(std::map<structs::InputState, int> &map, structs::InputState inputState) {
+        return map.find(inputState)->second;
+    }
+
+    int InputManager::GetInputState(const std::string &inputName, structs::InputState inputState) {
+        auto find = inputStates.find(inputName);
+        if (find == inputStates.end()) {
+            spdlog::warn("tried to detect non-defined input \"{}\"", inputName);
+            return 0;
+        }
+
+        std::map<structs::InputState, int> map = find->second;
+        return GetMapState(map, inputState);
     }
 
     int InputManager::GetMouseDown(structs::MouseButton mouseInput) {
@@ -103,23 +114,22 @@ namespace managers {
     }
 
     void InputManager::TrackInput(const std::string &inputName, int scanCode) {
-        auto keys = keyMap.find(inputName);
-        std::vector<int> &scanCodes = keys->second;
+        auto find = keyMap.find(inputName);
+        if (find == keyMap.end()) return spdlog::warn("tried to track non-defined input \"{}\"", inputName);
+
+        std::vector<int> &scanCodes = find->second;
         scanCodes.emplace_back(scanCode);
     }
 
     int InputManager::GetInputDown(const std::string &inputName) {
-        auto state = inputStates.find(inputName)->second;
-        return GetMapState(state, structs::InputState::Down);
+        return GetInputState(inputName, structs::InputState::Down);
     }
 
     int InputManager::GetInputPressed(const std::string &inputName) {
-        auto state = inputStates.find(inputName)->second;
-        return GetMapState(state, structs::InputState::Pressed);
+        return GetInputState(inputName, structs::InputState::Pressed);
     }
 
     int InputManager::GetInputReleased(const std::string &inputName) {
-        auto state = inputStates.find(inputName)->second;
-        return GetMapState(state, structs::InputState::Released);
+        return GetInputState(inputName, structs::InputState::Released);
     }
 }
