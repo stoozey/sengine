@@ -9,6 +9,7 @@
 #include "loop_runners/loop_runner.hpp"
 #include "loop_runners/entity_loop_runner.hpp"
 #include "structs/loop_runners/loop_runner_type.hpp"
+#include "structs/colour.hpp"
 
 namespace core {
     class Engine {
@@ -34,6 +35,10 @@ namespace core {
 
         int GetWindowWidth();
         int GetWindowHeight();
+
+        ImGuiIO *GetImGuiIo();
+
+        void SetClearColour(const structs::Colour &colour);
     private:
         SDL_Renderer *renderer;
         SDL_Window *window;
@@ -49,6 +54,8 @@ namespace core {
 
         int windowWidth;
         int windowHeight;
+
+        structs::Colour clearColour;
 
         void InitSdl();
         void InitNfd();

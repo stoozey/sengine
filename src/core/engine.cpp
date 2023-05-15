@@ -113,6 +113,14 @@ namespace core {
         return windowHeight;
     }
 
+    ImGuiIO *Engine::GetImGuiIo() {
+        return io;
+    }
+
+    void Engine::SetClearColour(const structs::Colour &colour) {
+        clearColour = colour;
+    }
+
     std::shared_ptr<loopRunners::LoopRunner> Engine::GetLoopRunner(structs::LoopRunnerType loopRunnerType) {
         for (auto &loopRunner: loopRunners) {
             if (loopRunner->GetLoopRunnerType() == loopRunnerType) return loopRunner;
@@ -186,7 +194,7 @@ namespace core {
                 glDisable(GL_CULL_FACE);
 
                 glViewport(0, 0, windowWidth, windowHeight);
-                glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+                glClearColor(clearColour.r, clearColour.g, clearColour.b, clearColour.a);
                 glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
                 Render();
