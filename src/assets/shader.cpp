@@ -7,6 +7,8 @@
 #include "structs/assets/asset_type.hpp"
 
 namespace assets {
+    const char *Shader::glslVersion = "#version 410 core";
+
     Shader::Shader() : assets::Asset(structs::AssetType::Shader) {
         programData = { "", "" };
         program = -1;

@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <list>
 #include <memory>
+#include <imgui.h>
 
 #include "loop_runners/loop_runner.hpp"
 #include "loop_runners/entity_loop_runner.hpp"
@@ -37,6 +38,7 @@ namespace core {
         SDL_Renderer *renderer;
         SDL_Window *window;
         SDL_GLContext glContext;
+        ImGuiIO *io;
 
         std::list<std::shared_ptr<loopRunners::LoopRunner>> loopRunners;
 
@@ -50,6 +52,7 @@ namespace core {
 
         void InitSdl();
         void InitNfd();
+        void InitImGui();
     };
 }
 

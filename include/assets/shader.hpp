@@ -26,6 +26,8 @@ namespace assets {
         void SetUniform(const std::string &name, glm::vec4 value);
         void SetUniform(const std::string &name, glm::mat4 value);
 
+        static const char *glslVersion;
+
         structs::ShaderProgramData programData;
     private:
         static GLuint Compile(GLuint shaderType, const char *source);

@@ -8,10 +8,13 @@
 #include <spdlog/spdlog.h>
 #include <nfd.h>
 
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_opengl3.h"
 #include "core/engine.hpp"
 #include "structs/clock.hpp"
 #include "managers/input_manager.hpp"
 #include "core/log.hpp"
+#include "assets/shader.hpp"
 
 core::Engine *g_Engine = new core::Engine();
 
@@ -24,6 +27,7 @@ namespace core {
         renderer = nullptr;
         window = nullptr;
         glContext = nullptr;
+        io = nullptr;
 
         loopRunning = false;
 
@@ -47,6 +51,7 @@ namespace core {
     void Engine::Initialize() {
         InitSdl();
         InitNfd();
+        InitImGui();
     }
 
     void Engine::InitSdl() {
@@ -70,6 +75,22 @@ namespace core {
 
         std::string error = NFD_GetError();
         core::Log::Critical("NFD failed to initialize: {}", error);
+    }
+
+    void Engine::InitImGui() {
+        // Setup Dear ImGui context
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        io = &ImGui::GetIO(); (void)io;
+        io->ConfigFlags |= (ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad);
+
+        // Setup Dear ImGui style
+        //ImGui::StyleColorsDark();
+        ImGui::StyleColorsLight();
+
+        // Setup Platform/Renderer backends
+        ImGui_ImplSDL2_InitForOpenGL(window, glContext);
+        ImGui_ImplOpenGL3_Init(assets::Shader::glslVersion);
     }
 
     SDL_Renderer *Engine::GetRenderer() {
@@ -108,6 +129,8 @@ namespace core {
     void Engine::Update(double deltaTime) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
+            ImGui_ImplSDL2_ProcessEvent(&event);
+
             switch (event.type) {
                 case SDL_QUIT: {
                     loopRunning = false;
@@ -126,6 +149,7 @@ namespace core {
     }
 
     void Engine::RunLoop() {
+        // setup performance tracking
         Uint64 now = SDL_GetPerformanceCounter();
         Uint64 last = 0;
         double deltaTime = 0.0;
@@ -133,6 +157,7 @@ namespace core {
         static structs::Clock systemClock;
         float accumulatedSeconds = 0.0f;
 
+        // run loop
         loopRunning = true;
         while (loopRunning) {
             systemClock.Tick();
@@ -165,6 +190,9 @@ namespace core {
                 glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
                 Render();
+                ImGui::Render();
+                ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
                 SDL_GL_SwapWindow(window);
             }
         }
