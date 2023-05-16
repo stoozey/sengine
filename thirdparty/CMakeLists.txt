@@ -9,6 +9,6 @@ add_subdirectory(spdlog)
 add_subdirectory(entt)
 add_subdirectory(crossguid)
 add_subdirectory(nativefiledialog-extended)
-add_subdirectory(imgui)
+#add_subdirectory(imgui)
 
 target_include_directories(${PROJECT_NAME} PUBLIC KHR base64 boost dlg freetype)
