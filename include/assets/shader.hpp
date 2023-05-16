@@ -13,6 +13,7 @@ namespace assets {
     class Shader : public Asset {
     public:
         Shader();
+        ~Shader();
 
         void Save(const std::string &filePath) override;
         void Load(const std::string &filePath) override;

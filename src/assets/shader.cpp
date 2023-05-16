@@ -14,6 +14,10 @@ namespace assets {
         program = -1;
     }
 
+    Shader::~Shader() {
+        DeleteProgram();
+    }
+
     void Shader::Save(const std::string &filePath) {
         std::fstream file;
         file.open(filePath, std::ios::binary | std::ios::out | std::ios::trunc);
