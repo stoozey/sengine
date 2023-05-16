@@ -7,7 +7,7 @@ namespace structs {
     struct ShaderProgramData {
         char vertexShader[4096];
         char fragmentShader[4096];
-        bool encoded = false;
+        bool encoded = true;
     };
 }
 
