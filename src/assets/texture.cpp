@@ -5,6 +5,7 @@
 #include "assets/texture.hpp"
 #include "structs/assets/asset_info.hpp"
 #include "structs/assets/asset_type.hpp"
+#include "core/log.hpp"
 
 namespace assets {
     Texture::Texture() : Asset(structs::AssetType::Texture) {
@@ -23,17 +24,16 @@ namespace assets {
     void Texture::Save(const std::string &filePath) {
         std::fstream file;
         file.open(filePath, std::ios::binary | std::ios::out | std::ios::trunc);
-        WriteAssetInfo(file, assetInfo);
+        WriteAssetInfo(file);
 
         file.write(reinterpret_cast<char *>(&width), sizeof(int));
         file.write(reinterpret_cast<char *>(&height), sizeof(int));
+
 
         file.write(reinterpret_cast<char *>(&dataSize), sizeof(long long));
         file.write(reinterpret_cast<char *>(data), dataSize);
 
         file.close();
-        std::cout << "saving as w: " << width << ", h: " << height << ", size: " << dataSize << std::endl;
-
     }
 
     void Texture::Load(const std::string &filePath) {
@@ -64,10 +64,10 @@ namespace assets {
         int totalChannels;
         data = stbi_load(filePath.c_str(), &width, &height, &totalChannels, 0);
         dataSize = (width * height * totalChannels);
-        std::cout << dataSize << std::endl;
     }
 
     void Texture::BindTexture() {
+        core::Log::Info("1");
         glGenTextures(1, &textureId);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textureId);

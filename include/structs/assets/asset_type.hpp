@@ -3,11 +3,12 @@
 
 namespace structs {
     enum class AssetType {
-        Shader,
+        Font,
+        Material,
         Model,
-        Texture,
+        Shader,
         Sound,
-        Font
+        Texture,
     };
 }
 

@@ -20,8 +20,8 @@ namespace assets {
         virtual void Save(const std::string &filePath) = 0;
         virtual void Load(const std::string &filePath) = 0;
     protected:
-        static void WriteAssetInfo(std::fstream &file, structs::AssetInfo &assetInfo);
-        static structs::AssetInfo ReadAssetInfo(std::fstream &file);
+        void WriteAssetInfo(std::fstream &file);
+        void ReadAssetInfo(std::fstream &file);
 
         structs::AssetInfo assetInfo{};
     private:

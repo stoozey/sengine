@@ -1,6 +1,8 @@
 #ifndef SENGINE_TEST1_ASSET_INFO_H
 #define SENGINE_TEST1_ASSET_INFO_H
 
+#include <crossguid/guid.hpp>
+
 #include "structs/assets/asset_type.hpp"
 
 namespace structs {
@@ -8,7 +10,11 @@ namespace structs {
 
     struct AssetInfo {
         AssetType assetType;
-        const char *guid[ASSET_INFO_GUID_BYTES];
+        std::array<unsigned char, 16> guid;
+
+        xg::Guid GetGuid() {
+            return xg::Guid(guid);
+        }
     };
 }
 

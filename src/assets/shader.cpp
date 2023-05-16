@@ -17,8 +17,7 @@ namespace assets {
     void Shader::Save(const std::string &filePath) {
         std::fstream file;
         file.open(filePath, std::ios::binary | std::ios::out | std::ios::trunc);
-
-        WriteAssetInfo(file, assetInfo);
+        WriteAssetInfo(file);
 
         structs::ShaderProgramData data = ((programData.encoded) ? GenerateEncodedShaderData() : programData);
         file.write(reinterpret_cast<char *>(&data), sizeof(structs::ShaderProgramData));

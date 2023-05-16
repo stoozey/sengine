@@ -28,25 +28,21 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2IMAGE_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2IMAGE_INCLUDE_DIRS})
 
 set(SENGINE_SDL_LINKER_FLAGS SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SENGINE_SDL_LINKER_FLAGS})
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libstdc++ -static-libgcc -lmingw32 ${SENGINE_SDL_LINKER_FLAGS} -mconsole)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libstdc++ -static-libgcc -lmingw32 ${SENGINE_SDL_LINKER_FLAGS})
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE -mconsole)
+endif()
 
 # thirdparty
 add_subdirectory(thirdparty)
 target_include_directories(${PROJECT_NAME} PUBLIC thirdparty)
-target_link_libraries(${PROJECT_NAME} PUBLIC assimp)
-target_link_libraries(${PROJECT_NAME} PUBLIC glm)
-target_link_libraries(${PROJECT_NAME} PUBLIC stb)
-target_link_libraries(${PROJECT_NAME} PUBLIC glad)
-target_link_libraries(${PROJECT_NAME} PUBLIC spdlog)
-target_link_libraries(${PROJECT_NAME} PUBLIC EnTT)
-target_link_libraries(${PROJECT_NAME} PUBLIC crossguid)
-target_link_libraries(${PROJECT_NAME} PUBLIC nfd)
-target_link_libraries(${PROJECT_NAME} PUBLIC imgui)
+target_link_libraries(${PROJECT_NAME} PUBLIC assimp glm stb glad spdlog EnTT crossguid nfd imgui)
 
 # build commands
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
@@ -63,7 +59,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         "${CMAKE_SOURCE_DIR}/datafiles"
         $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>)
 
-
+# install
 install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

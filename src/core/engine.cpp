@@ -8,8 +8,8 @@
 #include <spdlog/spdlog.h>
 #include <nfd.h>
 
-#include "imgui_impl_sdl2.h"
-#include "imgui_impl_opengl3.h"
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_opengl3.h>
 #include "core/engine.hpp"
 #include "structs/clock.hpp"
 #include "managers/input_manager.hpp"
@@ -37,12 +37,18 @@ namespace core {
 
         windowWidth = WINDOW_WIDTH_DEFAULT;
         windowHeight = WINDOW_HEIGHT_DEFAULT;
+
+        clearColour = { 0.5f, 0.5f, 0.5f, 0.5f };
     }
 
     Engine::~Engine() {
         if (window != nullptr) {
             SDL_DestroyWindow(window);
         }
+
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplSDL2_Shutdown();
+        ImGui::DestroyContext();
 
         NFD_Quit();
         SDL_Quit();
@@ -197,7 +203,13 @@ namespace core {
                 glClearColor(clearColour.r, clearColour.g, clearColour.b, clearColour.a);
                 glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
+                // setup imgui frame
+                ImGui_ImplOpenGL3_NewFrame();
+                ImGui_ImplSDL2_NewFrame(window);
+                ImGui::NewFrame();
+
                 Render();
+
                 ImGui::Render();
                 ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

@@ -9,25 +9,43 @@ namespace core {
 
     class Log {
     public:
+        static void Info(const std::string &string) {
+            spdlog::info(string);
+        }
+
+        static void Warn(const std::string &string) {
+            spdlog::warn(string);
+        }
+
+        static void Error(const std::string &string) {
+            spdlog::error(string);
+            throw;
+        }
+
+        static void Critial(const std::string &string) {
+            spdlog::critical(string);
+            exit(1);
+        }
+
         template<typename... Args>
         static void Info(format_string_t<Args...> fmt, Args &&...args) {
-            spdlog::info(fmt, args...);
+            spdlog::info(fmt, std::forward<Args>(args)...);
         }
 
         template<typename... Args>
         static void Warn(format_string_t<Args...> fmt, Args &&...args) {
-            spdlog::warn(fmt, args...);
+            spdlog::warn(fmt, std::forward<Args>(args)...);
         }
 
         template<typename... Args>
         static void Error(format_string_t<Args...> fmt, Args &&...args) {
-            spdlog::error(fmt, args...);
+            spdlog::error(fmt, std::forward<Args>(args)...);
             throw;
         }
 
         template<typename... Args>
         static void Critical(format_string_t<Args...> fmt, Args &&...args) {
-            spdlog::critical(fmt, args...);
+            spdlog::critical(fmt, std::forward<Args>(args)...);
             exit(1);
         }
     };

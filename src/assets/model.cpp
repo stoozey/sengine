@@ -75,7 +75,7 @@ namespace assets {
     void Model::Save(const std::string &filePath) {
         std::fstream file;
         file.open(filePath, std::ios::binary | std::ios::out | std::ios::trunc);
-        WriteAssetInfo(file, assetInfo);
+        WriteAssetInfo(file);
 
         short totalMeshes = meshes.size();
         file.write(reinterpret_cast<char *>(&totalMeshes), sizeof(short));
