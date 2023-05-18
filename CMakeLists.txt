@@ -44,9 +44,6 @@ add_subdirectory(thirdparty)
 target_include_directories(${PROJECT_NAME} PUBLIC thirdparty)
 target_link_libraries(${PROJECT_NAME} PUBLIC assimp glm stb glad spdlog EnTT crossguid nfd imgui 3rdparty_zlib)
 
-set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF)
-set(ASSIMP_BUILD_OBJ_IMPORTER ON)
-
 # build commands
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E rm -R -f
