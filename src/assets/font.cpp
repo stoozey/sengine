@@ -37,8 +37,7 @@
 //        int result = FT_New_Memory_Face(ftLibrary, reinterpret_cast<FT_Byte *>(&fontData), static_cast<FT_Long>(fontDataSize), 0, face);
 //        if (result == 0) return;
 //
-//        std::string guid = reinterpret_cast<const char *>(assetInfo.guid);
-//        core::Log::Error("failed to load face for font {}", guid);
+//        core::Log::Error("failed to load face for font {}", assetInfo.GetGuid().str());
 //    }
 //
 //    void Font::GenerateCharacters(FT_Library ftLibrary, const FT_Face &face) {
@@ -49,8 +48,7 @@
 //        for (unsigned char c = 0; c < 128; c++) {
 //            // load character glyph
 //            if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-//                std::string guid = reinterpret_cast<const char *>(assetInfo.guid);
-//                core::Log::Warn("failed to load glyph {} for font {}", c, guid);
+//                core::Log::Warn("failed to load glyph {} for font {}", c, assetInfo.GetGuid().str());
 //                continue;
 //            }
 //
