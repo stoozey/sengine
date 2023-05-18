@@ -19,11 +19,13 @@ namespace assets {
 
         virtual void Save(const std::string &filePath) = 0;
         virtual void Load(const std::string &filePath) = 0;
+
+        structs::AssetInfo GetAssetInfo();
     protected:
         void WriteAssetInfo(std::fstream &file);
         void ReadAssetInfo(std::fstream &file);
 
-        structs::AssetInfo assetInfo{};
+        structs::AssetInfo assetInfo;
     private:
         static int assetVersion;
     };

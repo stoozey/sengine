@@ -659,7 +659,7 @@ static void ShowDemoWindowWidgets()
         ImGui::LabelText("label", "Value");
 
         ImGui::SeparatorText("Inputs");
-
+        ImGui::Debug
         {
             // To wire InputText() with std::string or any other custom string type,
             // see the "Text Input > Resize Callback" section of this demo, and the misc/cpp/imgui_stdlib.h file.

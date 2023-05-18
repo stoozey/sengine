@@ -11,6 +11,10 @@ namespace assets {
         assetInfo = structs::AssetInfo{ assetType, guid.bytes() };
     }
 
+    structs::AssetInfo Asset::GetAssetInfo() {
+        return assetInfo;
+    }
+
     void Asset::WriteAssetInfo(std::fstream &file) {
         char *assetInfoBytes = new char[ASSET_INFO_BYTES];
         assetInfo.ToBytes(assetInfoBytes);

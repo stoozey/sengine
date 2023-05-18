@@ -30,10 +30,10 @@ find_package(SDL2_image REQUIRED)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2IMAGE_INCLUDE_DIRS})
 
-set(SENGINE_SDL_LINKER_FLAGS SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image)
+set(SENGINE_PACKAGE_LINKER_FLAGS SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SENGINE_SDL_LINKER_FLAGS})
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libstdc++ -static-libgcc -lmingw32 ${SENGINE_SDL_LINKER_FLAGS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SENGINE_PACKAGE_LINKER_FLAGS})
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE --static -static-libstdc++ -static-libgcc -lmingw32 ${SENGINE_PACKAGE_LINKER_FLAGS})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE -mconsole)
@@ -42,7 +42,10 @@ endif()
 # thirdparty
 add_subdirectory(thirdparty)
 target_include_directories(${PROJECT_NAME} PUBLIC thirdparty)
-target_link_libraries(${PROJECT_NAME} PUBLIC assimp glm stb glad spdlog EnTT crossguid nfd imgui)
+target_link_libraries(${PROJECT_NAME} PUBLIC assimp glm stb glad spdlog EnTT crossguid nfd imgui 3rdparty_zlib)
+
+set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF)
+set(ASSIMP_BUILD_OBJ_IMPORTER ON)
 
 # build commands
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

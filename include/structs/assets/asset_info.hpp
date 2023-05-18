@@ -28,7 +28,7 @@ namespace structs {
             char *clearEnd = (currentPtr + ASSET_INFO_BYTES);
             std::fill(currentPtr, clearEnd, 0);
 
-            std::strcpy(&out[0], ASSET_INFO_SIGNATURE);
+            std::strcpy(currentPtr, ASSET_INFO_SIGNATURE);
             currentPtr += std::strlen(ASSET_INFO_SIGNATURE);
 
             std::memcpy(currentPtr, &ASSET_INFO_VERSION, sizeof(ASSET_INFO_VERSION));
