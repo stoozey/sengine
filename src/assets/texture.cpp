@@ -29,7 +29,6 @@ namespace assets {
         file.write(reinterpret_cast<char *>(&width), sizeof(int));
         file.write(reinterpret_cast<char *>(&height), sizeof(int));
 
-
         file.write(reinterpret_cast<char *>(&dataSize), sizeof(long long));
         file.write(reinterpret_cast<char *>(data), dataSize);
 
