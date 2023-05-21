@@ -19,11 +19,14 @@ namespace assets {
         char *assetInfoBytes = new char[ASSET_INFO_BYTES];
         assetInfo.ToBytes(assetInfoBytes);
         file.write(assetInfoBytes, static_cast<long long>(ASSET_INFO_BYTES));
+
+        delete[] assetInfoBytes;
     }
 
     void Asset::ReadAssetInfo(std::fstream &file) {
         char *assetInfoBytes = new char[ASSET_INFO_BYTES];
         file.read(assetInfoBytes, static_cast<long long>(ASSET_INFO_BYTES));
         assetInfo = structs::AssetInfo::FromBytes(assetInfoBytes);
+        delete[] assetInfoBytes;
     }
 }

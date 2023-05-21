@@ -49,6 +49,9 @@ namespace structs {
             compSignature[signatureSize] = '\0';
             if (std::strcmp(compSignature, ASSET_INFO_SIGNATURE) != 0) core::Log::Error("invalid file signature (got {}, expected {})", compSignature, ASSET_INFO_SIGNATURE);
 
+            delete[] signatureArray;
+            delete[] compSignature;
+
             size_t versionSize = sizeof(ASSET_INFO_VERSION);
             unsigned short version;
             std::memcpy(&version, currentPtr, versionSize);

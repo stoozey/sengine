@@ -4,12 +4,11 @@
 #include <memory>
 #include <filesystem>
 #include <utility>
+#include <map>
 
 #include "core/log.hpp"
 #include "assets/asset.hpp"
-#include "assets/shader.hpp"
-#include "assets/model.hpp"
-#include "assets/texture.hpp"
+#include "structs/assets/asset_type.hpp"
 
 namespace managers {
     const std::string ASSET_DEFAULT_NAME = ".default";
@@ -20,6 +19,8 @@ namespace managers {
     public:
         AssetManager();
 
+        void GetAssetNames(const structs::AssetType &assetType, std::vector<std::string> *outNames);
+
         template<typename T>
         std::shared_ptr<T> LoadAsset(const std::string &assetName);
 
@@ -28,6 +29,7 @@ namespace managers {
 
         template<typename T>
         std::shared_ptr<T> GetAsset(const std::string &assetName);
+        std::shared_ptr<assets::Asset> GetAssetRaw(const std::string &assetPath);
 
         template<typename T>
         bool AssetExists(const std::string &assetName);
@@ -37,8 +39,9 @@ namespace managers {
 
         template<typename T>
         std::string GetAssetPath(const std::string &assetName);
+        static std::string GetAssetPathRaw(const std::string &folderName, const std::string &assetName);
     private:
-        std::map<std::string, std::shared_ptr<assets::Asset>> assets;
+        std::map<std::string, std::shared_ptr<assets::Asset>> assetMap;
     };
 }
 

@@ -1,3 +1,14 @@
+#ifndef SENGINE_ASSET_MANAGER_TPP
+#define SENGINE_ASSET_MANAGER_TPP
+
+#include "assets/asset.hpp"
+#include "assets/font.hpp"
+#include "assets/material.hpp"
+#include "assets/model.hpp"
+#include "assets/shader.hpp"
+#include "assets/sound.hpp"
+#include "assets/texture.hpp"
+
 namespace managers {
     template<typename T = assets::Asset>
     std::shared_ptr<T> AssetManager::LoadAsset(const std::string &assetName) {
@@ -9,7 +20,7 @@ namespace managers {
             if ((std::filesystem::exists(assetPath)) && (asset == nullptr)) {
                 asset = std::make_shared<T>();
                 asset->Load(assetPath);
-                assets.insert({ assetPath, asset });
+                assetMap.insert({ assetPath, asset });
             }
         }
         catch(const std::exception &e) {
@@ -32,17 +43,17 @@ namespace managers {
     template<typename T = assets::Asset>
     void AssetManager::UnLoadAsset(const std::string &assetName) {
         const std::string assetPath = GetAssetPath<T>(assetName);
-        auto find = assets.find(assetPath);
-        if (find == assets.end()) return;
+        auto find = assetMap.find(assetPath);
+        if (find == assetMap.end()) return;
 
-        assets.erase(find);
+        assetMap.erase(find);
     }
 
     template<typename T = assets::Asset>
     std::shared_ptr<T> AssetManager::GetAsset(const std::string &assetName) {
         const std::string assetPath = GetAssetPath<T>(assetName);
-        auto find = assets.find(assetPath);
-        return dynamic_pointer_cast<T>((find == assets.end()) ? nullptr : find->second);
+        std::shared_ptr<assets::Asset> asset = GetAssetRaw(assetPath);
+        return dynamic_pointer_cast<T>((asset == nullptr) ? nullptr : asset);
     }
 
     template<typename T = assets::Asset>
@@ -55,3 +66,5 @@ namespace managers {
         return LoadAsset<T>(".default");
     };
 }
+
+#endif //SENGINE_ASSET_MANAGER_TPP
