@@ -6,7 +6,7 @@
 namespace assets {
     int Asset::assetVersion = 1;
 
-    Asset::Asset(structs::AssetType assetType) {
+    Asset::Asset(structs::AssetType assetType) : assetInfo() {
         auto guid = xg::newGuid();
         assetInfo = structs::AssetInfo{ assetType, guid.bytes() };
     }

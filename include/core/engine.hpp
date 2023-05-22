@@ -10,6 +10,9 @@
 #include "loop_runners/entity_loop_runner.hpp"
 #include "structs/loop_runners/loop_runner_type.hpp"
 #include "structs/colour.hpp"
+#include "managers/asset_manager.hpp"
+#include "managers/input_manager.hpp"
+#include "managers/sound_manager.hpp"
 
 namespace core {
     class Engine {
@@ -22,6 +25,10 @@ namespace core {
         SDL_Renderer *GetRenderer();
         SDL_Window *GetWindow();
         SDL_GLContext *GetGlContext();
+
+        managers::AssetManager *GetAssetManager();
+        managers::InputManager *GetInputManager();
+        managers::SoundManager *GetSoundManager();
 
         std::shared_ptr<loopRunners::LoopRunner> GetLoopRunner(structs::LoopRunnerType loopRunnerType);
 
@@ -45,6 +52,10 @@ namespace core {
         SDL_GLContext glContext;
         ImGuiIO *io;
 
+        managers::AssetManager *assetManager;
+        managers::InputManager *inputManager;
+        managers::SoundManager *soundManager;
+
         std::list<std::shared_ptr<loopRunners::LoopRunner>> loopRunners;
 
         bool loopRunning;
@@ -60,6 +71,7 @@ namespace core {
         void InitSdl();
         void InitNfd();
         void InitImGui();
+        void InitManagers();
     };
 }
 

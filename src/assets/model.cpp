@@ -1,105 +1,140 @@
 #include <fstream>
 #include <iostream>
 #include <glad.h>
+#include <assimp/Importer.hpp>
+#include <assimp/Exporter.hpp>
+#include <assimp/postprocess.h>
 
+#include "core/log.hpp"
 #include "assets/model.hpp"
+#include "structs/vertex.hpp"
 
 namespace assets {
-    void WriteGlFloatVector(std::fstream &file, std::vector<GLfloat> &inVector) {
-        uint32_t size = inVector.size();
-        std::cout << "writing size " << size << std::endl;
-        file.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
-
-        for (GLfloat value: inVector) {
-            file.write(reinterpret_cast<char *>(&value), sizeof(GLfloat));
-        }
-    }
-
-    void ReadGlFloatVector(std::fstream &file, std::vector<GLfloat> &outVector) {
-        uint32_t size;
-        file.read(reinterpret_cast<char *>(&size), sizeof(uint32_t));
-        std::cout << "found size is " << size << std::endl;
-
-        for (int i = 0; i < size; i++) {
-            GLfloat value;
-            file.read(reinterpret_cast<char *>(&value), sizeof(GLfloat));
-
-            outVector.push_back(value);
-        }
-    }
-
-    Model::Model() : Asset(structs::AssetType::Model) {
-
+    Model::Model() : Asset(structs::AssetType::Model), scene(nullptr) {
+        core::Log::Error("poop!");
     }
 
     void Model::Load(const std::string &filePath) {
-        std::fstream file;
-        file.open(filePath, std::ios::binary | std::ios::in);
-        ReadAssetInfo(file);
-
-        short totalMeshes;
-        file.read(reinterpret_cast<char *>(&totalMeshes), sizeof(short));
-        std::cout << "totalMeshes " << totalMeshes << std::endl;
-
-        for (int i = 0; i < totalMeshes; i++) {
-            structs::Mesh mesh;
-
-            // load vectors
-            std::cout << "loading vertices" << std::endl;
-            ReadGlFloatVector(file, mesh.vertices);
-            std::cout << "loading colours" << std::endl;
-            ReadGlFloatVector(file, mesh.colours);
-            std::cout << "loading texCoords" << std::endl;
-            ReadGlFloatVector(file, mesh.texCoords);
-
-            // load texture
-            GLenum textureType;
-            file.read(reinterpret_cast<char *>(&textureType), sizeof(GLenum));
-            std::cout << "textureType " << textureType << std::endl;
-
-            size_t textureDataSize;
-            file.read(reinterpret_cast<char *>(&textureDataSize), sizeof(size_t));
-            std::cout << "textureDataSize  " << textureDataSize << std::endl;
-
-            char *textureData = new char[textureDataSize];
-            file.read(textureData, textureDataSize);
-
-            mesh.texture = structs::Texture{ textureType, textureDataSize, textureData };
-            meshes.push_back(mesh);
-        }
-
-        std::cout << "mesh count " << meshes.size() << std::endl;
-        file.close();
+        Assimp::Importer importer;
+        scene = importer.ReadFile(filePath, 0);
     }
 
     void Model::Save(const std::string &filePath) {
+        core::Log::Info("saving");
+        Assimp::Exporter exporter;
+        Assimp::ExportProperties *exportProperties = new Assimp::ExportProperties;
+        const aiExportDataBlob *blob = exporter.ExportToBlob(scene, "ASSBIN", 0u, exportProperties);
+        delete exportProperties;
+        if (blob == nullptr) core::Log::Error("failed to export blob for \"{}\"", filePath);
+
+        core::Log::Info(std::to_string(blob->size));
+
         std::fstream file;
         file.open(filePath, std::ios::binary | std::ios::out | std::ios::trunc);
-        WriteAssetInfo(file);
+        file.write(reinterpret_cast<const char *>(&blob->data), blob->size);
+        file.close();
+        exporter.FreeBlob();
+    }
 
-        short totalMeshes = meshes.size();
-        file.write(reinterpret_cast<char *>(&totalMeshes), sizeof(short));
-        for (int i = 0; i < totalMeshes; i++) {
-            structs::Mesh mesh = meshes.at(i);
+    void Model::LoadFromFile(const std::string &filePath) {
+        core::Log::Info("LoadFromFile1");
+        Assimp::Importer importer;
+        scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs);
+        core::Log::Info("LoadFromFile2");
+        if ((!scene) || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)) core::Log::Error("model assimp error: {}", importer.GetErrorString());
+        core::Log::Info("LoadFromFile3");
+        std::string directory = filePath.substr(0, filePath.find_last_of('/'));
+        ProcessNode(directory, scene->mRootNode);
+        core::Log::Info("LoadFromFile4");
+    }
 
-            // write vectors
-            WriteGlFloatVector(file, mesh.vertices);
-            WriteGlFloatVector(file, mesh.colours);
-            WriteGlFloatVector(file, mesh.texCoords);
+//    std::vector<std::shared_ptr<assets::Texture>> LoadMaterialTextures(aiMaterial *mat, aiTextureType type,  typeName)
+//    {
+//        vector<Texture> textures;
+//        for(unsigned int i = 0; i < mat->GetTextureCount(type); i++)
+//        {
+//            aiString str;
+//            mat->GetTexture(type, i, &str);
+//            Texture texture;
+//            texture.id = TextureFromFile(str.C_Str(), directory);
+//            texture.type = typeName;
+//            texture.path = str;
+//            textures.push_back(texture);
+//        }
+//        return textures;
+//    }
 
-            // write texture
-            structs::Texture texture = mesh.texture;
-            GLenum textureType = texture.textureType;
-            size_t textureDataSize = texture.textureDataSize;
-            file.write(reinterpret_cast<char *>(&textureType), sizeof(GLenum));
-            file.write(reinterpret_cast<char *>(&textureDataSize), sizeof(size_t));
-
-            std::cout << "saving " << textureType << ", " << textureDataSize << std::endl;
-
-            char *textureData = texture.textureData;
-            file.write(textureData, textureDataSize);
+    void Model::ProcessNode(const std::string &directory, aiNode *node) {
+        core::Log::Info("ProcessNode1");
+        for (int i = 0; i < node->mNumMeshes; i++) {
+            aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
+            meshes.push_back(ProcessMesh(mesh));
         }
 
-        file.close();
+        core::Log::Info("ProcessNode2");
+        for (int i = 0; i < node->mNumChildren; i++) {
+            ProcessNode(directory, node->mChildren[i]);
+        }
+    }
+
+    classes::Mesh Model::ProcessMesh(aiMesh *mesh) {
+        // vertices
+        core::Log::Info("ProcessMesh1");
+        std::vector<structs::Vertex> vertices;
+        for (int i = 0; i < mesh->mNumVertices; i++)
+        {
+            glm::vec3 position;
+            position.x = mesh->mVertices[i].x;
+            position.y = mesh->mVertices[i].y;
+            position.z = mesh->mVertices[i].z;
+
+            glm::vec3 normal;
+            if (mesh->mNormals != nullptr) {
+                normal.x = mesh->mNormals[i].x;
+                normal.y = mesh->mNormals[i].y;
+                normal.z = mesh->mNormals[i].z;
+            }
+
+            glm::vec2 texCoords;
+            if (mesh->mTextureCoords[0]) {
+                texCoords.x = mesh->mTextureCoords[0][i].x;
+                texCoords.y = mesh->mTextureCoords[0][i].y;
+            }
+
+            vertices.push_back({ position, normal, texCoords });
+        }
+
+        // indices
+        core::Log::Info("ProcessMesh2");
+        std::vector<GLuint> indices;
+        for (int i = 0; i < mesh->mNumFaces; i++)
+        {
+            aiFace face = mesh->mFaces[i];
+            for (int j = 0; j < face.mNumIndices; j++)
+                indices.push_back(face.mIndices[j]);
+        }
+
+        // textures
+        core::Log::Info("ProcessMesh3");
+        std::vector<std::shared_ptr<assets::Texture>> textures;
+//        if (mesh->mMaterialIndex >= 0)
+//        {
+//            aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+//            vector<Texture> diffuseMaps = loadMaterialTextures(material,
+//                                                               aiTextureType_DIFFUSE, "texture_diffuse");
+//            textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+//            vector<Texture> specularMaps = loadMaterialTextures(material,
+//                                                                aiTextureType_SPECULAR, "texture_specular");
+//            textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+//        }
+
+        core::Log::Info("ProcessMesh4");
+        return classes::Mesh(vertices, indices, textures);
+    }
+
+    void Model::Draw(std::shared_ptr<assets::Shader> shader) {
+        for (auto &mesh : meshes) {
+            mesh.Draw(shader);
+        }
     }
 }

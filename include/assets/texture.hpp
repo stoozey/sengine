@@ -1,6 +1,8 @@
 #ifndef SENGINE_TEST1_TEXTURE1_H
 #define SENGINE_TEST1_TEXTURE1_H
 
+#include <glad.h>
+
 #include "assets/asset.hpp"
 #include "structs/assets/asset_info.hpp"
 

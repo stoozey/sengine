@@ -21,6 +21,9 @@ namespace assets {
         GLuint GetProgram() const;
         bool ProgramExists() const;
 
+        void CreateProgram();
+        void DeleteProgram();
+
         void SetUniform(const std::string &name, float value);
         void SetUniform(const std::string &name, glm::vec2 value);
         void SetUniform(const std::string &name, glm::vec3 value);
@@ -36,8 +39,6 @@ namespace assets {
         structs::ShaderProgramData GenerateEncodedShaderData();
         structs::ShaderUniformData GetUniformData(const std::string &name);
 
-        void CreateProgram();
-        void DeleteProgram();
         void FetchUniforms();
 
         GLuint program;

@@ -6,8 +6,6 @@
 #include "structs/input/mouse_button.hpp"
 #include "structs/input/input_state.hpp"
 
-managers::InputManager *g_InputManager = new managers::InputManager();
-
 namespace managers {
     InputManager::InputManager() : mousePosition() {
         for (int i = (int) structs::MouseButton::LeftClick; i != (int) structs::MouseButton::None; i++) {

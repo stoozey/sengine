@@ -48,6 +48,4 @@ namespace managers {
     };
 }
 
-extern managers::InputManager *g_InputManager;
-
 #endif //SENGINE_INPUT_MANAGER_H

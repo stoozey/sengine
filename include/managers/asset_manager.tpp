@@ -1,22 +1,23 @@
 #ifndef SENGINE_ASSET_MANAGER_TPP
 #define SENGINE_ASSET_MANAGER_TPP
 
-#include "assets/asset.hpp"
-#include "assets/font.hpp"
-#include "assets/material.hpp"
-#include "assets/model.hpp"
-#include "assets/shader.hpp"
-#include "assets/sound.hpp"
-#include "assets/texture.hpp"
+#include "managers/asset_manager.hpp"
 
 namespace managers {
-    template<typename T = assets::Asset>
-    std::shared_ptr<T> AssetManager::LoadAsset(const std::string &assetName) {
+    template<typename T>
+    structs::AssetType AssetManager::GetAssetType() {
+        return ASSET_ASSET_TYPES.find(typeid(T))->second;
+    }
+
+    template<typename T>
+    std::shared_ptr<T> AssetManager::LoadAsset(const std::string &assetName, bool loadDefaultIfFailed) {
         std::shared_ptr<T> asset;
-        const std::string assetPath = GetAssetPath<T>(assetName);
+        core::Log::Info("getting asset path {}", assetName);
+        std::string assetPath = GetAssetPath<T>(assetName);
+        core::Log::Info("loading asset {}", assetPath);
 
         try {
-            asset = GetAsset<T>(assetName);
+            asset = GetAsset<T>(assetPath);
             if ((std::filesystem::exists(assetPath)) && (asset == nullptr)) {
                 asset = std::make_shared<T>();
                 asset->Load(assetPath);
@@ -34,13 +35,13 @@ namespace managers {
             const std::string defaultAssetPath = GetAssetPath<T>(ASSET_DEFAULT_NAME);
             if (!std::filesystem::exists(defaultAssetPath)) core::Log::Error("missing default asset \"{}\"", defaultAssetPath);
 
-            asset = LoadAsset<T>(ASSET_DEFAULT_NAME);
+            asset = LoadAsset<T>(ASSET_DEFAULT_NAME, false);
         }
 
         return asset;
     }
 
-    template<typename T = assets::Asset>
+    template<typename T>
     void AssetManager::UnLoadAsset(const std::string &assetName) {
         const std::string assetPath = GetAssetPath<T>(assetName);
         auto find = assetMap.find(assetPath);
@@ -49,22 +50,28 @@ namespace managers {
         assetMap.erase(find);
     }
 
-    template<typename T = assets::Asset>
+    template<typename T>
     std::shared_ptr<T> AssetManager::GetAsset(const std::string &assetName) {
         const std::string assetPath = GetAssetPath<T>(assetName);
         std::shared_ptr<assets::Asset> asset = GetAssetRaw(assetPath);
         return dynamic_pointer_cast<T>((asset == nullptr) ? nullptr : asset);
     }
 
-    template<typename T = assets::Asset>
+    template<typename T>
     bool AssetManager::AssetExists(const std::string &assetName) {
         return (GetAsset<T>(assetName) != nullptr);
     }
 
-    template<typename T = assets::Asset>
+    template<typename T>
     std::shared_ptr<T> AssetManager::GetDefaultAsset() {
-        return LoadAsset<T>(".default");
-    };
+        return LoadAsset<T>(DEFAULT_ASSET_NAME, false);
+    }
+
+    template<typename T>
+    std::string AssetManager::GetAssetPath(const std::string &assetName) {
+        std::string folderName = ASSET_FOLDER_NAMES.find(typeid(T))->second;
+        return GetAssetPathRaw(folderName, assetName);
+    }
 }
 
 #endif //SENGINE_ASSET_MANAGER_TPP

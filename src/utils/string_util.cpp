@@ -9,4 +9,8 @@ namespace utils {
             outVector->push_back(i.c_str());
         }
     }
+
+    bool CompareStrings(const std::string &a, const std::string &b) {
+        return (a < b);
+    }
 }

@@ -8,13 +8,14 @@
 #include <spdlog/spdlog.h>
 #include <nfd.h>
 
-#include <imgui_impl_sdl2.h>
-#include <imgui_impl_opengl3.h>
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_opengl3.h"
 #include "core/engine.hpp"
 #include "structs/clock.hpp"
 #include "managers/input_manager.hpp"
 #include "core/log.hpp"
 #include "assets/shader.hpp"
+#include "managers/asset_manager.hpp"
 
 core::Engine *g_Engine = new core::Engine();
 
@@ -58,6 +59,7 @@ namespace core {
         InitSdl();
         InitNfd();
         InitImGui();
+        InitManagers();
     }
 
     void Engine::InitSdl() {
@@ -99,6 +101,12 @@ namespace core {
         ImGui_ImplOpenGL3_Init(assets::Shader::glslVersion);
     }
 
+    void Engine::InitManagers() {
+        assetManager = new managers::AssetManager();
+        inputManager = new managers::InputManager();
+        soundManager = new managers::SoundManager();
+    }
+
     SDL_Renderer *Engine::GetRenderer() {
         return renderer;
     }
@@ -109,6 +117,18 @@ namespace core {
 
     SDL_GLContext *Engine::GetGlContext() {
         return &glContext;
+    }
+
+    managers::AssetManager *Engine::GetAssetManager() {
+        return assetManager;
+    }
+
+    managers::InputManager *Engine::GetInputManager() {
+        return inputManager;
+    }
+
+    managers::SoundManager *Engine::GetSoundManager() {
+        return soundManager;
     }
 
     int Engine::GetWindowWidth() {
@@ -163,58 +183,63 @@ namespace core {
     }
 
     void Engine::RunLoop() {
-        // setup performance tracking
-        Uint64 now = SDL_GetPerformanceCounter();
-        Uint64 last = 0;
-        double deltaTime = 0.0;
+        try {
+            // setup performance tracking
+            Uint64 now = SDL_GetPerformanceCounter();
+            Uint64 last = 0;
+            double deltaTime = 0.0;
 
-        static structs::Clock systemClock;
-        float accumulatedSeconds = 0.0f;
+            static structs::Clock systemClock;
+            float accumulatedSeconds = 0.0f;
 
-        // run loop
-        loopRunning = true;
-        while (loopRunning) {
-            systemClock.Tick();
-            accumulatedSeconds += systemClock.elapsedSeconds;
+            // run loop
+            loopRunning = true;
+            while (loopRunning) {
+                systemClock.Tick();
+                accumulatedSeconds += systemClock.elapsedSeconds;
 
-            if (std::isgreater(accumulatedSeconds, cycleTime)) {
-                accumulatedSeconds = -cycleTime;
+                if (std::isgreater(accumulatedSeconds, cycleTime)) {
+                    accumulatedSeconds = -cycleTime;
 
-                // Update
-                static structs::Clock physicsClock;
-                physicsClock.Tick();
+                    // Update
+                    static structs::Clock physicsClock;
+                    physicsClock.Tick();
 
-                last = now;
-                now = SDL_GetPerformanceCounter();
-                deltaTime = (
-                        (static_cast<double>(now - last) * 1000 / static_cast<double>(SDL_GetPerformanceFrequency())) *
-                        0.01);
-                //g_PhysicsManager.Update(deltaTime);
+                    last = now;
+                    now = SDL_GetPerformanceCounter();
+                    deltaTime = (
+                            (static_cast<double>(now - last) * 1000 / static_cast<double>(SDL_GetPerformanceFrequency())) *
+                            0.01);
+                    //g_PhysicsManager.Update(deltaTime);
 
-                g_InputManager->Poll();
+                    inputManager->Poll();
 
-                Update(deltaTime);
+                    Update(deltaTime);
 
-                // Render
-                glDisable(GL_DEPTH_TEST);
-                glDisable(GL_CULL_FACE);
+                    // Render
+                    glDisable(GL_DEPTH_TEST);
+                    glDisable(GL_CULL_FACE);
 
-                glViewport(0, 0, windowWidth, windowHeight);
-                glClearColor(clearColour.r, clearColour.g, clearColour.b, clearColour.a);
-                glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+                    glViewport(0, 0, windowWidth, windowHeight);
+                    glClearColor(clearColour.r, clearColour.g, clearColour.b, clearColour.a);
+                    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-                // setup imgui frame
-                ImGui_ImplOpenGL3_NewFrame();
-                ImGui_ImplSDL2_NewFrame(window);
-                ImGui::NewFrame();
+                    // setup imgui frame
+                    ImGui_ImplOpenGL3_NewFrame();
+                    ImGui_ImplSDL2_NewFrame(window);
+                    ImGui::NewFrame();
 
-                Render();
+                    Render();
 
-                ImGui::Render();
-                ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+                    ImGui::Render();
+                    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-                SDL_GL_SwapWindow(window);
+                    SDL_GL_SwapWindow(window);
+                }
             }
+        } catch (const char *e) {
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SEngine Error Occurred", e, window);
+            exit(1);
         }
     }
 }

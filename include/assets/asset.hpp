@@ -9,13 +9,11 @@
 
 #include "structs/assets/asset_info.hpp"
 #include "structs/assets/asset_type.hpp"
-#include "structs/mesh.hpp"
-#include "structs/texture.hpp"
 
 namespace assets {
     class Asset {
     public:
-        Asset(structs::AssetType assetType);
+        explicit Asset(structs::AssetType assetType);
 
         virtual void Save(const std::string &filePath) = 0;
         virtual void Load(const std::string &filePath) = 0;

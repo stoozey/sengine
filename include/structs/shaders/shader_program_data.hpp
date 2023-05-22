@@ -3,10 +3,12 @@
 
 #include "assets/shader.hpp"
 
+const size_t SHADER_PROGRAM_SIZE = 4096;
+
 namespace structs {
     struct ShaderProgramData {
-        char vertexShader[4096];
-        char fragmentShader[4096];
+        char vertexShader[SHADER_PROGRAM_SIZE];
+        char fragmentShader[SHADER_PROGRAM_SIZE];
         bool encoded = true;
     };
 }

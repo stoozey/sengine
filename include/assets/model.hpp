@@ -1,26 +1,28 @@
 #ifndef SENGINE_TEST1_MODEL_H
 #define SENGINE_TEST1_MODEL_H
 
-#include <glm/glm.hpp>
-#include <glad.h>
-#include <assimp/Importer.hpp>
+#include <vector>
+#include <utility>
 #include <assimp/scene.h>
-#include <assimp/postprocess.h>
 
-#include "assets/asset.hpp"
-#include "structs/mesh.hpp"
+#include "classes/mesh.hpp"
+#include "assets/shader.hpp"
 
 namespace assets {
     class Model : public Asset {
     public:
         Model();
 
-        static Model FromFile(const std::string &filePath);
-
         void Save(const std::string &filePath) override;
         void Load(const std::string &filePath) override;
+        void LoadFromFile(const std::string &filePath);
+
+        void Draw(std::shared_ptr<assets::Shader> shader);
+        void ProcessNode(const std::string &directory, aiNode *node);
+        classes::Mesh ProcessMesh(aiMesh *mesh);
     private:
-        std::vector<structs::Mesh> meshes;
+        std::vector<classes::Mesh> meshes;
+        const aiScene *scene;
     };
 }
 

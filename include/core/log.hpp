@@ -19,7 +19,7 @@ namespace core {
 
         static void Error(const std::string &string) {
             spdlog::error(string);
-            throw;
+            throw string.c_str();
         }
 
         static void Critial(const std::string &string) {
