@@ -1,12 +1,12 @@
 #ifndef SENGINE_ASSET_CREATOR_NOT_IMPLEMENTED_HPP
 #define SENGINE_ASSET_CREATOR_NOT_IMPLEMENTED_HPP
 
-#include <stdexcept>
+#include "exceptions/exception.h"
 
 namespace exceptions {
-    class NotImplemented : public std::logic_error {
+    class NotImplemented : public Exception {
     public:
-        NotImplemented() : std::logic_error("Not yet implemented") { };
+        NotImplemented() : Exception("Not yet implemented") { };
     };
 }
 

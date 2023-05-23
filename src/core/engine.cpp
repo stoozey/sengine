@@ -1,10 +1,7 @@
 #include <cmath>
 #include <iostream>
-#include <glm/glm.hpp>
-#include <glm/gtx/string_cast.hpp>
 #include <glad.h>
 #include <stb.h>
-#include <assimp/Importer.hpp>
 #include <spdlog/spdlog.h>
 #include <nfd.h>
 

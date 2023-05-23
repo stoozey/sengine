@@ -36,3 +36,12 @@ add_subdirectory(crossguid)
 add_subdirectory(nativefiledialog-extended)
 add_subdirectory(imgui)
 add_subdirectory(fmt)
+
+##backward
+#add_subdirectory(backward-cpp)
+#
+#target_sources(${CMAKE_PROJECT_NAME} PUBLIC ${BACKWARD_ENABLE})
+#add_backward(${CMAKE_PROJECT_NAME})
+#
+#target_sources(${PROJECT_NAME} PUBLIC ${BACKWARD_ENABLE})
+#add_backward(${PROJECT_NAME})

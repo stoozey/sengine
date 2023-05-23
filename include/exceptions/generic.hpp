@@ -1,12 +1,12 @@
 #ifndef SENGINE_ASSET_CREATOR_NOT_IMPLEMENTED_HPP
 #define SENGINE_ASSET_CREATOR_NOT_IMPLEMENTED_HPP
 
-#include <stdexcept>
+#include "exceptions/exception.h"
 
 namespace exceptions {
-    class Generic : public std::logic_error {
+    class Generic : public Exception {
     public:
-        Generic(const std::string &message) : std::logic_error(message) { };
+        Generic(const std::string &message) : Exception(message) { };
     };
 }
 

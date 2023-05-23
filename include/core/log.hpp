@@ -2,53 +2,32 @@
 #define SENGINE_LOG_HPP
 
 #include <spdlog/spdlog.h>
+#include <fmt/format.h>
 
 namespace core {
-    template<typename... Args>
-    using format_string_t = fmt::format_string<Args...>;
-
     class Log {
     public:
-        static void Info(const std::string &string) {
-            spdlog::info(string);
-        }
+        static void Info(const std::string &message);
+        static void Warn(const std::string &message);
+        static void Error(const std::string &message);
+        static void Critical(const std::string &message);
 
-        static void Warn(const std::string &string) {
-            spdlog::warn(string);
-        }
+        template <typename... T>
+        static void Info(fmt::format_string<T...> fmt, T&&... args);
 
-        static void Error(const std::string &string) {
-            spdlog::error(string);
-            throw string.c_str();
-        }
+        template <typename... T>
+        static void Warn(fmt::format_string<T...> fmt, T&&... args);
 
-        static void Critial(const std::string &string) {
-            spdlog::critical(string);
-            exit(1);
-        }
+        template <typename... T>
+        static void Error(fmt::format_string<T...> fmt, T&&... args);
 
-        template<typename... Args>
-        static void Info(format_string_t<Args...> fmt, Args &&...args) {
-            spdlog::info(fmt, std::forward<Args>(args)...);
-        }
-
-        template<typename... Args>
-        static void Warn(format_string_t<Args...> fmt, Args &&...args) {
-            spdlog::warn(fmt, std::forward<Args>(args)...);
-        }
-
-        template<typename... Args>
-        static void Error(format_string_t<Args...> fmt, Args &&...args) {
-            spdlog::error(fmt, std::forward<Args>(args)...);
-            throw;
-        }
-
-        template<typename... Args>
-        static void Critical(format_string_t<Args...> fmt, Args &&...args) {
-            spdlog::critical(fmt, std::forward<Args>(args)...);
-            exit(1);
-        }
+        template <typename... T>
+        static void Critical(fmt::format_string<T...> fmt, T&&... args);
+    private:
+        template <typename... T>
+        static std::string GetFormattedMessage(fmt::format_string<T...> fmt, T&&... args);
     };
 }
 
+#include "core/log.tpp"
 #endif //SENGINE_LOG_HPP
