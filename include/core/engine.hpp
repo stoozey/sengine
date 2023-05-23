@@ -5,6 +5,7 @@
 #include <list>
 #include <memory>
 #include <imgui.h>
+#include <utility>
 
 #include "loop_runners/loop_runner.hpp"
 #include "loop_runners/entity_loop_runner.hpp"
@@ -25,10 +26,11 @@ namespace core {
         SDL_Renderer *GetRenderer();
         SDL_Window *GetWindow();
         SDL_GLContext *GetGlContext();
+        ImGuiIO *GetImGuiIo();
 
-        managers::AssetManager *GetAssetManager();
-        managers::InputManager *GetInputManager();
-        managers::SoundManager *GetSoundManager();
+        std::shared_ptr<managers::AssetManager> GetAssetManager();
+        std::shared_ptr<managers::InputManager> GetInputManager();
+        std::shared_ptr<managers::SoundManager> GetSoundManager();
 
         std::shared_ptr<loopRunners::LoopRunner> GetLoopRunner(structs::LoopRunnerType loopRunnerType);
 
@@ -40,10 +42,8 @@ namespace core {
         void Render();
         void RunLoop();
 
-        int GetWindowWidth();
-        int GetWindowHeight();
-
-        ImGuiIO *GetImGuiIo();
+        int GetWindowWidth() const;
+        int GetWindowHeight() const;
 
         void SetClearColour(const structs::Colour &colour);
     private:
@@ -52,9 +52,9 @@ namespace core {
         SDL_GLContext glContext;
         ImGuiIO *io;
 
-        managers::AssetManager *assetManager;
-        managers::InputManager *inputManager;
-        managers::SoundManager *soundManager;
+        std::shared_ptr<managers::AssetManager> assetManager;
+        std::shared_ptr<managers::InputManager> inputManager;
+        std::shared_ptr<managers::SoundManager> soundManager;
 
         std::list<std::shared_ptr<loopRunners::LoopRunner>> loopRunners;
 

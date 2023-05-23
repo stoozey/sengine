@@ -39,7 +39,7 @@ endif()
 # thirdparty
 add_subdirectory(thirdparty)
 target_include_directories(${PROJECT_NAME} PUBLIC thirdparty)
-target_link_libraries(${PROJECT_NAME} PUBLIC assimp glm stb glad spdlog EnTT crossguid nfd imgui 3rdparty_zlib) #fmt
+target_link_libraries(${PROJECT_NAME} PUBLIC assimp glm stb glad spdlog EnTT crossguid nfd imgui 3rdparty_zlib fmt)
 
 # build commands
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

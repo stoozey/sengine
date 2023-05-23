@@ -20,9 +20,9 @@
 core::Engine *g_Engine = new core::Engine();
 
 namespace core {
-    int WINDOW_WIDTH_DEFAULT = 1280;
-    int WINDOW_HEIGHT_DEFAULT = 720;
-    int FPS_DEFAULT = 60;
+    const int WINDOW_WIDTH_DEFAULT = 1280;
+    const int WINDOW_HEIGHT_DEFAULT = 720;
+    const int FPS_DEFAULT = 60;
 
     Engine::Engine() {
         renderer = nullptr;
@@ -55,12 +55,7 @@ namespace core {
         SDL_Quit();
     }
 
-    void Engine::Initialize() {
-        InitSdl();
-        InitNfd();
-        InitImGui();
-        InitManagers();
-    }
+//region init
 
     void Engine::InitSdl() {
         SDL_CreateWindowAndRenderer(windowWidth, windowHeight, (SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL), &window, &renderer);
@@ -86,26 +81,31 @@ namespace core {
     }
 
     void Engine::InitImGui() {
-        // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         io = &ImGui::GetIO(); (void)io;
         io->ConfigFlags |= (ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad);
 
-        // Setup Dear ImGui style
-        //ImGui::StyleColorsDark();
         ImGui::StyleColorsLight();
 
-        // Setup Platform/Renderer backends
         ImGui_ImplSDL2_InitForOpenGL(window, glContext);
         ImGui_ImplOpenGL3_Init(assets::Shader::glslVersion);
     }
 
     void Engine::InitManagers() {
-        assetManager = new managers::AssetManager();
-        inputManager = new managers::InputManager();
-        soundManager = new managers::SoundManager();
+        assetManager = std::make_shared<managers::AssetManager>();
+        inputManager = std::make_shared<managers::InputManager>();
+        soundManager = std::make_shared<managers::SoundManager>();
     }
+
+    void Engine::Initialize() {
+        InitSdl();
+        InitNfd();
+        InitImGui();
+        InitManagers();
+    }
+
+//endregion
 
     SDL_Renderer *Engine::GetRenderer() {
         return renderer;
@@ -119,28 +119,28 @@ namespace core {
         return &glContext;
     }
 
-    managers::AssetManager *Engine::GetAssetManager() {
+    ImGuiIO *Engine::GetImGuiIo() {
+        return io;
+    }
+
+    std::shared_ptr<managers::AssetManager> Engine::GetAssetManager() {
         return assetManager;
     }
 
-    managers::InputManager *Engine::GetInputManager() {
+    std::shared_ptr<managers::InputManager> Engine::GetInputManager() {
         return inputManager;
     }
 
-    managers::SoundManager *Engine::GetSoundManager() {
+    std::shared_ptr<managers::SoundManager> Engine::GetSoundManager() {
         return soundManager;
     }
 
-    int Engine::GetWindowWidth() {
+    int Engine::GetWindowWidth() const {
         return windowWidth;
     }
 
-    int Engine::GetWindowHeight() {
+    int Engine::GetWindowHeight() const {
         return windowHeight;
-    }
-
-    ImGuiIO *Engine::GetImGuiIo() {
-        return io;
     }
 
     void Engine::SetClearColour(const structs::Colour &colour) {
