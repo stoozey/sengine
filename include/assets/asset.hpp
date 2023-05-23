@@ -14,6 +14,7 @@ namespace assets {
     class Asset {
     public:
         explicit Asset(structs::AssetType assetType);
+        virtual ~Asset();
 
         virtual void Save(const std::string &filePath) = 0;
         virtual void Load(const std::string &filePath) = 0;

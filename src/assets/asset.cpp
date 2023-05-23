@@ -11,6 +11,8 @@ namespace assets {
         assetInfo = structs::AssetInfo{ assetType, guid.bytes() };
     }
 
+    Asset::~Asset() { }
+
     structs::AssetInfo Asset::GetAssetInfo() {
         return assetInfo;
     }
