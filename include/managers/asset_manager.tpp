@@ -6,13 +6,15 @@
 namespace managers {
     template<typename T>
     structs::AssetType AssetManager::GetAssetType() {
-        return ASSET_ASSET_TYPES.find(typeid(T))->second;
+        auto find = ASSET_ASSET_TYPES.find(typeid(T));
+        if (find == ASSET_ASSET_TYPES.end()) core::Log::Error("asset type for typeid \"{}\" doesn't exist", typeid(T).name());
+
+        return find->second;
     }
 
     template<typename T>
     std::shared_ptr<T> AssetManager::LoadAsset(const std::string &assetName, bool loadDefaultIfFailed) {
         std::shared_ptr<T> asset;
-        core::Log::Info("getting asset path {}", assetName);
         std::string assetPath = GetAssetPath<T>(assetName);
         core::Log::Info("loading asset {}", assetPath);
 
@@ -69,7 +71,10 @@ namespace managers {
 
     template<typename T>
     std::string AssetManager::GetAssetPath(const std::string &assetName) {
-        std::string folderName = ASSET_FOLDER_NAMES.find(typeid(T))->second;
+        auto find = ASSET_FOLDER_NAMES.find(typeid(T));
+        if (find == ASSET_FOLDER_NAMES.end()) core::Log::Error("asset folder name for \"{}\" doesn't exist", assetName);
+
+        std::string folderName = find->second;
         return GetAssetPathRaw(folderName, assetName);
     }
 }

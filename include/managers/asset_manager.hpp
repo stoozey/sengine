@@ -52,7 +52,6 @@ namespace managers {
         std::shared_ptr<assets::Asset> GetAssetRaw(const std::string &assetPath);
         std::string GetAssetPathRaw(const std::string &folderName, const std::string &assetName);
 
-
         template<typename T>
         structs::AssetType GetAssetType();
 
