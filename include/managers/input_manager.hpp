@@ -7,12 +7,13 @@
 #include <utility>
 #include <string>
 
+#include "managers/manager.hpp"
 #include "structs/vector2.hpp"
 #include "structs/input/mouse_button.hpp"
 #include "structs/input/input_state.hpp"
 
 namespace managers {
-    class InputManager {
+    class InputManager : public Manager {
     public:
         InputManager();
 

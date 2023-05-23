@@ -2,9 +2,14 @@
 #define SENGINE_ENTITY_H
 
 #include <vector>
+#include <map>
+#include <typeindex>
+#include <typeinfo>
 
-#include "structs/vector3.hpp"
 #include "components/component.hpp"
+#include "structs/vector3.hpp"
+
+typedef unsigned long EntityId;
 
 namespace core {
     class Entity {
@@ -13,6 +18,8 @@ namespace core {
 
         structs::Vector3 position;
 
+        EntityId GetEntityId() const;
+
         virtual void PreUpdate(double deltaTime);
         virtual void Update(double deltaTime);
         virtual void PostUpdate(double deltaTime);
@@ -20,6 +27,11 @@ namespace core {
         virtual void PreRender();
         virtual void Render();
         virtual void PostRender();
+    private:
+        static EntityId Id;
+
+        EntityId id;
+        std::map<std::type_info, components::Component> components;
     };
 }
 

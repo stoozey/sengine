@@ -1,8 +1,12 @@
 #include "core/entity.hpp"
 
 namespace core {
-    Entity::Entity() {
-        position = { 0, 0 };
+    EntityId Entity::Id = 0;
+
+    Entity::Entity() : position({0, 0, 0}), id(Id++) { }
+
+    EntityId Entity::GetEntityId() const {
+        return id;
     }
 
     void Entity::PreUpdate(double deltaTime) { }

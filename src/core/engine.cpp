@@ -14,7 +14,7 @@
 #include "assets/shader.hpp"
 #include "managers/asset_manager.hpp"
 
-core::Engine *g_Engine = new core::Engine();
+std::unique_ptr<core::Engine> g_Engine = std::make_unique<core::Engine>();
 
 namespace core {
     const int WINDOW_WIDTH_DEFAULT = 1280;
@@ -40,12 +40,11 @@ namespace core {
     }
 
     Engine::~Engine() {
+        StopLoop();
         Free();
     }
 
     void Engine::Free() {
-        loopRunning = false;
-
         if (window != nullptr) {
             SDL_DestroyWindow(window);
         }
@@ -95,17 +94,10 @@ namespace core {
         ImGui_ImplOpenGL3_Init(assets::Shader::glslVersion);
     }
 
-    void Engine::InitManagers() {
-        assetManager = std::make_shared<managers::AssetManager>();
-        inputManager = std::make_shared<managers::InputManager>();
-        soundManager = std::make_shared<managers::SoundManager>();
-    }
-
     void Engine::Initialize() {
         InitSdl();
         InitNfd();
         InitImGui();
-        InitManagers();
     }
 
 #pragma endregion
@@ -128,32 +120,12 @@ namespace core {
         return io;
     }
 
-    std::shared_ptr<managers::AssetManager> Engine::GetAssetManager() {
-        return assetManager;
-    }
-
-    std::shared_ptr<managers::InputManager> Engine::GetInputManager() {
-        return inputManager;
-    }
-
-    std::shared_ptr<managers::SoundManager> Engine::GetSoundManager() {
-        return soundManager;
-    }
-
     int Engine::GetWindowWidth() const {
         return windowWidth;
     }
 
     int Engine::GetWindowHeight() const {
         return windowHeight;
-    }
-
-    std::shared_ptr<loopRunners::LoopRunner> Engine::GetLoopRunner(structs::LoopRunnerType loopRunnerType) {
-        for (auto &loopRunner: loopRunners) {
-            if (loopRunner->GetLoopRunnerType() == loopRunnerType) return loopRunner;
-        }
-
-        return nullptr;
     }
 
 #pragma endregion
@@ -186,13 +158,17 @@ namespace core {
             }
         }
 
-        for (auto &loopRunner : loopRunners)
+        for (const auto &pair : loopRunners) {
+            const auto &loopRunner = pair.second;
             loopRunner->Update(deltaTime);
+        }
     }
 
     void Engine::Render() {
-        for (auto &loopRunner : loopRunners)
+        for (const auto &pair : loopRunners) {
+            const auto &loopRunner = pair.second;
             loopRunner->Render();
+        }
     }
 
     void Engine::RunLoop() {
@@ -225,7 +201,10 @@ namespace core {
                             0.01);
                     //g_PhysicsManager.Update(deltaTime);
 
-                    inputManager->Poll();
+                    auto inputManager = GetManager<managers::InputManager>();
+                    if (inputManager != nullptr) {
+                        inputManager->Poll();
+                    }
 
                     Update(deltaTime);
 
@@ -254,6 +233,10 @@ namespace core {
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SEngine Error Occurred", e, window);
             exit(1);
         }
+    }
+
+    void Engine::StopLoop() {
+        loopRunning = false;
     }
 
 #pragma endregion

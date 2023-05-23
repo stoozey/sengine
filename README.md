@@ -4,18 +4,25 @@ A custom--unfinished--game engine written in C++
 ## Setup
 
 ### main.cpp
-To get started with a basic window and a loop runner active:
+The engine is accessible through a global `g_Engine` pointer.
+Before you use the engine, you must call `g_Engine->Initialize()`.
+Afterwards, you can add any managers/loop runners you need and then call `g_Engine->RunLoop()`.
+Once the loop exits, you should delete the engine to free its resources.
+
 ```cpp
-#include <loop_runners/entity_loop_runner.hpp>
 #include <core/engine.hpp>
+#include <managers/asset_manager.hpp>
+#include <loop_runners/entity_loop_runner.hpp>
 
 int main(int argv, char **args) {
     g_Engine->Initialize();
-
-    auto entityLoopRunner = std::make_shared<loopRunners::EntityLoopRunner>();
-    g_Engine->AddLoopRunner<loopRunners::EntityLoopRunner>(entityLoopRunner);
-
+    
+    g_Engine->AddManager<managers::AssetManager>();
+    g_Engine->AddLoopRunner<loopRunners::EntityLoopRunner>();
+    
     g_Engine->RunLoop();
+    
+    delete g_Engine;
     return 0;
 }
 ```
@@ -27,7 +34,7 @@ Put this black magic in your project's CMakeLists.txt:
 
 ```cmake
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_compile_definitions(DEBUG)
+    add_compile_definitions(SENGINE_DEBUG)
 endif()
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})  

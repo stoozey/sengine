@@ -4,12 +4,13 @@
 #include <map>
 #include <utility>
 
+#include "managers/manager.hpp"
 #include "assets/sound.hpp"
 
 typedef unsigned short SoundId;
 
 namespace managers {
-    class SoundManager {
+    class SoundManager : public Manager {
     public:
         SoundManager();
 

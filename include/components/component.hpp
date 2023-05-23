@@ -1,12 +1,19 @@
 #ifndef SENGINE_COMPONENT_H
 #define SENGINE_COMPONENT_H
 
+#include <memory>
+
+#include "core/entity.fwd.hpp"
+
 namespace components {
     class Component {
     public:
-        virtual void Update(double deltaTime) = 0;
+        explicit Component(EntityId entityId);
 
-        virtual void Render() = 0;
+        virtual void Update(double deltaTime);
+        virtual void Render();
+    protected:
+        std::weak_ptr<core::Entity> entity;
     };
 }
 

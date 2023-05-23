@@ -6,14 +6,15 @@
 #include <memory>
 #include <imgui.h>
 #include <utility>
+#include <unordered_map>
+#include <typeindex>
+#include <typeinfo>
 
 #include "loop_runners/loop_runner.hpp"
 #include "loop_runners/entity_loop_runner.hpp"
 #include "structs/loop_runners/loop_runner_type.hpp"
 #include "structs/colour.hpp"
-#include "managers/asset_manager.hpp"
-#include "managers/input_manager.hpp"
-#include "managers/sound_manager.hpp"
+#include "managers/manager.hpp"
 
 namespace core {
     class Engine {
@@ -22,26 +23,29 @@ namespace core {
         ~Engine();
 
         void Initialize();
-        void Free();
 
         SDL_Renderer *GetRenderer();
         SDL_Window *GetWindow();
         SDL_GLContext *GetGlContext();
         ImGuiIO *GetImGuiIo();
 
-        std::shared_ptr<managers::AssetManager> GetAssetManager();
-        std::shared_ptr<managers::InputManager> GetInputManager();
-        std::shared_ptr<managers::SoundManager> GetSoundManager();
-
-        std::shared_ptr<loopRunners::LoopRunner> GetLoopRunner(structs::LoopRunnerType loopRunnerType);
+        template<typename T>
+        T *AddLoopRunner();
 
         template<typename T>
-        void AddLoopRunner(std::shared_ptr<T> &loopRunner);
+        T *GetLoopRunner();
+
+        template<typename T>
+        T *AddManager();
+
+        template<typename T>
+        T *GetManager();
 
         void SetFps(int targetFps);
         void Update(double deltaTime);
         void Render();
         void RunLoop();
+        void StopLoop();
 
         int GetWindowWidth() const;
         int GetWindowHeight() const;
@@ -53,11 +57,8 @@ namespace core {
         SDL_GLContext glContext;
         ImGuiIO *io;
 
-        std::shared_ptr<managers::AssetManager> assetManager;
-        std::shared_ptr<managers::InputManager> inputManager;
-        std::shared_ptr<managers::SoundManager> soundManager;
-
-        std::list<std::shared_ptr<loopRunners::LoopRunner>> loopRunners;
+        std::unordered_map<std::type_index, std::unique_ptr<loopRunners::LoopRunner>> loopRunners;
+        std::unordered_map<std::type_index, std::unique_ptr<managers::Manager>> managers;
 
         bool loopRunning;
 
@@ -72,10 +73,11 @@ namespace core {
         void InitSdl();
         void InitNfd();
         void InitImGui();
-        void InitManagers();
+
+        void Free();
     };
 }
 
 #include "engine.tpp"
-extern core::Engine *g_Engine;
+extern std::unique_ptr<core::Engine> g_Engine;
 #endif //SENGINE_ENGINE_H

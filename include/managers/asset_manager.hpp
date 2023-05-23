@@ -5,10 +5,10 @@
 #include <filesystem>
 #include <utility>
 #include <map>
-#include <unordered_map>
 #include <typeindex>
 #include <typeinfo>
 
+#include "managers/manager.hpp"
 #include "core/log.hpp"
 #include "structs/assets/asset_type.hpp"
 #include "assets/asset.hpp"
@@ -44,13 +44,14 @@ namespace managers {
             { typeid(assets::Texture), structs::AssetType::Texture }
     };
 
-    class AssetManager {
+    class AssetManager : public Manager {
     public:
         AssetManager();
 
         void GetAssetNames(const structs::AssetType &assetType, std::vector<std::string> *outNames);
         std::shared_ptr<assets::Asset> GetAssetRaw(const std::string &assetPath);
-        std::string GetAssetPathRaw(const std::string &folderName, const std::string &assetName);
+        static std::string GetAssetPathRaw(const std::string &folderName, const std::string &assetName);
+
 
         template<typename T>
         structs::AssetType GetAssetType();
