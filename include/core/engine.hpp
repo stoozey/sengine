@@ -22,6 +22,7 @@ namespace core {
         ~Engine();
 
         void Initialize();
+        void Free();
 
         SDL_Renderer *GetRenderer();
         SDL_Window *GetWindow();

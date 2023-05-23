@@ -43,6 +43,12 @@ namespace core {
     }
 
     Engine::~Engine() {
+        Free();
+    }
+
+    void Engine::Free() {
+        loopRunning = false;
+
         if (window != nullptr) {
             SDL_DestroyWindow(window);
         }
@@ -55,7 +61,7 @@ namespace core {
         SDL_Quit();
     }
 
-//region init
+#pragma region init
 
     void Engine::InitSdl() {
         SDL_CreateWindowAndRenderer(windowWidth, windowHeight, (SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL), &window, &renderer);
@@ -73,7 +79,7 @@ namespace core {
         if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) core::Log::Critical("Engine::Initialize failed (glad wasn't initialized)");
     }
 
-    void Engine::InitNfd() {
+    void Engine::InitNfd() { // NOLINT(readability-convert-member-functions-to-static)
         if (NFD_Init() == NFD_OKAY) return;
 
         std::string error = NFD_GetError();
@@ -105,7 +111,9 @@ namespace core {
         InitManagers();
     }
 
-//endregion
+#pragma endregion
+
+#pragma region getters
 
     SDL_Renderer *Engine::GetRenderer() {
         return renderer;
@@ -143,10 +151,6 @@ namespace core {
         return windowHeight;
     }
 
-    void Engine::SetClearColour(const structs::Colour &colour) {
-        clearColour = colour;
-    }
-
     std::shared_ptr<loopRunners::LoopRunner> Engine::GetLoopRunner(structs::LoopRunnerType loopRunnerType) {
         for (auto &loopRunner: loopRunners) {
             if (loopRunner->GetLoopRunnerType() == loopRunnerType) return loopRunner;
@@ -155,10 +159,22 @@ namespace core {
         return nullptr;
     }
 
+#pragma endregion
+
+#pragma region setters
+
+    void Engine::SetClearColour(const structs::Colour &colour) {
+        clearColour = colour;
+    }
+
     void Engine::SetFps(int targetFps) {
         fps = targetFps;
         cycleTime = (1.0f / static_cast<float>(fps));
     }
+
+#pragma endregion
+
+#pragma region loop
 
     void Engine::Update(double deltaTime) {
         SDL_Event event;
@@ -242,4 +258,6 @@ namespace core {
             exit(1);
         }
     }
+
+#pragma endregion
 }
