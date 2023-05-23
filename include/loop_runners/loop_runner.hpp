@@ -6,12 +6,12 @@
 namespace loopRunners {
     class LoopRunner {
     public:
+        virtual ~LoopRunner();
+
         structs::LoopRunnerType GetLoopRunnerType();
 
         virtual void Update(double deltaTime) = 0;
-
         virtual void Render() = 0;
-
     protected:
         structs::LoopRunnerType loopRunnerType = structs::LoopRunnerType::Entity;
     };

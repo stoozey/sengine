@@ -8,6 +8,8 @@ namespace components {
         entity = entityLoopRunner->GetEntity(entityId);
     }
 
+    Component::~Component() { };
+
     void Component::Update(double deltaTime) { }
     void Component::Render() { }
 }

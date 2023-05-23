@@ -16,6 +16,7 @@ namespace managers {
     class InputManager : public Manager {
     public:
         InputManager();
+        ~InputManager();
 
         void Poll();
 

@@ -33,13 +33,13 @@ namespace core {
         T *AddLoopRunner();
 
         template<typename T>
-        T *GetLoopRunner();
+        T *GetLoopRunner(bool suppressNotAddedWarning = false);
 
         template<typename T>
         T *AddManager();
 
         template<typename T>
-        T *GetManager();
+        T *GetManager(bool suppressNotAddedWarning = false);
 
         void SetFps(int targetFps);
         void Update(double deltaTime);

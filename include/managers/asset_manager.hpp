@@ -47,6 +47,7 @@ namespace managers {
     class AssetManager : public Manager {
     public:
         AssetManager();
+        ~AssetManager();
 
         void GetAssetNames(const structs::AssetType &assetType, std::vector<std::string> *outNames);
         std::shared_ptr<assets::Asset> GetAssetRaw(const std::string &assetPath);

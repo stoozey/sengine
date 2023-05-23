@@ -3,7 +3,8 @@
 
 namespace managers {
     class Manager {
-
+    public:
+        virtual ~Manager();
     };
 }
 

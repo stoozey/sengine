@@ -20,6 +20,8 @@ namespace managers {
         }
     }
 
+    InputManager::~InputManager() = default;
+
     void InputManager::Poll() {
         PollMouse();
         PollInputs();

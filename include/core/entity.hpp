@@ -15,6 +15,7 @@ namespace core {
     class Entity {
     public:
         Entity();
+        virtual ~Entity();
 
         structs::Vector3 position;
 

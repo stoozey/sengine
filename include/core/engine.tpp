@@ -18,11 +18,13 @@ namespace core {
     }
 
     template<typename T>
-    T *Engine::GetLoopRunner() {
+    T *Engine::GetLoopRunner(bool suppressNotAddedWarning) {
         T *loopRunner = nullptr;
         auto find = loopRunners.find(typeid(T));
         if (find != loopRunners.end()) {
             loopRunner = static_cast<T*>(find->second.get());
+        } else if (!suppressNotAddedWarning) {
+            core::Log::Warn("tried to get loop runner \"{}\" which hasn't been added", typeid(T).name());
         }
 
         return loopRunner;
@@ -41,11 +43,13 @@ namespace core {
     }
 
     template<typename T>
-    T *Engine::GetManager() {
+    T *Engine::GetManager(bool suppressNotAddedWarning) {
         T *manager = nullptr;
         auto find = managers.find(typeid(T));
         if (find != managers.end()) {
             manager = static_cast<T*>(find->second.get());
+        } else if (!suppressNotAddedWarning) {
+            core::Log::Warn("tried to get manager \"{}\" which hasn't been added", typeid(T).name());
         }
 
         return manager;

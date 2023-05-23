@@ -11,6 +11,8 @@ namespace managers {
         GetDefaultAsset<assets::Texture>();
     }
 
+    AssetManager::~AssetManager() = default;
+
     void AssetManager::GetAssetNames(const structs::AssetType &assetType, std::vector<std::string> *outNames) {
         std::map<std::string, std::shared_ptr<assets::Asset>>::iterator iterator;
         for (iterator = assetMap.begin(); iterator != assetMap.end(); ++iterator) {

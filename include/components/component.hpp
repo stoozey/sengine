@@ -9,6 +9,7 @@ namespace components {
     class Component {
     public:
         explicit Component(EntityId entityId);
+        virtual ~Component();
 
         virtual void Update(double deltaTime);
         virtual void Render();

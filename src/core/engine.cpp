@@ -201,7 +201,7 @@ namespace core {
                             0.01);
                     //g_PhysicsManager.Update(deltaTime);
 
-                    auto inputManager = GetManager<managers::InputManager>();
+                    auto inputManager = GetManager<managers::InputManager>(true);
                     if (inputManager != nullptr) {
                         inputManager->Poll();
                     }

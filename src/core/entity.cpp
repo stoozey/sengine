@@ -4,6 +4,7 @@ namespace core {
     EntityId Entity::Id = 0;
 
     Entity::Entity() : position({0, 0, 0}), id(Id++) { }
+    Entity::~Entity() { };
 
     EntityId Entity::GetEntityId() const {
         return id;
