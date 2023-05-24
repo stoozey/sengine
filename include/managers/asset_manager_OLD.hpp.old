@@ -4,9 +4,10 @@
 #include <memory>
 #include <filesystem>
 #include <utility>
-#include <map>
+#include <unordered_map>
 #include <typeindex>
 #include <typeinfo>
+#include <crossguid/guid.hpp>
 
 #include "managers/manager.hpp"
 #include "core/log.hpp"
@@ -35,49 +36,54 @@ namespace managers {
             { typeid(assets::Texture), "texture" }
     };
 
-    const std::unordered_map<std::type_index, structs::AssetType> ASSET_ASSET_TYPES = {
-            { typeid(assets::Font), structs::AssetType::Font },
-            { typeid(assets::Material), structs::AssetType::Material },
-            { typeid(assets::Model), structs::AssetType::Model },
-            { typeid(assets::Shader), structs::AssetType::Shader },
-            { typeid(assets::Sound), structs::AssetType::Sound },
-            { typeid(assets::Texture), structs::AssetType::Texture }
-    };
 
-    class AssetManager : public Manager {
+
+    class AssetManager_OLD : public Manager {
     public:
-        AssetManager();
-        ~AssetManager();
+        AssetManager_old();
+        ~AssetManager_OLD();
 
-        void GetAssetNames(const structs::AssetType &assetType, std::vector<std::string> *outNames);
-        std::shared_ptr<assets::Asset> GetAssetRaw(const std::string &assetPath);
         static std::string GetAssetPathRaw(const std::string &folderName, const std::string &assetName);
 
+        std::weak_ptr<assets::Asset> GetAssetRaw(const std::string &assetPath);
+        void GetAssetNames(const structs::AssetType &assetType, std::vector<std::string> *outNames);
+
+        void UnLoadAsset(const std::weak_ptr<assets::Asset> &asset);
+        void UnLoadAsset(const xg::Guid &guid);
+
+        std::weak_ptr<assets::Asset> GetAssetByGuidRaw(xg::Guid guid);
+
+        template<typename T>
+        std::weak_ptr<T> GetAssetByGuid(const xg::Guid &guid);
 
         template<typename T>
         structs::AssetType GetAssetType();
 
         template<typename T>
-        std::shared_ptr<T> LoadAsset(const std::string &assetName, bool loadDefaultIfFailed = true);
+        std::weak_ptr<T> LoadAsset(const std::string &assetName, bool loadDefaultIfFailed = true);
 
         template<typename T>
-        void UnLoadAsset(const std::string &assetName);
-
-        template<typename T>
-        std::shared_ptr<T> GetAsset(const std::string &assetName);
+        std::weak_ptr<T> GetAsset(const std::string &assetName);
 
         template<typename T>
         bool AssetExists(const std::string &assetName);
 
         template<typename T>
-        std::shared_ptr<T> GetDefaultAsset();
+        std::weak_ptr<T> GetDefaultAsset();
 
         template<typename T>
         std::string GetAssetPath(const std::string &assetName);
     private:
-        std::map<std::string, std::shared_ptr<assets::Asset>> assetMap;
+        std::unordered_map<xg::Guid, std::shared_ptr<assets::Asset>> assetMap;
+        std::unordered_map<xg::Guid, std::string> assetNameMap;
+        std::unordered_map<xg::Guid, std::string> assetPathMap;
+
+        std::shared_ptr<assets::Asset> GetSharedAssetRaw(const xg::Guid &assetPath);
+        std::shared_ptr<assets::Asset> GetSharedAssetRaw(const std::string &assetPath);
+        void RegisterAsset(const std::string &assetPath, const std::shared_ptr<assets::Asset> &asset);
+        void UnRegisterAsset(const std::shared_ptr<assets::Asset> &asset);
     };
 }
 
-#include "managers/asset_manager.tpp"
+#include "asset_manager_OLD.tpp"
 #endif //SENGINE_ASSET_MANAGER_H

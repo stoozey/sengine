@@ -1,7 +1,7 @@
 #ifndef SENGINE_ASSET_MANAGER_TPP
 #define SENGINE_ASSET_MANAGER_TPP
 
-#include "managers/asset_manager.hpp"
+#include asset_manager_OLD.hpp
 
 namespace managers {
     template<typename T>
@@ -13,59 +13,60 @@ namespace managers {
     }
 
     template<typename T>
-    std::shared_ptr<T> AssetManager::LoadAsset(const std::string &assetName, bool loadDefaultIfFailed) {
-        std::shared_ptr<T> asset;
+    std::weak_ptr<T> AssetManager::LoadAsset(const std::string &assetName, bool loadDefaultIfFailed) {
         std::string assetPath = GetAssetPath<T>(assetName);
         core::Log::Info("loading asset {}", assetPath);
 
+        std::shared_ptr<T> sharedAsset;
         try {
-            asset = GetAsset<T>(assetPath);
-            if ((std::filesystem::exists(assetPath)) && (asset == nullptr)) {
-                asset = std::make_shared<T>();
-                asset->Load(assetPath);
-                assetMap.insert({ assetPath, asset });
+            sharedAsset = std::static_pointer_cast<T>(GetSharedAssetRaw(assetPath));
+            if ((std::filesystem::exists(assetPath)) && (sharedAsset == nullptr)) {
+                sharedAsset = std::make_shared<T>();
+                sharedAsset->Load(assetPath);
+                RegisterAsset(assetPath, sharedAsset);
             }
         }
         catch(const std::exception &e) {
             core::Log::Warn("an error occured when trying to get asset ", assetName, ":", e.what());
-            asset = nullptr;
+            sharedAsset = nullptr;
         }
 
-        if (asset == nullptr) {
+        std::weak_ptr<T> weakAsset = std::weak_ptr<T>();
+        if ((sharedAsset == nullptr) && (loadDefaultIfFailed)) {
             core::Log::Warn("asset \"{}\" not found, using default", assetPath);
 
             const std::string defaultAssetPath = GetAssetPath<T>(ASSET_DEFAULT_NAME);
             if (!std::filesystem::exists(defaultAssetPath)) core::Log::Error("missing default asset \"{}\"", defaultAssetPath);
 
-            asset = LoadAsset<T>(ASSET_DEFAULT_NAME, false);
+            weakAsset = LoadAsset<T>(ASSET_DEFAULT_NAME, false);
+        } else {
+            weakAsset = GetAsset<T>(assetName);
         }
 
-        return asset;
+        return weakAsset;
     }
 
     template<typename T>
-    void AssetManager::UnLoadAsset(const std::string &assetName) {
+    std::weak_ptr<T> AssetManager::GetAsset(const std::string &assetName) {
         const std::string assetPath = GetAssetPath<T>(assetName);
-        auto find = assetMap.find(assetPath);
-        if (find == assetMap.end()) return;
-
-        assetMap.erase(find);
+        std::shared_ptr<assets::Asset> asset = GetSharedAssetRaw(assetPath);
+        return ((asset == nullptr) ? std::weak_ptr<T>() : std::weak_ptr<T>(std::static_pointer_cast<T>(asset)));
     }
 
     template<typename T>
-    std::shared_ptr<T> AssetManager::GetAsset(const std::string &assetName) {
-        const std::string assetPath = GetAssetPath<T>(assetName);
-        std::shared_ptr<assets::Asset> asset = GetAssetRaw(assetPath);
-        return dynamic_pointer_cast<T>((asset == nullptr) ? nullptr : asset);
+    std::weak_ptr<T> AssetManager::GetAssetByGuid(const xg::Guid &guid) {
+        auto find = assetGuidMap.find(guid);
+        return ((find == assetGuidMap.end()) ? std::weak_ptr<T>() : find->second);
     }
 
     template<typename T>
     bool AssetManager::AssetExists(const std::string &assetName) {
-        return (GetAsset<T>(assetName) != nullptr);
+        std::weak_ptr<T> asset = GetAsset<T>(assetName);
+        return (!asset.expired());
     }
 
     template<typename T>
-    std::shared_ptr<T> AssetManager::GetDefaultAsset() {
+    std::weak_ptr<T> AssetManager::GetDefaultAsset() {
         return LoadAsset<T>(DEFAULT_ASSET_NAME, false);
     }
 
