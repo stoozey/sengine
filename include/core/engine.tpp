@@ -11,7 +11,7 @@ namespace core {
         if (find == loopRunners.end()) {
             loopRunners[typeid(T)] = std::make_unique<T>();
         } else {
-            core::Log::Warn("tried to add loop runner \"{}\", but it already exists", typeid(T).name());
+            core::Log::Warn(fmt::format("tried to add loop runner \"{}\", but it already exists", typeid(T).name()));
         }
 
         return GetLoopRunner<T>();
@@ -24,7 +24,7 @@ namespace core {
         if (find != loopRunners.end()) {
             loopRunner = static_cast<T*>(find->second.get());
         } else if (!suppressNotAddedWarning) {
-            core::Log::Warn("tried to get loop runner \"{}\" which hasn't been added", typeid(T).name());
+            core::Log::Warn(fmt::format("tried to get loop runner \"{}\" which hasn't been added", typeid(T).name()));
         }
 
         return loopRunner;
@@ -36,7 +36,7 @@ namespace core {
         if (find == managers.end()) {
             managers[typeid(T)] = std::make_unique<T>();
         } else {
-            core::Log::Warn("tried to add manager \"{}\", but it already exists", typeid(T).name());
+            core::Log::Warn(fmt::format("tried to add manager \"{}\", but it already exists", typeid(T).name()));
         }
 
         return GetManager<T>();
@@ -49,7 +49,7 @@ namespace core {
         if (find != managers.end()) {
             manager = static_cast<T*>(find->second.get());
         } else if (!suppressNotAddedWarning) {
-            core::Log::Warn("tried to get manager \"{}\" which hasn't been added", typeid(T).name());
+            core::Log::Warn(fmt::format("tried to get manager \"{}\" which hasn't been added", typeid(T).name()));
         }
 
         return manager;

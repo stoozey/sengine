@@ -75,7 +75,7 @@ namespace managers {
     int InputManager::GetInputState(const std::string &inputName, enums::InputState inputState) {
         auto find = inputStates.find(inputName);
         if (find == inputStates.end()) {
-            core::Log::Warn("tried to detect non-defined input \"{}\"", inputName);
+            core::Log::Warn(fmt::format("tried to detect non-defined input \"{}\"", inputName));
             return 0;
         }
 
@@ -116,7 +116,7 @@ namespace managers {
 
     void InputManager::TrackInput(const std::string &inputName, int scanCode) {
         auto find = keyMap.find(inputName);
-        if (find == keyMap.end()) return core::Log::Warn("tried to track non-defined input \"{}\"", inputName);
+        if (find == keyMap.end()) return core::Log::Warn(fmt::format("tried to track non-defined input \"{}\"", inputName));
 
         std::vector<int> &scanCodes = find->second;
         scanCodes.emplace_back(scanCode);

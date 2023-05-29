@@ -5,6 +5,7 @@
 #include <map>
 #include <typeindex>
 #include <typeinfo>
+#include <utility>
 
 #include "components/component.hpp"
 #include "structs/vector3.hpp"
@@ -21,6 +22,15 @@ namespace core {
 
         EntityId GetEntityId() const;
 
+        template<typename T>
+        bool HasComponent();
+
+        template<typename T>
+        void AddComponent();
+
+        template<typename T>
+        std::shared_ptr<T> GetComponent();
+
         virtual void PreUpdate(double deltaTime);
         virtual void Update(double deltaTime);
         virtual void PostUpdate(double deltaTime);
@@ -28,12 +38,18 @@ namespace core {
         virtual void PreRender();
         virtual void Render();
         virtual void PostRender();
+    protected:
+
+
+        void UpdateComponents(void(components::Component::*func)(double), double deltaTime);
+        void RenderComponents(void(components::Component::*func)());
     private:
         static EntityId Id;
 
         EntityId id;
-        std::map<std::type_info, components::Component> components;
+        std::map<std::type_index, std::shared_ptr<components::Component>> components;
     };
 }
 
+#include "core/entity.tpp"
 #endif //SENGINE_ENTITY_H

@@ -78,7 +78,7 @@ namespace core {
         if (NFD_Init() == NFD_OKAY) return;
 
         std::string error = NFD_GetError();
-        core::Log::Critical("NFD failed to initialize: {}", error);
+        core::Log::Critical(fmt::format("NFD failed to initialize: {}", error));
     }
 
     void Engine::InitImGui() {

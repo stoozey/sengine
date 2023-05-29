@@ -47,7 +47,7 @@ namespace structs {
             char *compSignature = new char[signatureSize + 1];
             std::memcpy(compSignature, signatureArray, signatureSize);
             compSignature[signatureSize] = '\0';
-            if (std::strcmp(compSignature, ASSET_INFO_SIGNATURE) != 0) core::Log::Error("invalid file signature (got {}, expected {})", compSignature, ASSET_INFO_SIGNATURE);
+            if (std::strcmp(compSignature, ASSET_INFO_SIGNATURE) != 0) core::Log::Error(fmt::format("invalid file signature (got {}, expected {})", compSignature, ASSET_INFO_SIGNATURE));
 
             delete[] signatureArray;
             delete[] compSignature;
@@ -72,7 +72,7 @@ namespace structs {
                 }
 
                 default: {
-                    core::Log::Error("unsupported AssetInfo version \"{}\"", version);
+                    core::Log::Error(fmt::format("unsupported AssetInfo version \"{}\"", version));
                 }
             }
 

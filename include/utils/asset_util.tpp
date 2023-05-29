@@ -7,7 +7,7 @@ namespace utils {
     template<typename T>
     enums::AssetType GetAssetType() {
         auto find = ASSET_ASSET_TYPES.find(typeid(T));
-        if (find == ASSET_ASSET_TYPES.end()) core::Log::Error("asset type for typeid \"{}\" doesn't exist", typeid(T).name());
+        if (find == ASSET_ASSET_TYPES.end()) core::Log::Error(fmt::format("asset type for typeid \"{}\" doesn't exist", typeid(T).name()));
 
         return find->second;
     }
