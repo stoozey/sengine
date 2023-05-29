@@ -17,7 +17,7 @@ namespace assets {
         void Load(const std::string &filePath) override;
         void LoadFromFile(const std::string &filePath);
 
-        void Draw(std::shared_ptr<assets::Shader> shader);
+        void Draw(std::weak_ptr<assets::Shader> shader);
         void ProcessNode(const std::string &directory, aiNode *node);
         classes::Mesh ProcessMesh(aiMesh *mesh);
     private:

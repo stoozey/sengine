@@ -5,11 +5,11 @@
 //
 //#include "assets/font.hpp"
 //#include "core/log.hpp"
-//#include "structs/assets/asset_type.hpp"
+//#include "enums/asset_type.hpp"
 //#include "utils/file_util.hpp"
 //
 //namespace assets {
-//    Font::Font() : Asset(structs::AssetType::Font) {
+//    Font::Font() : Asset(enums::AssetType::Font) {
 //        fontSize = 64;
 //
 //        fontDataSize = 0;

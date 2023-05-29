@@ -2,7 +2,7 @@
 #define SENGINE_TEST1_SOUND_HPP
 
 #include "assets/asset.hpp"
-#include "structs/assets/asset_info.hpp"
+#include "structs/asset_info.hpp"
 
 namespace assets {
     class Sound : public Asset {

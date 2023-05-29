@@ -1,12 +1,12 @@
 #ifndef SENGINE_ASSET_CREATOR_NOT_IMPLEMENTED_HPP
 #define SENGINE_ASSET_CREATOR_NOT_IMPLEMENTED_HPP
 
-#include "exceptions/exception.h"
+#include "exceptions/exception.hpp"
 
 namespace exceptions {
     class NotImplemented : public Exception {
     public:
-        NotImplemented() : Exception("Not yet implemented") { };
+        explicit NotImplemented() : Exception("Not yet implemented") { };
     };
 }
 

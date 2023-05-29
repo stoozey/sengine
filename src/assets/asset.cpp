@@ -6,7 +6,7 @@
 namespace assets {
     int Asset::assetVersion = 1;
 
-    Asset::Asset(structs::AssetType assetType) : assetInfo() {
+    Asset::Asset(enums::AssetType assetType) : assetInfo() {
         auto guid = xg::newGuid();
         assetInfo = structs::AssetInfo{ assetType, guid.bytes() };
     }
@@ -15,6 +15,10 @@ namespace assets {
 
     structs::AssetInfo Asset::GetAssetInfo() {
         return assetInfo;
+    }
+
+    xg::Guid Asset::GetGuid() {
+        return assetInfo.GetGuid();
     }
 
     void Asset::WriteAssetInfo(std::fstream &file) {

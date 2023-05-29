@@ -23,9 +23,6 @@ namespace core {
 
         template <typename... T>
         static void Critical(fmt::format_string<T...> fmt, T&&... args);
-    private:
-        template <typename... T>
-        static std::string GetFormattedMessage(fmt::format_string<T...> fmt, T&&... args);
     };
 }
 

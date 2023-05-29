@@ -1,7 +1,7 @@
 #ifndef SENGINE_TEST1_INPUT_STATE_H
 #define SENGINE_TEST1_INPUT_STATE_H
 
-namespace structs {
+namespace enums {
     enum class InputState {
         Pressed,
         Down,

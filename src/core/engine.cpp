@@ -12,7 +12,6 @@
 #include "managers/input_manager.hpp"
 #include "core/log.hpp"
 #include "assets/shader.hpp"
-#include "managers/asset_manager.hpp"
 
 std::unique_ptr<core::Engine> g_Engine = std::make_unique<core::Engine>();
 

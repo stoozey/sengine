@@ -3,12 +3,12 @@
 #include <iostream>
 
 #include "assets/texture.hpp"
-#include "structs/assets/asset_info.hpp"
-#include "structs/assets/asset_type.hpp"
+#include "structs/asset_info.hpp"
+#include "enums/asset_type.hpp"
 #include "core/log.hpp"
 
 namespace assets {
-    Texture::Texture() : Asset(structs::AssetType::Texture) {
+    Texture::Texture() : Asset(enums::AssetType::Texture) {
         width = 0;
         height = 0;
         dataSize = 0;

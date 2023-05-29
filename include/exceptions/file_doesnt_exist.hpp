@@ -4,9 +4,9 @@
 #include "exceptions/exception.hpp"
 
 namespace exceptions {
-    class Generic : public Exception {
+    class FileDoesntExist : public Exception {
     public:
-        explicit Generic(const std::string &message) : Exception(message) { };
+        explicit FileDoesntExist(const std::string &filename) : Exception(filename) { };
     };
 }
 

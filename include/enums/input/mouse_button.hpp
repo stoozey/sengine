@@ -1,7 +1,7 @@
 #ifndef SENGINE_TEST1_MOUSE_BUTTON_H
 #define SENGINE_TEST1_MOUSE_BUTTON_H
 
-namespace structs {
+namespace enums {
     enum class MouseButton {
         LeftClick,
         MiddleClick,

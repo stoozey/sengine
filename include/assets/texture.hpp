@@ -4,7 +4,7 @@
 #include <glad.h>
 
 #include "assets/asset.hpp"
-#include "structs/assets/asset_info.hpp"
+#include "structs/asset_info.hpp"
 
 namespace assets {
     class Texture : public Asset {

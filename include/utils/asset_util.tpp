@@ -1,35 +1,15 @@
 #ifndef SENGINE_ASSET_UTIL_TPP
 #define SENGINE_ASSET_UTIL_TPP
 
+#include "utils/asset_util.hpp"
+
 namespace utils {
-    template<>
-    structs::AssetType GetAssetType<assets::Font>() {
-        return structs::AssetType::Font;
-    }
+    template<typename T>
+    enums::AssetType GetAssetType() {
+        auto find = ASSET_ASSET_TYPES.find(typeid(T));
+        if (find == ASSET_ASSET_TYPES.end()) core::Log::Error("asset type for typeid \"{}\" doesn't exist", typeid(T).name());
 
-    template<>
-    structs::AssetType GetAssetType<assets::Material>() {
-        return structs::AssetType::Material;
-    }
-
-    template<>
-    structs::AssetType GetAssetType<assets::Model>() {
-        return structs::AssetType::Model;
-    }
-
-    template<>
-    structs::AssetType GetAssetType<assets::Shader>() {
-        return structs::AssetType::Shader;
-    }
-
-    template<>
-    structs::AssetType GetAssetType<assets::Sound>() {
-        return structs::AssetType::Sound;
-    }
-
-    template<>
-    structs::AssetType GetAssetType<assets::Texture>() {
-        return structs::AssetType::Texture;
+        return find->second;
     }
 }
 

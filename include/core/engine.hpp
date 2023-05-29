@@ -12,7 +12,6 @@
 
 #include "loop_runners/loop_runner.hpp"
 #include "loop_runners/entity_loop_runner.hpp"
-#include "structs/loop_runners/loop_runner_type.hpp"
 #include "structs/colour.hpp"
 #include "managers/manager.hpp"
 

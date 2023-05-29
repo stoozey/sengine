@@ -3,13 +3,13 @@
 
 #include "assets/shader.hpp"
 #include "structs/shaders/shader_program_data.hpp"
-#include "structs/assets/asset_info.hpp"
-#include "structs/assets/asset_type.hpp"
+#include "structs/asset_info.hpp"
+#include "enums/asset_type.hpp"
 
 namespace assets {
     const char *Shader::glslVersion = "#version 410 core";
 
-    Shader::Shader() : assets::Asset(structs::AssetType::Shader) {
+    Shader::Shader() : assets::Asset(enums::AssetType::Shader) {
         programData = { "", "" };
         program = -1;
     }

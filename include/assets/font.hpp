@@ -6,7 +6,7 @@
 #include FT_FREETYPE_H
 
 #include "assets/asset.hpp"
-#include "structs/assets/asset_info.hpp"
+#include "structs/asset_info.hpp"
 #include "structs/text_character.hpp"
 
 namespace assets {

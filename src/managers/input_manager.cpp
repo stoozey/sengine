@@ -3,20 +3,20 @@
 #include "managers/input_manager.hpp"
 #include "core/engine.hpp"
 #include "core/log.hpp"
-#include "structs/input/mouse_button.hpp"
-#include "structs/input/input_state.hpp"
+#include "enums/input/mouse_button.hpp"
+#include "enums/input/input_state.hpp"
 
 namespace managers {
     InputManager::InputManager() : mousePosition() {
-        for (int i = (int) structs::MouseButton::LeftClick; i != (int) structs::MouseButton::None; i++) {
-            std::map<structs::InputState, int> map = {
-                    { structs::InputState::Down,     0 },
-                    { structs::InputState::Pressed,  0 },
-                    { structs::InputState::Released, 0 }
+        for (int i = (int) enums::MouseButton::LeftClick; i != (int) enums::MouseButton::None; i++) {
+            std::map<enums::InputState, int> map = {
+                    { enums::InputState::Down,     0 },
+                    { enums::InputState::Pressed,  0 },
+                    { enums::InputState::Released, 0 }
             };
 
-            auto mouseInput = static_cast<structs::MouseButton>(i);
-            mouseStates.insert(std::pair<structs::MouseButton, std::map<structs::InputState, int>>(mouseInput, map));
+            auto mouseInput = static_cast<enums::MouseButton>(i);
+            mouseStates.insert(std::pair<enums::MouseButton, std::map<enums::InputState, int>>(mouseInput, map));
         }
     }
 
@@ -34,9 +34,9 @@ namespace managers {
         SDL_RenderWindowToLogical(g_Engine->GetRenderer(), mouseX, mouseY, &mousePosition.x, &mousePosition.y);
 
         // set map
-        SetMapState(mouseStates.find(structs::MouseButton::LeftClick)->second, (mouseInputs & SDL_BUTTON_LMASK));
-        SetMapState(mouseStates.find(structs::MouseButton::MiddleClick)->second, (mouseInputs & SDL_BUTTON_MMASK));
-        SetMapState(mouseStates.find(structs::MouseButton::RightClick)->second, (mouseInputs & SDL_BUTTON_RMASK));
+        SetMapState(mouseStates.find(enums::MouseButton::LeftClick)->second, (mouseInputs & SDL_BUTTON_LMASK));
+        SetMapState(mouseStates.find(enums::MouseButton::MiddleClick)->second, (mouseInputs & SDL_BUTTON_MMASK));
+        SetMapState(mouseStates.find(enums::MouseButton::RightClick)->second, (mouseInputs & SDL_BUTTON_RMASK));
     }
 
     void InputManager::PollInputs() {
@@ -57,45 +57,45 @@ namespace managers {
         }
     }
 
-    void InputManager::SetMapState(std::map<structs::InputState, int> &map, int isDown) {
-        auto down = map.find(structs::InputState::Down);
-        auto pressed = map.find(structs::InputState::Pressed);
-        auto released = map.find(structs::InputState::Released);
+    void InputManager::SetMapState(std::map<enums::InputState, int> &map, int isDown) {
+        auto down = map.find(enums::InputState::Down);
+        auto pressed = map.find(enums::InputState::Pressed);
+        auto released = map.find(enums::InputState::Released);
 
         int downPrevious = down->second;
-        map[structs::InputState::Released] = ((downPrevious) && (!isDown));
-        map[structs::InputState::Pressed] = ((!downPrevious) && (isDown));
-        map[structs::InputState::Down] = isDown;
+        map[enums::InputState::Released] = ((downPrevious) && (!isDown));
+        map[enums::InputState::Pressed] = ((!downPrevious) && (isDown));
+        map[enums::InputState::Down] = isDown;
     }
 
-    int InputManager::GetMapState(std::map<structs::InputState, int> &map, structs::InputState inputState) {
+    int InputManager::GetMapState(std::map<enums::InputState, int> &map, enums::InputState inputState) {
         return map.find(inputState)->second;
     }
 
-    int InputManager::GetInputState(const std::string &inputName, structs::InputState inputState) {
+    int InputManager::GetInputState(const std::string &inputName, enums::InputState inputState) {
         auto find = inputStates.find(inputName);
         if (find == inputStates.end()) {
             core::Log::Warn("tried to detect non-defined input \"{}\"", inputName);
             return 0;
         }
 
-        std::map<structs::InputState, int> map = find->second;
+        std::map<enums::InputState, int> map = find->second;
         return GetMapState(map, inputState);
     }
 
-    int InputManager::GetMouseDown(structs::MouseButton mouseInput) {
+    int InputManager::GetMouseDown(enums::MouseButton mouseInput) {
         auto state = mouseStates.find(mouseInput)->second;
-        return GetMapState(state, structs::InputState::Down);
+        return GetMapState(state, enums::InputState::Down);
     }
 
-    int InputManager::GetMousePressed(structs::MouseButton mouseInput) {
+    int InputManager::GetMousePressed(enums::MouseButton mouseInput) {
         auto state = mouseStates.find(mouseInput)->second;
-        return GetMapState(state, structs::InputState::Pressed);
+        return GetMapState(state, enums::InputState::Pressed);
     }
 
-    int InputManager::GetMouseReleased(structs::MouseButton mouseInput) {
+    int InputManager::GetMouseReleased(enums::MouseButton mouseInput) {
         auto state = mouseStates.find(mouseInput)->second;
-        return GetMapState(state, structs::InputState::Released);
+        return GetMapState(state, enums::InputState::Released);
     }
 
     structs::Vector2 InputManager::GetMousePosition() {
@@ -106,12 +106,12 @@ namespace managers {
         std::vector<int> keysVector;
         keyMap.insert(std::pair<std::string, std::vector<int>>(inputName, keysVector));
 
-        std::map<structs::InputState, int> map;
-        map[structs::InputState::Down] = 0;
-        map[structs::InputState::Pressed] = 0;
-        map[structs::InputState::Released] = 0;
+        std::map<enums::InputState, int> map;
+        map[enums::InputState::Down] = 0;
+        map[enums::InputState::Pressed] = 0;
+        map[enums::InputState::Released] = 0;
 
-        inputStates.insert(std::pair<std::string, std::map<structs::InputState, int>>(inputName, map));
+        inputStates.insert(std::pair<std::string, std::map<enums::InputState, int>>(inputName, map));
     }
 
     void InputManager::TrackInput(const std::string &inputName, int scanCode) {
@@ -123,14 +123,14 @@ namespace managers {
     }
 
     int InputManager::GetInputDown(const std::string &inputName) {
-        return GetInputState(inputName, structs::InputState::Down);
+        return GetInputState(inputName, enums::InputState::Down);
     }
 
     int InputManager::GetInputPressed(const std::string &inputName) {
-        return GetInputState(inputName, structs::InputState::Pressed);
+        return GetInputState(inputName, enums::InputState::Pressed);
     }
 
     int InputManager::GetInputReleased(const std::string &inputName) {
-        return GetInputState(inputName, structs::InputState::Released);
+        return GetInputState(inputName, enums::InputState::Released);
     }
 }

@@ -14,7 +14,7 @@ namespace managers {
     public:
         SoundManager();
 
-        SoundId Play(std::shared_ptr<assets::Sound> sound);
+        SoundId Play(std::weak_ptr<assets::Sound> sound);
 
     private:
         SoundId GetAvailableSoundId();
@@ -22,7 +22,7 @@ namespace managers {
         bool SoundExists(SoundId soundId);
 
         SoundId reservedSoundId;
-        std::map<SoundId, std::shared_ptr<assets::Sound>> sounds;
+        std::map<SoundId, std::weak_ptr<assets::Sound>> sounds;
     };
 }
 

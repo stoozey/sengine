@@ -12,14 +12,14 @@
 namespace classes {
     class Mesh {
     public:
-        Mesh(std::vector<structs::Vertex> vertices, std::vector<GLuint> indices, std::vector<std::shared_ptr<assets::Texture>> textures);
+        Mesh(std::vector<structs::Vertex> vertices, std::vector<GLuint> indices, std::vector<std::weak_ptr<assets::Texture>> textures);
         ~Mesh();
 
         std::vector<structs::Vertex> vertices;
         std::vector<GLuint> indices;
-        std::vector<std::shared_ptr<assets::Texture>> textures;
+        std::vector<std::weak_ptr<assets::Texture>> textures;
 
-        void Draw(std::shared_ptr<assets::Shader> shader);
+        void Draw(std::weak_ptr<assets::Shader> shader);
     private:
         GLuint VAO;
         GLuint VBO;

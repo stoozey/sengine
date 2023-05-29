@@ -5,7 +5,7 @@
 #include <cstring>
 #include <algorithm>
 
-#include "structs/assets/asset_type.hpp"
+#include "enums/asset_type.hpp"
 #include "core/log.hpp"
 
 extern const size_t ASSET_INFO_BYTES;
@@ -16,7 +16,7 @@ typedef std::array<unsigned char, 16> AssetInfoGuid;
 
 namespace structs {
     struct AssetInfo {
-        AssetType assetType;
+        enums::AssetType assetType;
         AssetInfoGuid guid;
 
         xg::Guid GetGuid() {
@@ -57,11 +57,11 @@ namespace structs {
             std::memcpy(&version, currentPtr, versionSize);
             currentPtr += versionSize;
 
-            structs::AssetType assetType;
+            enums::AssetType assetType;
             AssetInfoGuid guid;
             switch (version) {
                 case 1: {
-                    size_t assetTypeSize = sizeof(structs::AssetType);
+                    size_t assetTypeSize = sizeof(enums::AssetType);
                     std::memcpy(&assetType, currentPtr, assetTypeSize);
                     currentPtr += assetTypeSize;
 
