@@ -3,6 +3,30 @@ A custom--unfinished--game engine written in C++
 
 ## Setup
 
+### Installing
+This is designed to easily be added to your thirdparty folder as a git submodule.
+```
+cd .\thirdparty\
+git submodule add https://github.com/stoozey/sengine.git
+git submodule update --init --recursive
+```
+
+---
+
+### CMake
+Put this black magic in your project's CMakeLists.txt:
+
+```cmake
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(SENGINE_DEBUG)
+endif()
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})  
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+```
+
+---
+
 ### main.cpp
 The engine is accessible through a global `g_Engine` pointer.
 Before you use the engine, you must call `g_Engine->Initialize()`.
@@ -27,19 +51,6 @@ int main(int argv, char **args) {
 }
 ```
 
----
-
-### CMake
-Put this black magic in your project's CMakeLists.txt:
-
-```cmake
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_compile_definitions(SENGINE_DEBUG)
-endif()
-
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})  
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-```
 ---
 
 ### Datafiles
