@@ -14,7 +14,6 @@ namespace classes {
     }
 
     Mesh::~Mesh() {
-        core::Log::Info("deleting mesh");
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);
         glDeleteBuffers(1, &EBO);
@@ -38,9 +37,11 @@ namespace classes {
         // vertex positions
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*) nullptr);
+
         // vertex normals
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)offsetof(structs::Vertex, normal));
+
         // vertex texture coords
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, vertexSize, (void*)offsetof(structs::Vertex, texCoords));
@@ -51,19 +52,15 @@ namespace classes {
     void Mesh::Draw() {
         for (int i = 0; i < textures.size(); i++)
         {
-            glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
-
             auto texture = textures[i];
             auto lock = utils::GetAssetLock<assets::Texture>(texture);
+            glActiveTexture(GL_TEXTURE0 + i);
             glBindTexture(GL_TEXTURE_2D, lock->textureId);
         }
 
         glActiveTexture(GL_TEXTURE0);
-
-        // draw mesh
-        GLsizei indicesSize = static_cast<GLsizei>(indices.size());
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, nullptr);
         glBindVertexArray(0);
     }
 }

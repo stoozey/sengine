@@ -6,7 +6,7 @@
 namespace exceptions {
     class NotImplemented : public Exception {
     public:
-        explicit NotImplemented() : Exception("Not yet implemented") { };
+        explicit NotImplemented(const std::string &message = "") : Exception(fmt::format("Not yet implemented ({})", message)) { };
     };
 }
 

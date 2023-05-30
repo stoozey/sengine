@@ -6,14 +6,14 @@
 
 #include "structs/vertex.hpp"
 #include "classes/mesh.hpp"
-
-
+#include "structs/primitive_type.hpp"
 
 namespace classes {
     class Primitive {
     public:
+        static classes::Mesh GetMesh(const structs::PrimitiveType &primitiveType);
         classes::Mesh GenerateMesh();
-    protected:
+    private:
         Primitive(std::vector<structs::Vertex> vertices, std::vector<GLuint> indices);
 
         std::vector<structs::Vertex> vertices;
