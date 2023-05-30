@@ -57,6 +57,25 @@ namespace managers {
     }
 
     template<typename T>
+    std::shared_ptr<T> AssetManager::GetAssetOrDefault(const std::string &name) {
+        auto assetPtr = GetAsset<T>(name);
+        if (auto lock = assetPtr.lock()) return lock;
+
+        static auto assetManager = g_Engine->GetManager<managers::AssetManager>();
+        auto defaultAsset = assetManager->GetDefaultAsset<T>();
+        return defaultAsset.lock();
+    }
+
+    template<typename T>
+    std::shared_ptr<T> AssetManager::GetAssetOrDefault(std::weak_ptr<T> assetPtr) {
+        if (auto lock = assetPtr.lock()) return lock;
+
+        static auto assetManager = g_Engine->GetManager<managers::AssetManager>();
+        auto defaultAsset = assetManager->GetDefaultAsset<T>();
+        return defaultAsset.lock();
+    }
+
+    template<typename T>
     std::vector<xg::Guid> AssetManager::GetAssetGuids() {
         AssertTemplateIsAsset<T>();
 

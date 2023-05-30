@@ -7,7 +7,7 @@
 namespace classes {
     Primitive::Primitive(std::vector<structs::Vertex> vertices, std::vector<GLuint> indices) : vertices(std::move(vertices)), indices(std::move(indices)) { }
 
-    classes::Mesh Primitive::GetMesh(const structs::PrimitiveType &primitiveType) {
+    Mesh Primitive::GetMesh(const structs::PrimitiveType &primitiveType) {
         switch (primitiveType) {
             case structs::PrimitiveType::Plane: {
                 static std::vector<structs::Vertex> vertices = {
@@ -23,8 +23,8 @@ namespace classes {
                 };
 
                 static Primitive plane = Primitive(vertices, indices);
-
-                return plane.GenerateMesh();
+                static Mesh mesh = plane.GenerateMesh();
+                return mesh;
             }
 
             default: {

@@ -36,6 +36,8 @@ namespace core {
     }
 
     void Entity::UpdateComponents(void(components::Component::*func)(double), double deltaTime) {
+        if (components.empty()) return;
+
         auto runner = utils::GetUpdateRunner<components::Component>(func);
         std::map<std::type_index, std::shared_ptr<components::Component>>::iterator iterator;
         for (iterator = components.begin(); iterator != components.end(); ++iterator) {
@@ -45,6 +47,8 @@ namespace core {
     }
 
     void Entity::RenderComponents(void(components::Component::*func)()) {
+        if (components.empty()) return;
+
         auto runner = utils::GetRenderRunner<components::Component>(func);
         std::map<std::type_index, std::shared_ptr<components::Component>>::iterator iterator;
         for (iterator = components.begin(); iterator != components.end(); ++iterator) {

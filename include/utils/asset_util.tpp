@@ -13,15 +13,6 @@ namespace utils {
 
         return find->second;
     }
-
-    template<typename T>
-    std::shared_ptr<T> GetAssetLock(const std::weak_ptr<T> &assetPtr) {
-        if (auto lock = assetPtr.lock()) return lock;
-
-        static auto assetManager = g_Engine->GetManager<managers::AssetManager>();
-        auto defaultAsset = assetManager->GetDefaultAsset<T>();
-        return defaultAsset.lock();
-    }
 }
 
 #endif //SENGINE_ASSET_UTIL_TPP

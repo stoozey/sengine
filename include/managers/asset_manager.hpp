@@ -50,6 +50,12 @@ namespace managers {
         std::weak_ptr<T> GetAsset(const std::string &name);
         std::weak_ptr<assets::Asset> GetAsset(const xg::Guid &guid);
 
+        template<typename T>
+        std::shared_ptr<T> GetAssetOrDefault(const std::string &name);
+
+        template<typename T>
+        std::shared_ptr<T> GetAssetOrDefault(std::weak_ptr<T> assetPtr);
+
         enums::AssetType AssetGetType(const xg::Guid &guid);
         std::string AssetGetName(const xg::Guid &guid);
         std::string AssetGetPath(const xg::Guid &guid);

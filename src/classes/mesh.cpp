@@ -6,9 +6,10 @@
 #include "classes/mesh.hpp"
 #include "assets/texture.hpp"
 #include "utils/asset_util.hpp"
+#include "managers/asset_manager.hpp"
 
 namespace classes {
-    Mesh::Mesh(std::vector<structs::Vertex> vertices, std::vector<GLuint> indices, std::vector<std::weak_ptr<assets::Texture>> textures)
+    Mesh::Mesh(std::vector<structs::Vertex> vertices, std::vector<GLuint> indices, std::vector<std::string> textureNames)
         : vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures)), VAO(0), VBO(0), EBO(0) {
         SetupMesh();
     }
@@ -50,12 +51,14 @@ namespace classes {
     }
 
     void Mesh::Draw() {
+        static auto assetManager = g_Engine->GetManager<managers::AssetManager>();
+
         for (int i = 0; i < textures.size(); i++)
         {
-            auto texture = textures[i];
-            auto lock = utils::GetAssetLock<assets::Texture>(texture);
+            auto textureName = textures[i];
+            auto texture = assetManager->GetAssetOrDefault<assets::Texture>(textureName);
             glActiveTexture(GL_TEXTURE0 + i);
-            glBindTexture(GL_TEXTURE_2D, lock->textureId);
+            glBindTexture(GL_TEXTURE_2D, texture->textureId);
         }
 
         glActiveTexture(GL_TEXTURE0);

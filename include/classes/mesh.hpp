@@ -12,7 +12,7 @@
 namespace classes {
     class Mesh {
     public:
-        Mesh(std::vector<structs::Vertex> vertices, std::vector<GLuint> indices, std::vector<std::weak_ptr<assets::Texture>> textures);
+        Mesh(std::vector<structs::Vertex> vertices, std::vector<GLuint> indices, std::vector<std::string> textureNames);
         ~Mesh();
 
         std::vector<structs::Vertex> vertices;
