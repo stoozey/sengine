@@ -31,7 +31,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 The engine is accessible through a global `g_Engine` pointer.
 Before you use the engine, you must call `g_Engine->Initialize()`.
 Afterwards, you can add any managers/loop runners you need and then call `g_Engine->RunLoop()`.
-Once the loop exits, you should delete the engine to free its resources.
+Once the loop exits, you should reset the engine pointer to free its resources.
 
 ```cpp
 #include <core/engine.hpp>
@@ -46,7 +46,7 @@ int main(int argv, char **args) {
     
     g_Engine->RunLoop();
     
-    delete g_Engine;
+    g_Engine.reset();
     return 0;
 }
 ```
