@@ -19,7 +19,7 @@ namespace classes {
         std::vector<GLuint> indices;
         std::vector<std::weak_ptr<assets::Texture>> textures;
 
-        void Draw(std::weak_ptr<assets::Shader> shader);
+        void Draw();
     private:
         GLuint VAO;
         GLuint VBO;

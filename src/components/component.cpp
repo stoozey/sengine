@@ -12,7 +12,7 @@ namespace components {
     void Component::PostUpdate(double deltaTime) { }
 
     void Component::PreRender() { }
-    void Component::Render() { core::Log::Info("base render"); }
+    void Component::Render() { }
     void Component::PostRender() { }
 
     void Component::FetchEntity(EntityId entityId) {

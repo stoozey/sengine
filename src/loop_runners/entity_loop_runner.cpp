@@ -1,5 +1,10 @@
+#include <SDL.h>
+
+#include "utils/entity_util.hpp"
 #include "loop_runners/entity_loop_runner.hpp"
 #include "exceptions/not_implemented.hpp"
+
+double deltaLast = 0;
 
 namespace loopRunners {
     EntityId EntityLoopRunner::AddEntity(std::unique_ptr<core::Entity> entity) {

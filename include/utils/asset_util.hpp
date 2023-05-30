@@ -26,6 +26,9 @@ namespace utils {
     template<typename T>
     enums::AssetType GetAssetType();
 
+    template<typename T>
+    std::shared_ptr<T> GetAssetLock(const std::weak_ptr<T> &assetPtr);
+
     template<typename T = assets::Asset>
     void GetAssetNames(std::vector<std::string> *outNames);
     void GetAssetNames(const enums::AssetType &assetType, std::vector<std::string> *outNames);

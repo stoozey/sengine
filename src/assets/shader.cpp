@@ -1,5 +1,6 @@
 #include <iostream>
 #include <base64.h>
+#include <glad.h>
 
 #include "assets/shader.hpp"
 #include "structs/shaders/shader_program_data.hpp"
@@ -11,7 +12,7 @@ namespace assets {
 
     Shader::Shader() : assets::Asset(enums::AssetType::Shader) {
         programData = { "", "" };
-        program = -1;
+        program = 0;
     }
 
     Shader::~Shader() {
@@ -103,11 +104,29 @@ namespace assets {
     }
 
     GLuint Shader::Compile(GLuint shaderType, const char *source) {
-        //if ((shaderType != GL_VERTEX_SHADER) && (shaderType != GL_FRAGMENT_SHADER)) return -1;
+        //if ((shaderType != GL_VERTEX_SHADER) && (shaderType != GL_FRAGMENT_SHADER)) return 0;
 
         GLuint shaderObject = glCreateShader(shaderType);
-        glShaderSource(shaderObject, 1, &source, nullptr);
+
+        GLchar const *sources[] = { source };
+        GLint lengths[] = { SHADER_PROGRAM_SIZE };
+        std::cout << sources[0] << std::endl;
+        glShaderSource(shaderObject, sizeof(sources)/sizeof(*sources), sources, lengths);
         glCompileShader(shaderObject);
+
+        GLint compileStatus;
+        glGetShaderiv(shaderObject, GL_COMPILE_STATUS, &compileStatus);
+        core::Log::Info(fmt::format("compileStatus {}", compileStatus));
+        if (compileStatus == GL_FALSE) {
+            GLint infoLogLength;
+            glGetShaderiv(shaderObject, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+            std::vector<GLchar> infoLog(infoLogLength);
+            glGetShaderInfoLog(shaderObject, infoLogLength, nullptr, infoLog.data());
+
+            // Handle shader compilation errors
+            std::cout << "Shader compilation failed:\n" << infoLog.data() << std::endl;
+        }
 
         return shaderObject;
     }
@@ -132,7 +151,7 @@ namespace assets {
         if (!ProgramExists()) return;
 
         glDeleteProgram(program);
-        program = -1;
+        program = 0;
 
         uniformData.clear();
     };

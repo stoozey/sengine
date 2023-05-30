@@ -9,11 +9,15 @@ namespace components {
 
     TextureRenderer::~TextureRenderer() { }
 
+    void TextureRenderer::SetTexture(std::weak_ptr<assets::Texture> newTexture) {
+        texture = newTexture;
+    }
+
     void TextureRenderer::PostRender() {
-        RenderTexture();
     }
 
     void TextureRenderer::RenderTexture() {
         core::Log::Info("texture rendere rednerererr!!!");
+
     }
 }
