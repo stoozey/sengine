@@ -6,6 +6,7 @@
 #include <typeindex>
 #include <typeinfo>
 #include <utility>
+#include <glm/glm.hpp>
 
 #include "components/component.hpp"
 #include "structs/vector3.hpp"
@@ -18,7 +19,7 @@ namespace core {
         Entity();
         virtual ~Entity();
 
-        structs::Vector3 position;
+        glm::vec3 position;
 
         EntityId GetEntityId() const;
 
