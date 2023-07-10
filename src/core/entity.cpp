@@ -4,8 +4,18 @@
 namespace core {
     EntityId Entity::Id = 0;
 
-    Entity::Entity() : position({0, 0, 0}), id(Id++) { }
+    Entity::Entity() : position({0, 0, 0}), id(Id++), frontVector(0.0f, 0.0f, -1.0f), upVector(0.0f, 1.0f, 0.0f) { }
     Entity::~Entity() { };
+
+    void Entity::Move(const glm::vec2 &moveVector) {
+        if (moveVector.x != 0) {
+            position += (moveVector.x * glm::normalize(glm::cross(frontVector, upVector)));
+        }
+
+        if (moveVector.y != 0) {
+            position += (moveVector.y * frontVector);
+        }
+    }
 
     EntityId Entity::GetEntityId() const {
         return id;

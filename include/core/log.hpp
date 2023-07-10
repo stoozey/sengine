@@ -10,6 +10,18 @@ namespace core {
         static void Warn(const std::string &message);
         static void Error(const std::string &message);
         static void Critical(const std::string &message);
+
+        template <typename... T>
+        static void Info(fmt::format_string<T...> fmt, T&&... args);
+
+        template <typename... T>
+        static void Warn(fmt::format_string<T...> fmt, T&&... args);
+
+        template <typename... T>
+        static void Error(fmt::format_string<T...> fmt, T&&... args);
+
+        template <typename... T>
+        static void Critical(fmt::format_string<T...> fmt, T&&... args);
     };
 }
 

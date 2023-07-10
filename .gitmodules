@@ -10,9 +10,6 @@
 [submodule "thirdparty/glm"]
 	path = thirdparty/glm
 	url = https://github.com/g-truc/glm
-[submodule "thirdparty/spdlog"]
-	path = thirdparty/spdlog
-	url = https://github.com/gabime/spdlog
 [submodule "thirdparty/nativefiledialog-cmake"]
 	path = thirdparty/nativefiledialog-cmake
 	url = https://github.com/stoozey/nativefiledialog-cmake
@@ -25,3 +22,6 @@
 [submodule "thirdparty/fmt"]
 	path = thirdparty/fmt
 	url = https://github.com/fmtlib/fmt.git
+[submodule "thirdparty/easyloggingpp"]
+	path = thirdparty/easyloggingpp
+	url = https://github.com/abumq/easyloggingpp.git

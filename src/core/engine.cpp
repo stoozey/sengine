@@ -2,7 +2,6 @@
 #include <iostream>
 #include <glad.h>
 #include <stb.h>
-#include <spdlog/spdlog.h>
 #include <nfd.h>
 
 #include "imgui_impl_sdl2.h"

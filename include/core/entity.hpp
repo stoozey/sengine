@@ -21,6 +21,9 @@ namespace core {
 
         glm::vec3 position;
 
+        void Move(const glm::vec2 &moveVector);
+        void Rotate(const glm::vec2 &rotationVector);
+
         EntityId GetEntityId() const;
 
         template<typename T>
@@ -40,13 +43,14 @@ namespace core {
         virtual void Render();
         virtual void PostRender();
     protected:
+        static EntityId Id;
 
+        glm::vec3 frontVector;
+        glm::vec3 upVector;
 
         void UpdateComponents(void(components::Component::*func)(double), double deltaTime);
         void RenderComponents(void(components::Component::*func)());
     private:
-        static EntityId Id;
-
         EntityId id;
         std::map<std::type_index, std::shared_ptr<components::Component>> components;
     };

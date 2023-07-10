@@ -17,6 +17,11 @@ namespace components {
 
     void Component::FetchEntity(EntityId entityId) {
         auto entityLoopRunner = g_Engine->GetLoopRunner<loopRunners::EntityLoopRunner>();
-        entity = entityLoopRunner->GetEntity(entityId);
+        auto weakEntity = entityLoopRunner->GetEntity(entityId);
+        if (auto lock = weakEntity.lock()) {
+            entity = lock;
+        } else {
+            core::Log::Error(fmt::format("entity of id %s doesn't exist", entityId));
+        }
     }
 }

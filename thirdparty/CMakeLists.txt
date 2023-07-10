@@ -30,12 +30,12 @@ add_subdirectory(assimp)
 add_subdirectory(glm)
 add_subdirectory(stb)
 add_subdirectory(glad)
-add_subdirectory(spdlog)
 add_subdirectory(entt)
 add_subdirectory(crossguid)
 add_subdirectory(nativefiledialog-extended)
 add_subdirectory(imgui)
 add_subdirectory(fmt)
+add_subdirectory(easyloggingpp)
 
 ##backward
 #add_subdirectory(backward-cpp)

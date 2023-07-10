@@ -1,5 +1,3 @@
-#include <spdlog/spdlog.h>
-
 #include "managers/input_manager.hpp"
 #include "core/engine.hpp"
 #include "core/log.hpp"

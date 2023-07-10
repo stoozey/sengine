@@ -19,7 +19,7 @@ namespace components {
         virtual void Render();
         virtual void PostRender();
     protected:
-        std::weak_ptr<core::Entity> entity;
+        std::shared_ptr<core::Entity> entity;
 
         void FetchEntity(EntityId entityId);
     };
